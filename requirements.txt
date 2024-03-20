@@ -1,8 +1,0 @@
-bs4
-gemmi
-matplotlib
-numpy
-pandas
-pymol
-requests
-scipy

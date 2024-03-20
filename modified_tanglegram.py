@@ -27,6 +27,11 @@ from matplotlib.patches import ConnectionPatch
 from tqdm import tqdm
 
 
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+TANGLEGRAMS = RESULTS_FOLDER / "tanglegrams"
+TANGLEGRAMS.mkdir(exist_ok=True)
+
+
 __all__ = ['tanglegram', 'tanglegram_many', 'entanglement', 'untangle']
 
 # Set up logging
@@ -151,12 +156,12 @@ def tanglegram(a, b, n_data, labelsA=None, labelsB=None, edges=None, sort=True, 
         13: '#9a6324', 14: '#fffac8', 15: '#800000', 16: '#aaffc3', 17: '#808000', 18: '#ffd8b1',
         19: '#000075', 20: '#61ffff', 21: '#d300ff', 22: '#000000',
     }
-    with (Path(__file__).parent.parent / "results" / "clusters" / "FUC" / "super" / "22_centroid_all_clusters.json").open() as f:
+    with (RESULTS_FOLDER / "clusters" / "FUC" / "super" / "22_centroid_all_clusters.json").open() as f:
         clusters = json.load(f)
     dflt_col = "#808080"
 
     link_cols = {}
-    for i in range(620):
+    for i in range(618): # TODO: does this need to be hardcoded?
         link_cols[i] = [colors[int(cluster)] for cluster, struc in clusters.items() if i in struc][0]
 
     for i, i12 in enumerate(link1[:,:2].astype(int)):

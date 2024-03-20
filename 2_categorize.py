@@ -3,8 +3,8 @@ import json
 from pathlib import Path
 
 
-RESULTS_FOLDER = Path(__file__).parent.parent / "results"
-DATA_FOLDER = Path(__file__).parent.parent / "data"
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
 results_path = RESULTS_FOLDER / "categorization"
 results_path.mkdir(exist_ok=True)
@@ -30,6 +30,9 @@ pdb_ligand_glycosylated = []
 pdb_ligand_close_contacts = []
 pdb_glycosylated_close_contacts = []
 pdb_lig_glyc_close = []
+
+
+res_gycosyl_residue_not_1 = []
 
 # some structures has sugars, but they are listed in the wrong category
 # so it is not possible to automatize the search - they are excluded
@@ -210,7 +213,7 @@ def main():
         all_residues[block.name] = current_all_residues
 
 
-        # Remove glycosylations and close contacts from mono and oligosaccharides. Dictionaries are modified in place.
+        # remove glycosylations and close contacts from mono and oligosaccharides. Dictionaries are modified in place.
         current_glycosylated = remove_connections(block, monosacharides, oligosacharides)
         current_close_contacts = remove_close_contacts(block, monosacharides, oligosacharides)
 
@@ -275,39 +278,45 @@ def main():
         json.dump(list(pdb_not_anotated_glycosylation), f, indent=4)
 
     # print counts of everything
-    print("pocet rezidui s viac konformaciami: ", len(overall_conformers))
-    print("pdb s neanotovanou glykosylaciou:", len(pdb_not_anotated_glycosylation))
-    print(f"pdb s cukrami v zlej kategorii: {len(pdb_sugars_in_wrong_category)}\n")
+    print("Number of residues with multiple conformations: ", len(overall_conformers))
+    print("PDB with unannotated glycosylation:", len(pdb_not_anotated_glycosylation))
+    print(f"PDB with sugars in the wrong category: {len(pdb_sugars_in_wrong_category)}\n")
     print()
 
     count = 0
     for residues in all_residues.values():
         count += len(residues)
-    print(f"vsetky struktury: {len(all_residues)} , resiuda: {count}\n")
+    print(f"All structures: {len(all_residues)} , residues: {count}\n")
 
     count = 0
     for residues in ligands.values():
         count += len(residues)
-    print(f"ligandy: {len(ligands)} , residua: {count}\n")
+    print(f"Ligands: {len(ligands)} , residues: {count}\n")
 
     count = 0
     for i in glycosylated.values():
         count += len(i)
-    print(f"glycosylace: {len(glycosylated)} , residua: {count}\n")
+    print(f"Glycosylations: {len(glycosylated)} , residues: {count}\n")
 
     count = 0
     for i in close_contacts.values():
         count += len(i)
-    print(f"close contacts: {len(set(close_contacts))} , residua: {count}\n")
+    print(f"Close contacts: {len(set(close_contacts))} , residues: {count}\n")
 
-    print(f"pdb iba ligandy: {len(set(pdb_only_ligands))}\n")
-    print(f"pdb iba glycosylated: {len(set(pdb_only_glycosylated))}\n")
-    print(f"pdb iba close_contacts: {len(set(pdb_only_close_contacts))}\n")
+    print(f"PDB only ligands: {len(set(pdb_only_ligands))}\n")
+    print(f"PDB only glycosylated: {len(set(pdb_only_glycosylated))}\n")
+    print(f"PDB only close contacts: {len(set(pdb_only_close_contacts))}\n")
 
-    print(f"pdb ligandy a glycosyly: {len(set(pdb_ligand_glycosylated))}\n")
-    print(f"pdb ligandy a close_contacts: {len(set(pdb_ligand_close_contacts))}\n")
-    print(f"pdb glycosyly a close_contacts: {len(set(pdb_glycosylated_close_contacts))}\n")
-    print(f"pdb lig glyc close: {len(set(pdb_lig_glyc_close))}\n")
+    print(f"PDB ligands and glycosylated: {len(set(pdb_ligand_glycosylated))}\n")
+    print(f"PDB ligands and close contacts: {len(set(pdb_ligand_close_contacts))}\n")
+    print(f"PDB glycosylated and close contacts: {len(set(pdb_glycosylated_close_contacts))}\n")
+    print(f"PDB ligands, glycosylated and close contacts: {len(set(pdb_lig_glyc_close))}\n")
+
+    
+    print(f"res_gycosyl_residue_not_1 list: {len(res_gycosyl_residue_not_1)}\n")
+    print(f"res_gycosyl_residue_not_1 set: {len(set(res_gycosyl_residue_not_1))}\n")
+
+
 
 
 if __name__ == "__main__":

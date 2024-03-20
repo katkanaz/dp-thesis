@@ -7,18 +7,26 @@ import zipfile
 from tempfile import TemporaryDirectory
 from pathlib import Path
 
+from argparse import ArgumentParser
 
-PQ_WORKING_PATH = Path(__file__).parent.parent / "PatternQuery_1.1.21.12.14a"
-RESULTS_FOLDER = Path(__file__).parent.parent / "results"
-DATA_FOLDER = Path(__file__).parent.parent / "data"
+PQ_WORKING_PATH = Path(__file__).parent.parent / "pq_cmd_line" / "PatternQuery_1.1.23.12.27b"
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
+
+PQ_STRUCTURES = Path(__file__).parent.parent / "pq_cmd_line" / "structures"
+PQ_STRUCTURES.mkdir(exist_ok=True)
+PQ_RESULTS = Path(__file__).parent.parent / "pq_cmd_line" / "pq_results"
+PQ_RESULTS.mkdir(exist_ok=True)
+
 
 
 more_than_one_pattern = []			# just to check no more than one pattern for specific ResidueID was found
-PQ_couldnt_find_pattern = []		# some ResidueID couldn"t be found by PQ because they have different ResidueID somehow 
+pq_couldnt_find_pattern = []		# some ResidueID couldn't be found by PQ because they have different ResidueID somehow 
 result_folder_not_created = []		# just in case something else goes wrong
 
+#END_FLAG = False
 
-def create_config(structure, residues, sugar):
+def create_config(structure: str, residues, sugar: str):
 	"""
 	Creates config file for the given structure.
 	Every stucture can contain 0 - n residues of interest specified by <sugar>.
@@ -26,21 +34,21 @@ def create_config(structure, residues, sugar):
 	If at least one residue of interest is present:
 	For every residue a separate query is needed. Therefore one config file with 1-n queries is created per structure.
 	Then it is saved and a list of all query names is returnd.
-	Name is in a form <pdb>_<name>_<num>_<chain>_*<key_sensitive_tag>*.pdb
+	Name is in a form <pdb>_<name>_<num>_<chain>_*<case_sensitive_tag>*.pdb
 	"""
 	config = {
 		"InputFolders": [
-			str(PQ_WORKING_PATH / "structures"),
+			str(PQ_STRUCTURES),
 		],
 		"Queries": [],
 		"StatisticsOnly": False,
 		"MaxParallelism": 2
 	}
 	query_names = []
-	# PQ queries are not key sensitive but there are structures which contain
+	# PQ queries are not case sensitive but there are structures which contain ## keys are not case sensitive
 	# two chains with the same letter but one upper and the other lower.
 	# In that case eg. residues "GLC 1 M" and "GLC 1 m" would have the same
-	# query in PQ sense. Therefore, "_2" is added to such queries.
+	# query in PQ sense. Therefore, tag "_2" is added to such queries.
 	key_sensitive_check = []
 	for residue in residues:
 		if residue["name"] == sugar:
@@ -62,7 +70,7 @@ def create_config(structure, residues, sugar):
 	return query_names
 
 
-def extract_results(target, zip_result_folder, query_names):
+def extract_results(target: Path, zip_result_folder: Path, query_names: list):
 	"""
 	Results are present in the zip folder, where every query has its own subfolder
 	with the name same as was its query name: <pdb>_<name>_<num>_<chain>_*<key_sensitive_tag>*.pdb
@@ -73,22 +81,26 @@ def extract_results(target, zip_result_folder, query_names):
 	with TemporaryDirectory() as temp_dir:
 		with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:
 			zip_ref.extractall(temp_dir)
-			for dir in query_names:
-				results_path = Path(temp_dir) / dir / "patterns"
+			for query_name in query_names: 
+				results_path = Path(temp_dir) / query_name / "patterns"
 				if not results_path.exists():
-					PQ_couldnt_find_pattern.append(dir)
+					pq_couldnt_find_pattern.append(query_name)
 					continue
 				# It is expected to have only one pattern found for one query, but checking just in case
 				if len(os.listdir(results_path)) > 1:
-					more_than_one_pattern.append(dir) 
+					#global END_FLAG
+					#END_FLAG = True
+					#return
+					more_than_one_pattern.append(query_name)
+					continue
 				for file in results_path.iterdir():
-					Path(file).rename(results_path / f"{dir}.pdb")  # rename the pattern so it is distinguishable
-				src = results_path / f"{dir}.pdb"
-				shutil.move(src, target)
+					Path(file).rename(results_path / f"{query_name}.pdb")  # rename the pattern so it is distinguishable
+				src = results_path / f"{query_name}.pdb"
+				shutil.move(str(src), str(target))
 
 
-def main(sugar):
-	with open(RESULTS_FOLDER / "categorization" / "flitered_ligands.json", "r") as f:
+def main(sugar: str):
+	with open(RESULTS_FOLDER / "categorization" / "filtered_ligands.json", "r") as f:
 		ligands = json.load(f)
 	
 	target_dir = RESULTS_FOLDER / "binding_sites" / sugar
@@ -101,38 +113,43 @@ def main(sugar):
 			continue
 		# copy current structure to ./structures dir which is used as source by PQ.
 		src = DATA_FOLDER / "mmCIF_files" / f"{structure}.cif"
-		dst = PQ_WORKING_PATH / f"structures\\{structure}.cif"
+		dst = PQ_STRUCTURES / f"{structure}.cif"
 		shutil.copyfile(src, dst)
 
 		# run PQ
 		cmd = [
-			f"{PQ_WORKING_PATH}\\WebChemistry.Queries.Service.exe",
-			PQ_WORKING_PATH ,
-			f"{PQ_WORKING_PATH}\\configuration.json"
+			f"mono {PQ_WORKING_PATH}/WebChemistry.Queries.Service.exe {PQ_RESULTS} {PQ_WORKING_PATH}/configuration.json"
 		]
 		subprocess.run(cmd, shell=True)
 
-		zip_result_folder = PQ_WORKING_PATH / "result\\result.zip"
+		zip_result_folder = PQ_RESULTS / "result/result.zip"
 		if not zip_result_folder.exists():
 			result_folder_not_created.append(structure)
-			# delete the current structure from ./structures directory and continue to the next structure
-			Path(PQ_WORKING_PATH / f"structures\\{structure}.cif").unlink()
+			# delete the current structure from ./structures directory and continue to the next structure ## ???
+			Path(PQ_STRUCTURES / f"{structure}.cif").unlink()
 			continue
 		
 		extract_results(target_dir, zip_result_folder, query_names)
 
-		# delete the result folder and also the current structure from ./structures so the new one can be copied there
-		(PQ_WORKING_PATH / f"structures\\{structure}.cif").unlink()
-		shutil.rmtree(PQ_WORKING_PATH / "result")
+		#if END_FLAG:
+			#break
 
-	print("more patterns for one id:", more_than_one_pattern)
-	print()
-	print("PQ could not find these patterns:", PQ_couldnt_find_pattern)
-	print()
+		# delete the result folder and also the current structure from ./structures so the new one can be copied there
+		(PQ_STRUCTURES / f"{structure}.cif").unlink()
+		shutil.rmtree(PQ_RESULTS / "result")
+
+	print("more patterns for one id:", more_than_one_pattern, end="\n\n")
+	print("PQ could not find these patterns:", pq_couldnt_find_pattern, end="\n\n")
 	print("result folder not created:", result_folder_not_created)
 
 
 
 
 if __name__ == "__main__":
-    main("FUC")
+	parser = ArgumentParser()
+	
+	parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
+	
+	args = parser.parse_args()
+	
+	main(args.sugar)

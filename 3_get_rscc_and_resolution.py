@@ -5,14 +5,14 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 
-RESULTS_FOLDER = Path(__file__).parent.parent / "results"
-DATA_FOLDER = Path(__file__).parent.parent / "data"
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
 categorized_pdbs_path = RESULTS_FOLDER / "categorization"
 validation_files_path = DATA_FOLDER / "validation_files"
 
 results_path = RESULTS_FOLDER / "validation"
-results_path.mkdir()
+results_path.mkdir(exist_ok=True)
 
 
 def extract_rscc_and_resolution():
@@ -76,5 +76,5 @@ def extract_rscc_and_resolution():
         json.dump(list(no_rscc), f, indent=4)
 
 
-
-extract_rscc_and_resolution()
+if __name__ == "__main__":
+    extract_rscc_and_resolution()

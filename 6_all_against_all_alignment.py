@@ -7,11 +7,13 @@ from pathlib import Path
 import numpy as np
 from pymol import cmd
 
+from argparse import ArgumentParser
 
-RESULTS_FOLDER = Path(__file__).parent.parent / "results"
+
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 
 
-def refine_binding_sites(sugar, min_res):
+def refine_binding_sites(sugar: str, min_res: int):
     """
     Filters the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
     and gives the filtered structures unique ID, which will be used as an index for creating the
@@ -22,7 +24,7 @@ def refine_binding_sites(sugar, min_res):
 
     # Path to the new folder where the fixed structures will be saved
     fixed_folder = RESULTS_FOLDER / "binding_sites" / f"{sugar}_fixed_{min_res}"
-    fixed_folder.mkdir()
+    fixed_folder.mkdir(exist_ok=True)
 
     less_than_n_aa = []  # just to know how many structures were excluded
     i = 0  # index
@@ -40,7 +42,7 @@ def refine_binding_sites(sugar, min_res):
             pdb, res, num, chain = filename.split("_")
         except ValueError:
             pdb, res, num, chain, tag = filename.split("_")
-        # For some reason, some structures has chains named eg. AaA but when loaded to PyMol
+        # For some reason, some structures have chains named eg. AaA but when loaded to PyMol
         # the the chain is reffered to just as A.
         if len(chain) > 1:
             chain = chain[0]
@@ -49,15 +51,15 @@ def refine_binding_sites(sugar, min_res):
 
         cmd.select("wanted_residues", f"{current_sugar} or polymer")
         cmd.select("junk_residues", f"not wanted_residues")
-        cmd.remove("junk_residues")
+        cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
 
-        cmd.save(f"{fixed_folder}\\{i}_{filename}.pdb")
+        cmd.save(f"{fixed_folder}/{i}_{filename}.pdb")
         structures_keys[i] = f"{i}_{filename}.pdb"
         i += 1 # raise the index
         cmd.delete("all")
 
-    (RESULTS_FOLDER / "clusters" / sugar).mkdir(exist_ok=True)
+    (RESULTS_FOLDER / "clusters" / sugar).mkdir(exist_ok=True, parents=True)
     with open(RESULTS_FOLDER / "clusters" / sugar / f"{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
     print(f"number of structures with less than {min_res} AA: ", len(less_than_n_aa))
@@ -65,7 +67,7 @@ def refine_binding_sites(sugar, min_res):
     return fixed_folder
 
 
-def all_against_all_alignment(sugar, structures_folder, method):
+def all_against_all_alignment(sugar: str, structures_folder: Path, method: str):
     """
     Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
     by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
@@ -86,8 +88,8 @@ def all_against_all_alignment(sugar, structures_folder, method):
         for (structure1, structure2) in itertools.combinations(os.listdir(structures_folder), 2):
             try:
                 cmd.delete("all")
-                cmd.load(f"{structures_folder}\\{structure1}")
-                cmd.load(f"{structures_folder}\\{structure2}")
+                cmd.load(f"{structures_folder}/{structure1}")
+                cmd.load(f"{structures_folder}/{structure2}")
                 cmd.fetch(sugar)
 
                 filename1 = str(Path(structure1).stem)
@@ -121,14 +123,14 @@ def all_against_all_alignment(sugar, structures_folder, method):
                 if method == "align":
                     cmd.align("polymer1", "polymer2", transform=0, cycles=0, object="aln")
                 elif method == "super":
-                    cmd.super("polymer1", "polymer2", transform=0, cycles=0, object="aln")
+                    cmd.super("polymer1", "polymer2", transform=0, cycles=0, object="aln") 
                 rms = float(cmd.rms_cur("polymer1 & aln", "polymer2 & aln", matchmaker=-1))
 
                 writer.writerow([filename1, filename2, rms])
-                rmsd_values[int(id1), int(id2)] = rms
+                rmsd_values[int(id1), int(id2)] = rms 
                 rmsd_values[int(id2), int(id1)] = rms
 
-                cmd.delete("all")
+                cmd.delete("all") 
             except:
                 # save pairs with which something went wrong
                 something_wrong.append((structure1, structure2))
@@ -139,11 +141,18 @@ def all_against_all_alignment(sugar, structures_folder, method):
     cmd.quit()
 
 
-def main(sugar, method):
+def main(sugar: str, method: str):
     # method: PyMOL command to be used for the calculation of RMSD {align or super}
     fixed_folder = refine_binding_sites(sugar, 5)
     all_against_all_alignment(sugar, fixed_folder, method)
 
 
 if __name__ == "__main__":
-    main("FUC", "super")
+    parser = ArgumentParser()
+    
+    parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
+    parser.add_argument("-a", "--align_method", help = "PyMOL cmd for the calculation of RMSD", type=str, choices=["super", "align"], required=True)
+    
+    args = parser.parse_args()
+    
+    main(args.sugar, args.align_method)

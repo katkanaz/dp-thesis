@@ -5,10 +5,11 @@ import gemmi
 import requests
 
 
-RESULTS_FOLDER = Path(__file__).parent.parent / "results"
-DATA_FOLDER = Path(__file__).parent.parent / "data"
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
 RESULTS_FOLDER.mkdir(exist_ok=True)
+
 
 def get_sugars_from_ccd():
     """
@@ -27,12 +28,12 @@ def get_sugars_from_ccd():
     return list(sugars)
 
 
-def get_pdb_ids_with_sugars(sugar_names):
+def get_pdb_ids_with_sugars(sugar_names: list):
     """
     Gets a set of all PDB IDs of structures containing any of the sugars.
     """
     pdb_ids = set()
-    counts_structures_with_sugar = {}
+    counts_structures_with_sugar = {} 
     sugars_not_present_in_any_structure = []
     for sugar in sugar_names:
         response = requests.get(f"https://www.ebi.ac.uk/pdbe/api/pdb/compound/in_pdb/{sugar}")
@@ -56,7 +57,7 @@ def get_pdb_ids_with_sugars(sugar_names):
     return pdb_ids
 
 
-def download_structures_and_validation_files(pdb_ids):
+def download_structures_and_validation_files(pdb_ids: set):
     """
     Downloads mmCIF files of structures containing sugars and their xml validation files.
     """

@@ -8,25 +8,27 @@ import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
 import matplotlib.pyplot as plt
 
+from argparse import ArgumentParser
 
-RESULTS_FOLDER = Path(__file__).parent.parent / "results"
-DATA_FOLDER = Path(__file__).parent.parent / "data"
+
+RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 
 (RESULTS_FOLDER / "clusters").mkdir(exist_ok=True)
 
 
-def cluster_data(sugar, n_clusters, cluster_method, align_method, show=False):
+def cluster_data(sugar: str, n_clusters: int, cluster_method: str, align_method: str, show=False):
     """
     Perform hierarchical clustering, using the given clustering method (ward, average, centroid,
-    single, complete, weighted, median) and creates given number of clusters. 
+    single, complete, weighted, median) and create a given number of clusters. 
     """
-    data = np.load(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{sugar}_all_pairs_rmsd.npy")
+    
+    data = np.load(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
 
     # Create densed form of the matrix
     D = ssd.squareform(data)
 
     # Compute the linkage matrix using given cluster_method
-    Z1 = sch.linkage(D, method=cluster_method)
+    Z1 = sch.linkage(D, method=cluster_method) 
 
     if show:
         # Plot the dendrogram
@@ -53,7 +55,7 @@ def cluster_data(sugar, n_clusters, cluster_method, align_method, show=False):
     # Calculate the representative structures for each cluster, as a structure with the lowest sum of RMSDs
     # with all the other structures from the cluster
     representatives = {}
-    print("Priemerna RMSD reprezentativneho okolia s ostatnymi okoliami v danom klastri:")
+    print("Průměrné RMSD reprezentativního okolí s ostatními okolími v daném klastru:")
     for cluster, structures in clusters.items():
         lowest_rmsd_sum = np.inf
         for i in structures:
@@ -65,19 +67,34 @@ def cluster_data(sugar, n_clusters, cluster_method, align_method, show=False):
                 representative_structure = i
         length = len(structures)
         representatives[cluster] = representative_structure
-        print(f"Klaster {cluster}: {lowest_rmsd_sum / length}")
+        print(f"Cluster {cluster}: {lowest_rmsd_sum / length}")
     
-    print("Priemerna RMSD medzi reprezentativnymi okoliami navzajom:")
+    print("Průměrné RMSD mezi reprezentativními okolími navzájem:")
     for cluster, structure in representatives.items():
         sum = 0
         for cluster2, structure2 in representatives.items():
             sum += data[structure, structure2]
-        print(f"Klaster {cluster}: {sum/n_clusters}")
+        print(f"Cluster {cluster}: {sum/n_clusters}")
 
 
     with open(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_cluster_representatives.json", "w") as f:
         json.dump(representatives, f, indent=4)
 
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    
+    parser.add_argument("-s", "--sugar", help = "Three letter code of sugar", type=str)
+    parser.add_argument("-n", "--n_clusters", help = "Number of clusters to create", type=int, required=True)
+    parser.add_argument("-c", "--cluster_method", help = "Clustering method", type=str, choices=["ward", "average", "centroid",
+    "single", "complete", "weighted", "median"], required=True)
+    parser.add_argument("-a", "--align_method", help = "PyMOL cmd for the calculation of RMSD", type=str, choices=["super", "align"], required=True)
+    
+    args = parser.parse_args()
+    
+    cluster_data(args.sugar, args.n_clusters, args.cluster_method, args.align_method, show=True)
 
 
-cluster_data("FUC", 22, "centroid", "super", show=True)
+
+    #cluster_data("FUC", 22, "centroid", "super", show=True)
+    #cluster_data("FUC", 20, "centroid", "align", show=True)
+    
