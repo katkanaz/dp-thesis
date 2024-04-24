@@ -1,25 +1,36 @@
-import json
-
+from argparse import ArgumentParser
 from collections import defaultdict
+import csv
+import json
 from pathlib import Path
+from typing import Union
 
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
-import matplotlib.pyplot as plt
-
-from argparse import ArgumentParser
-
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-
 (RESULTS_FOLDER / "clusters").mkdir(exist_ok=True)
 
+DENDROGRAMS = Path(__file__).parent.parent / "images" / "dendrograms"
+DENDROGRAMS.mkdir(exist_ok=True, parents=True)
 
-def cluster_data(sugar: str, n_clusters: int, cluster_method: str, align_method: str, show=False):
+def cluster_data(sugar: str, n_clusters: int, cluster_method: str, 
+                 align_method: str, make_dendrogram: bool = False,
+                 color_threshold: Union[float, None] = None) -> None:
     """
-    Perform hierarchical clustering, using the given clustering method (ward, average, centroid,
-    single, complete, weighted, median) and create a given number of clusters. 
+    Perform hierarchical clustering, using the specified clustering
+    method and create the given number of clusters.
+
+    @param sugar The suugar for which representative binding sites are being defined
+    @param n_clusters The number of clusters to create
+    @param cluster_method The desired method of clustering. Valid options
+                          include "ward", "average", "centroid", "single",
+                          "complete", "weighted", "median"
+    @param align_method The PyMOL command that was used for alignment
+    @param make_dendrogram Whether to create and save the dendrogram plot
+    @param color_threshold The color threshold for the dendrogram plot
     """
     
     data = np.load(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
@@ -27,22 +38,35 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str, align_method:
     # Create densed form of the matrix
     D = ssd.squareform(data)
 
-    # Compute the linkage matrix using given cluster_method
-    Z1 = sch.linkage(D, method=cluster_method) 
+    # Calculate the linkage matrix using given cluster_method
+    Z1 = sch.linkage(D, method=cluster_method)
 
-    if show:
+
+    dendro_sugar_folder = DENDROGRAMS / sugar
+    dendro_sugar_folder.mkdir(exist_ok=True, parents=True)
+
+    if make_dendrogram:
         # Plot the dendrogram
-        fig = plt.figure()
-        sch.dendrogram(Z1, color_threshold=6.1)
-        plt.show()
-        
-    # Cut the dendrogram at a desired number of clusters
-    labels = sch.fcluster(Z1, t=n_clusters, criterion='maxclust')
+        plt.figure(figsize=(6, 4))
+        #TODO: print the dict
+        sch.dendrogram(Z1, color_threshold=color_threshold)
 
+        # Save the figure to the sugar folder
+        if color_threshold is None:
+            filename = f"{n_clusters}_{cluster_method}_{align_method}.svg"
+        else:
+            filename = f"{n_clusters}_{cluster_method}_{align_method}_{color_threshold}.svg"
+        fig_path = dendro_sugar_folder / filename
+        plt.savefig(fig_path, dpi=300)
+        plt.close()
 
-    # Save the clusters and IDs of structures belonging to each cluster.
-    # 'labels' contains a list of cluster IDs, which indices correspond
-    #  to the ID of structure belonging to that cluster.
+    # Cut the dendrogram at the desired number of clusters
+    labels = sch.fcluster(Z1, t=n_clusters, criterion="maxclust")
+
+    #TODO: reword
+    # Save the clusters and the IDs of the structures belonging to each
+    # cluster. "labels" contains a list of cluster IDs whose indices
+    # correspond to the IDs of the structures belonging to the cluster.
     index = 0
     clusters = defaultdict(list)
     for label in labels:
@@ -52,29 +76,40 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str, align_method:
     with open(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_all_clusters.json", "w") as f:
         json.dump(clusters, f, indent=4)
 
-    # Calculate the representative structures for each cluster, as a structure with the lowest sum of RMSDs
-    # with all the other structures from the cluster
+    # Calculate the representative structure for each cluster
+    # as the structure with the lowest sum of RMSD with all other
+    # structures in the cluster
     representatives = {}
-    print("Průměrné RMSD reprezentativního okolí s ostatními okolími v daném klastru:")
+    average_rmsds = {}
+
     for cluster, structures in clusters.items():
-        lowest_rmsd_sum = np.inf
-        for i in structures:
-            sum = 0
-            for j in structures:
-                sum += data[i, j]
-            if sum < lowest_rmsd_sum:
-                lowest_rmsd_sum = sum
-                representative_structure = i
-        length = len(structures)
-        representatives[cluster] = representative_structure
-        print(f"Cluster {cluster}: {lowest_rmsd_sum / length}")
-    
-    print("Průměrné RMSD mezi reprezentativními okolími navzájem:")
+            lowest_rmsd_sum = np.inf
+            for i in structures:
+                sum = 0
+                for j in structures:
+                    sum += data[i, j]
+                if sum < lowest_rmsd_sum:
+                    lowest_rmsd_sum = sum
+                    representative_structure = i
+            length = len(structures)
+            representatives[cluster] = representative_structure
+            average_rmsds[cluster] = [lowest_rmsd_sum / length]
+
     for cluster, structure in representatives.items():
-        sum = 0
-        for cluster2, structure2 in representatives.items():
-            sum += data[structure, structure2]
-        print(f"Cluster {cluster}: {sum/n_clusters}")
+            sum = 0
+            for cluster2, structure2 in representatives.items():
+                sum += data[structure, structure2]
+            average_rmsds[cluster].append(sum/n_clusters)
+
+    with open(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_average_rmsds.csv",
+              "w", newline="") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(["# intra_avg_rmsd: Average RMSD of the representative surroundings with other surroundings in the respective cluster"])
+        writer.writerow(["# inter_avg_rmsd: Average RMSD between the representative surroundings"])
+        writer.writerow(["cluster", "intra_avg_rmsd", "inter_avg_rmsd"])
+
+        for cluster, rmsds in average_rmsds.items():
+            writer.writerow([cluster, rmsds[0], rmsds[1]])
 
 
     with open(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_cluster_representatives.json", "w") as f:
@@ -83,18 +118,18 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str, align_method:
 if __name__ == "__main__":
     parser = ArgumentParser()
     
-    parser.add_argument("-s", "--sugar", help = "Three letter code of sugar", type=str)
-    parser.add_argument("-n", "--n_clusters", help = "Number of clusters to create", type=int, required=True)
-    parser.add_argument("-c", "--cluster_method", help = "Clustering method", type=str, choices=["ward", "average", "centroid",
-    "single", "complete", "weighted", "median"], required=True)
-    parser.add_argument("-a", "--align_method", help = "PyMOL cmd for the calculation of RMSD", type=str, choices=["super", "align"], required=True)
+    parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
+    parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
+    parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,
+                        choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
+                        required=True)
+    parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
+                        choices=["super", "align"], required=True)
+    parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
+    parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
     
     args = parser.parse_args()
     
-    cluster_data(args.sugar, args.n_clusters, args.cluster_method, args.align_method, show=True)
-
-
-
-    #cluster_data("FUC", 22, "centroid", "super", show=True)
-    #cluster_data("FUC", 20, "centroid", "align", show=True)
+    #TODO: make number of clusters optional
+    cluster_data(args.sugar, args.n_clusters, args.cluster_method, args.align_method, args.make_dendrogram, args.color_threshold)
     
