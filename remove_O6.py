@@ -2,17 +2,17 @@ from csv import DictReader
 import json
 from pathlib import Path
 
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
 
-def get_pdb_ids_with_rscc():
+def get_pdb_ids_with_rscc() -> None:
+    #TODO: add docs
     """
     Get PDB IDs of structures for which residues there are the RSCC values.
     """
     with open(RESULTS_FOLDER / "validation" / "all_rscc_and_resolution.csv") as f:
-        rscc = DictReader(f) # TODO: maybe use pandas
+        rscc = DictReader(f) # TODO: use pandas
         pdb_ids = set()
         for row in rscc:
             pdb_ids.add(row["pdb"])
@@ -20,7 +20,8 @@ def get_pdb_ids_with_rscc():
         json.dump(list(pdb_ids), f, indent=4)
 
 
-def remove_O6():
+def remove_O6() -> None:
+    #TODO: add docs
     """
     Removes atom O6 of NAG, GAL, MAN, GLC and BGC from the structures.
     """
@@ -31,9 +32,9 @@ def remove_O6():
     for pdb in pdb_ids_of_interest:
         with (DATA_FOLDER / "mmCIF_files"/ f"{pdb.lower()}.cif").open() as f:
             file = f.readlines()
-        with (result / f"{pdb.lower()}.cif").open("w") as f:
+        with (result / f"{pdb.lower()}.cif").open("w") as f: #FIXME
             for line in file:
-                if line.startswith("HETATM"):
+                if line.startswith("HETATM"): #FIXME
                     if "MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line:
                         if "O6" in line:
                             continue

@@ -1,14 +1,12 @@
+from argparse import ArgumentParser
 import json
 from pathlib import Path
-
-from argparse import ArgumentParser
-
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 
 
-
-def compare_clusters(sugar: str):
+def compare_clusters(sugar: str) -> None:
+    #TODO: add docs
     """
     How many clusters from align-data correspond to one cluster from super-data, and vice versa.
     """

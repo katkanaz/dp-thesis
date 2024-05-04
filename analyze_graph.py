@@ -1,14 +1,14 @@
-from pathlib import Path
 from csv import DictReader, DictWriter
-
+from pathlib import Path
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 SAVE_ANALYSIS = RESULTS_FOLDER / "graph_analysis"
-SAVE_ANALYSIS.mkdir(exist_ok=True)
+SAVE_ANALYSIS.mkdir(exist_ok=True, parents=True)
 
 
-
-def analyze_graph(min_rscc, max_rscc, min_rmsd, max_rmsd, name=None):
+def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float, name=None) -> None:
+    #TODO: what is the name argument?
+    #TODO: add docs
     """
     Prints what kind of sugars are in the defined area on the graph.
     """
@@ -29,4 +29,5 @@ def analyze_graph(min_rscc, max_rscc, min_rmsd, max_rmsd, name=None):
 
 
 if __name__ == "__main__":
+    #TODO: add argparse
     analyze_graph(0.85, 1.0, 2.0, 3.0, name=None)

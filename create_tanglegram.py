@@ -1,18 +1,18 @@
+from argparse import ArgumentParser
 from pathlib import Path
-import numpy as np
+
 import modified_tanglegram
+import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
 
-from argparse import ArgumentParser
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 TANGLEGRAMS = RESULTS_FOLDER / "tanglegrams"
-TANGLEGRAMS.mkdir(exist_ok=True)
+TANGLEGRAMS.mkdir(exist_ok=True, parents=True)
 
 
-
-def create_tanglegram(sugar: str, cluster_method: str):
+def create_tanglegram(sugar: str, cluster_method: str) -> None:
+    #TODO: add docs
     """
     Call the external script tanglegram, which is modified to show the data as needed for this analysis.
     """

@@ -12,24 +12,22 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 
-import math
+import json
 import logging
+import math
 from pathlib import Path
+
+import numpy as np
+from matplotlib.patches import ConnectionPatch
 import matplotlib.pyplot as plt
+import pandas as pd
+from tqdm import tqdm
 import scipy.cluster as sclust
 import scipy.spatial.distance as sdist
 
-import numpy as np
-import pandas as pd
-import json
-
-from matplotlib.patches import ConnectionPatch
-from tqdm import tqdm
-
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 TANGLEGRAMS = RESULTS_FOLDER / "tanglegrams"
-TANGLEGRAMS.mkdir(exist_ok=True)
+TANGLEGRAMS.mkdir(exist_ok=True, parents=True)
 
 
 __all__ = ['tanglegram', 'tanglegram_many', 'entanglement', 'untangle']

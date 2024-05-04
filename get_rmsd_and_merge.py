@@ -1,12 +1,15 @@
 import csv
 import json
 from pathlib import Path
+
 import pandas as pd
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 
-# after runnig mv, extracting rmsd from results
-def get_rmsd_and_merge():
+
+# after runnig MV, extracting RMSD from results
+def get_rmsd_and_merge() -> None:
+    #TODO: add docs
     """
     Gets RMSDs from MotiveValidator results and merges them with the file with resolutions and RSCC values.
     """

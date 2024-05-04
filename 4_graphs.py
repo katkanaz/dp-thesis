@@ -3,7 +3,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
@@ -13,6 +12,7 @@ results_path.mkdir(exist_ok=True, parents=True)
 
 
 def make_corr_graphs():
+    #TODO: add docs
     """
     Creates correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
     glycosylated residues and residues in close contacts. Also cretates these graphs separately for each
@@ -62,6 +62,7 @@ def make_corr_graphs():
 
 
 def make_histograms():
+    #TODO: add docs
     (results_path / "individual_sugars" / "histograms").mkdir(exist_ok=True)
     data = pd.read_csv(data_path)
     new_data = data.filter(items=["rmsd"])
@@ -84,6 +85,7 @@ def make_histograms():
 
 
 def make_3D_graph():
+    #TODO: add docs
     data = pd.read_csv(data_path)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')

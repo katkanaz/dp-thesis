@@ -2,12 +2,11 @@ import gemmi
 import json
 from pathlib import Path
 
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
 results_path = RESULTS_FOLDER / "categorization"
-results_path.mkdir(exist_ok=True)
+results_path.mkdir(exist_ok=True, parents=True)
 
 ligands = {}  # all ligands from all structures
 glycosylated = {}  # all glycosylated residues according to conn category from all structures
@@ -56,8 +55,9 @@ AMINO_ACIDS = [
 with (DATA_FOLDER / "sugar_names.json").open() as f:
     SUGAR_NAMES = json.load(f)
 
-
+#TODO: add type hints
 def extract_sugars(table):
+    #TODO: add docs
     """
     Gets a list of dictionaries, in which one dictionary represents single
     sugar residue present in the given table (either monosacharide or one
@@ -81,8 +81,9 @@ def extract_sugars(table):
     
     return extracted_sugars
 
-
+#TODO: add type hints
 def remove_connections(block, mono, oligo):
+    #TODO: add docs
     """
     Removes glycosylated residues from mono and oligo (modifies the lists in place)
     and returns list of glycosylated residues (according to conn).
@@ -141,8 +142,9 @@ def remove_connections(block, mono, oligo):
 
     return glycosylated_residues
 
-
+#TODO: add type hints
 def remove_close_contacts(block, mono, oligo):
+    #TODO: add docs
     """
     Close contacts category lists pairs of atoms from all residues, which are in so close proximity
     we cannot be sure whether there is or is not a bond. Sometimes the residues from which the pair is
@@ -221,6 +223,7 @@ def main():
         current_ligands = monosacharides.copy()
         current_ligands.extend(oligosacharides)
 
+        #TODO: extract to function
         # store residues from the current structure to the appropirate groups
         if current_ligands:
             ligands[block.name] = current_ligands
@@ -245,6 +248,7 @@ def main():
         if current_ligands and current_glycosylated and current_close_contacts:
             pdb_lig_glyc_close.append(block.name)
 
+    #TODO: extract to function
     # save everything
     with open((results_path / "ligands.json"), "w") as f:
         json.dump(ligands, f, indent=4)
@@ -277,6 +281,7 @@ def main():
     with open((results_path / "pdb_glycosylation_not_anotated.json"), "w") as f:
         json.dump(list(pdb_not_anotated_glycosylation), f, indent=4)
 
+    #TODO: extract to function, print into file?
     # print counts of everything
     print("Number of residues with multiple conformations: ", len(overall_conformers))
     print("PDB with unannotated glycosylation:", len(pdb_not_anotated_glycosylation))

@@ -11,45 +11,51 @@ import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-(RESULTS_FOLDER / "clusters").mkdir(exist_ok=True)
+(RESULTS_FOLDER / "clusters").mkdir(exist_ok=True, parents=True)
 
 DENDROGRAMS = Path(__file__).parent.parent / "images" / "dendrograms"
 DENDROGRAMS.mkdir(exist_ok=True, parents=True)
 
+DEBUG_DIR = Path(__file__).parent.parent / "debug"
+DEBUG_DIR.mkdir(exist_ok=True, parents=True)
+
+
 def cluster_data(sugar: str, n_clusters: int, cluster_method: str, 
                  align_method: str, make_dendrogram: bool = False,
                  color_threshold: Union[float, None] = None) -> None:
-    """
-    Perform hierarchical clustering, using the specified clustering
-    method and create the given number of clusters.
+    """Perform hierarchical clustering, using the specified clustering 
+        method and create the given number of clusters.
 
-    @param sugar The suugar for which representative binding sites are being defined
-    @param n_clusters The number of clusters to create
-    @param cluster_method The desired method of clustering. Valid options
-                          include "ward", "average", "centroid", "single",
-                          "complete", "weighted", "median"
-    @param align_method The PyMOL command that was used for alignment
-    @param make_dendrogram Whether to create and save the dendrogram plot
-    @param color_threshold The color threshold for the dendrogram plot
+    :param str sugar: The sugar for which representative binding sites are being defined
+    :param int n_clusters: The number of clusters to create
+    :param str cluster_method: The desired method of clustering. Valid options
+                                include "ward", "average", "centroid", "single",
+                                "complete", "weighted", "median"
+    :param str align_method: The PyMOL command that was used for alignment
+    :param bool make_dendrogram: Whether to create and save the dendrogram plot, defaults to False
+    :param Union[float, None] color_threshold: The color threshold for the dendrogram plot, defaults to None
     """
     
     data = np.load(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
+    print(data) #TODO: remove
 
     # Create densed form of the matrix
     D = ssd.squareform(data)
+    print(D) #TODO: remove
 
     # Calculate the linkage matrix using given cluster_method
     Z1 = sch.linkage(D, method=cluster_method)
+    print(Z1) #TODO: remove
 
-
+    #TODO: try to calculate the num of clusters from matrix with given threshold
+    # something times threshold - 1
     dendro_sugar_folder = DENDROGRAMS / sugar
     dendro_sugar_folder.mkdir(exist_ok=True, parents=True)
 
     if make_dendrogram:
         # Plot the dendrogram
-        plt.figure(figsize=(6, 4))
-        #TODO: print the dict
-        sch.dendrogram(Z1, color_threshold=color_threshold)
+        plt.figure(figsize=(12, 8))
+        dendr = sch.dendrogram(Z1, color_threshold=color_threshold)
 
         # Save the figure to the sugar folder
         if color_threshold is None:
@@ -57,11 +63,19 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
         else:
             filename = f"{n_clusters}_{cluster_method}_{align_method}_{color_threshold}.svg"
         fig_path = dendro_sugar_folder / filename
+        plt.show()#TODO: remove
         plt.savefig(fig_path, dpi=300)
         plt.close()
 
+    
+    #NOTE: dict returned by .dendrogram()
+    with open(DEBUG_DIR / f"dendrogram_dict.json", "w") as f:
+        json.dump(dendr, f, indent=4)
+    
+
     # Cut the dendrogram at the desired number of clusters
     labels = sch.fcluster(Z1, t=n_clusters, criterion="maxclust")
+    print(labels) #TODO: remove
 
     #TODO: reword
     # Save the clusters and the IDs of the structures belonging to each
@@ -79,6 +93,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     # Calculate the representative structure for each cluster
     # as the structure with the lowest sum of RMSD with all other
     # structures in the cluster
+    #TODO: extract to function
     representatives = {}
     average_rmsds = {}
 

@@ -4,7 +4,6 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
@@ -12,10 +11,11 @@ categorized_pdbs_path = RESULTS_FOLDER / "categorization"
 validation_files_path = DATA_FOLDER / "validation_files"
 
 results_path = RESULTS_FOLDER / "validation"
-results_path.mkdir(exist_ok=True)
+results_path.mkdir(exist_ok=True, parents=True)
 
 
-def extract_rscc_and_resolution():
+def extract_rscc_and_resolution() -> None:
+    #TODO: add docs
     with open(categorized_pdbs_path / "all_residues.json", "r") as f:
         all_residues = json.load(f)
     with open(categorized_pdbs_path / "ligands.json", "r") as f:

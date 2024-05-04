@@ -1,11 +1,12 @@
 import json
+from collections import defaultdict
 from csv import DictReader
 from pathlib import Path
-from collections import defaultdict
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 
-def filter_ligands(max_resolution, min_rscc, max_rmsd):
+def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float) -> None:
+    #TODO: add docs
     """
     Filters ligands.json to contain only those structures whose overall resolution
     is better than <max_resolution> and residues with RSCC higher than <min_rscc>
@@ -64,4 +65,5 @@ def filter_ligands(max_resolution, min_rscc, max_rmsd):
 
 
 if __name__ == "__main__":
+    #TODO: add argparse if necessary - are these values solid, is it based on literature? if yes then set as default
     filter_ligands(3.0, 0.8, 2.0)

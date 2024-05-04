@@ -4,16 +4,17 @@ from pathlib import Path
 import gemmi
 import requests
 
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
-RESULTS_FOLDER.mkdir(exist_ok=True)
+RESULTS_FOLDER.mkdir(exist_ok=True, parents=True)
+# TODO: download components.cif.gz automatically, mkdir data
 
 
-def get_sugars_from_ccd():
-    """
-    Gets a set of all sugar abbreviations that appear in PDB database.
+def get_sugars_from_ccd() -> list:
+    """Get a list of all sugar abbreviations that appear in PDB database
+
+    :return list: List of sugar abbreviations
     """
     doc = gemmi.cif.read(str(DATA_FOLDER / "components.cif.gz"))
     sugars = set()
@@ -28,9 +29,11 @@ def get_sugars_from_ccd():
     return list(sugars)
 
 
-def get_pdb_ids_with_sugars(sugar_names: list):
-    """
-    Gets a set of all PDB IDs of structures containing any of the sugars.
+def get_pdb_ids_with_sugars(sugar_names: list) -> set:
+    """Get a set of PDB IDs for all structures containing any of the sugars
+
+    :param list sugar_names: List of sugar abbreviations
+    :return set: Set of PDB IDs belonging to structures with the sugars
     """
     pdb_ids = set()
     counts_structures_with_sugar = {} 
@@ -57,7 +60,8 @@ def get_pdb_ids_with_sugars(sugar_names: list):
     return pdb_ids
 
 
-def download_structures_and_validation_files(pdb_ids: set):
+def download_structures_and_validation_files(pdb_ids: set) -> None:
+    #TODO: add docs
     """
     Downloads mmCIF files of structures containing sugars and their xml validation files.
     """

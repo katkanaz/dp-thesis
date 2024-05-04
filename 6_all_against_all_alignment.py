@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 import csv
 import itertools
 import json
@@ -7,13 +8,11 @@ from pathlib import Path
 import numpy as np
 from pymol import cmd
 
-from argparse import ArgumentParser
-
-
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 
 
-def refine_binding_sites(sugar: str, min_res: int):
+def refine_binding_sites(sugar: str, min_res: int) -> Path:
+    #TODO: add docs
     """
     Filters the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
     and gives the filtered structures unique ID, which will be used as an index for creating the
@@ -67,7 +66,8 @@ def refine_binding_sites(sugar: str, min_res: int):
     return fixed_folder
 
 
-def all_against_all_alignment(sugar: str, structures_folder: Path, method: str):
+def all_against_all_alignment(sugar: str, structures_folder: Path, method: str) -> None:
+    #TODO: add docs
     """
     Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
     by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
@@ -141,7 +141,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str):
     cmd.quit()
 
 
-def main(sugar: str, method: str):
+def main(sugar: str, method: str) -> None:
     # method: PyMOL command to be used for the calculation of RMSD {align or super}
     fixed_folder = refine_binding_sites(sugar, 5)
     all_against_all_alignment(sugar, fixed_folder, method)
