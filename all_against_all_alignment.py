@@ -90,6 +90,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str) 
                 cmd.delete("all")
                 cmd.load(f"{structures_folder}/{structure1}")
                 cmd.load(f"{structures_folder}/{structure2}")
+                # TODO: add path to save the sugar files
                 cmd.fetch(sugar)
 
                 filename1 = str(Path(structure1).stem)

@@ -8,6 +8,7 @@ RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
 DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
 
 RESULTS_FOLDER.mkdir(exist_ok=True, parents=True)
+DATA_FOLDER.mkdir(exist_ok=True, parents=True)
 # TODO: download components.cif.gz automatically, mkdir data
 
 

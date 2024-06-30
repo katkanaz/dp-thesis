@@ -37,15 +37,15 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     """
     
     data = np.load(RESULTS_FOLDER / "clusters" / sugar / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
-    print(data) #TODO: remove
+    # print(data) #TODO: remove
 
     # Create densed form of the matrix
     D = ssd.squareform(data)
-    print(D) #TODO: remove
+    # print(D) #TODO: remove
 
     # Calculate the linkage matrix using given cluster_method
     Z1 = sch.linkage(D, method=cluster_method)
-    print(Z1) #TODO: remove
+    # print(Z1) #TODO: remove
 
     #TODO: try to calculate the num of clusters from matrix with given threshold
     # something times threshold - 1
@@ -55,7 +55,10 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     if make_dendrogram:
         # Plot the dendrogram
         plt.figure(figsize=(12, 8))
+        #TODO: add labels to axis
         dendr = sch.dendrogram(Z1, color_threshold=color_threshold)
+        if color_threshold is None:
+            print(f"Color threshold is: {0.7*max(Z1[:,2])}")
 
         # Save the figure to the sugar folder
         if color_threshold is None:
@@ -63,7 +66,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
         else:
             filename = f"{n_clusters}_{cluster_method}_{align_method}_{color_threshold}.svg"
         fig_path = dendro_sugar_folder / filename
-        plt.show()#TODO: remove
+        # plt.show()#TODO: remove
         plt.savefig(fig_path, dpi=300)
         plt.close()
 
@@ -75,7 +78,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
 
     # Cut the dendrogram at the desired number of clusters
     labels = sch.fcluster(Z1, t=n_clusters, criterion="maxclust")
-    print(labels) #TODO: remove
+    # print(labels) #TODO: remove
 
     #TODO: reword
     # Save the clusters and the IDs of the structures belonging to each
