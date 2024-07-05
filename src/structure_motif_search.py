@@ -28,7 +28,7 @@ def extract_representatives(sugar: str, align_method: str, representatives_file:
     
     for num, file_key in representatives.items():
         structure = structure_keys[str(file_key)]
-        shutil.copyfile((path_to_file / structure), (INPUT_FOLDER / sugar /structure)) #FIXME: but the sugar dir doesnt exist
+        shutil.copyfile((path_to_file / structure), (INPUT_FOLDER / structure)) #FIXME: but the sugar dir doesnt exist
 
 
 if __name__ == "__main__":

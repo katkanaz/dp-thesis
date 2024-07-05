@@ -7,7 +7,7 @@ import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
 
 RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-TANGLEGRAMS = RESULTS_FOLDER / "tanglegrams"
+TANGLEGRAMS = Path(__file__).parent.parent / "images" / "tanglegrams"
 TANGLEGRAMS.mkdir(exist_ok=True, parents=True)
 
 
@@ -27,11 +27,13 @@ def create_tanglegram(sugar: str, cluster_method: str) -> None:
     Z_super = sph.linkage(D_super, method=cluster_method)
     Z_align = sph.linkage(D_align, method=cluster_method)
 
-    # NOTE: assuming that this is always the shape of Z_super 
-    n_data = Z_super.shape[0]
+    # NOTE: assuming that this is always the shape of Z_super
+    # FIXME: wrong assumption, what is n_data then
+    n_data = Z_super.shape[0] + 1
+    print(n_data)
 
     fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True)
-    fig.savefig(TANGLEGRAMS / f"tanglegram_{sugar}.png")
+    fig.savefig(TANGLEGRAMS / f"tanglegram_{sugar}.svg")
     
 
 if __name__ == "__main__":
