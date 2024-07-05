@@ -1,2 +1,5 @@
-.DS_Store
+danca/
+local_utils/
+__pycache__/
 venv/
+*.cif
