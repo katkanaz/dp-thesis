@@ -1,0 +1,11 @@
+{
+    "data_folder": "../data",
+    "results_folder": "../results",
+    "mv_working_path": "../mv/MotiveValidator_1.1.23.12.27b",
+    "mv_results": "../mv/results",
+    "pq_working_path": "../pq_cmd_line/PatternQuery_1.1.23.12.27b",
+    "pq_results": "../pq_cmd_line/results",
+    "pq_structures": "../pq_cmd_line/structures",
+    "dendrograms": "../img/dendrograms",
+    "tanglegrams": "../img/tanglegrams"
+}
