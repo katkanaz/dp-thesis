@@ -1,22 +1,23 @@
 from argparse import ArgumentParser
 import json
-from pathlib import Path
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+from config import Config
 
 
-def compare_clusters(sugar: str) -> None:
-    #TODO: add docs
+def compare_clusters(sugar: str, config: Config) -> None:
     """
-    How many clusters from align-data correspond to one cluster from super-data, and vice versa.
+    How many clusters from align-data correspond to one cluster from super-data, and vice versa
+
+    :param sugar: The sugar for which the representative binding site is being defined
+    :param config: Config object
     """
 
-    with (RESULTS_FOLDER / "clusters" / sugar / "super" / "22_centroid_all_clusters.json").open() as f:
+    with (config.results_folder / "clusters" / sugar / "super" / "22_centroid_all_clusters.json").open() as f:
         clusters_super = json.load(f)
 
-    with (RESULTS_FOLDER / "clusters" / sugar / "align" / "20_centroid_all_clusters.json").open() as f:
+    with (config.results_folder / "clusters" / sugar / "align" / "20_centroid_all_clusters.json").open() as f:
         clusters_align = json.load(f)
-    
+
     # create dict in a form of {structure: cluster}
     reversed_clusters_align = {}
     for cluster, structures in clusters_align.items():
@@ -36,7 +37,6 @@ def compare_clusters(sugar: str) -> None:
     for c, ss in clusters_align.items():
         overall_spread_from_align[c] = {reversed_clusters_super[s] for s in ss}
 
-    #FIXME
     print(overall_spread_from_super)
     print(overall_spread_from_align)
 
@@ -48,4 +48,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    compare_clusters(args.sugar)
+    config = Config.load("config.json")
+
+    compare_clusters(args.sugar, config)

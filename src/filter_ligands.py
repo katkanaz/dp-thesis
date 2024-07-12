@@ -1,18 +1,24 @@
 import json
 from collections import defaultdict
 from csv import DictReader
-from pathlib import Path
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+from config import Config
 
-def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float) -> None:
-    #TODO: add docs
+
+#TODO: Rename max_resolution variable
+def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:
     """
-    Filters ligands.json to contain only those structures whose overall resolution
+    Filter ligands.json to contain only the structures with overall resolution
     is better than <max_resolution> and residues with RSCC higher than <min_rscc>
     and rmsd lower than <max_rmsd>
+
+    :param max_resolution: Minimal overall resolution
+    :param min_rscc: Minimum RSCC of residue
+    :param max_rmsd: Maximum RMSD of residue
+    :param config: [TODO:description]
     """
-    with open(RESULTS_FOLDER / "categorization" / "ligands.json", "r") as f:
+
+    with open(config.categorization_results / "ligands.json", "r") as f:
         ligands = json.load(f)
     print("number of structures before filtering: ", len(ligands.keys()))
     count = 0
@@ -20,29 +26,29 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float) -> N
         count += len(residues)
     print("number of residues before filtering: ", count)
 
-    # save the pdb id of structures with good resolution, because not all structures have resolution
-    # available and we want to continue just with those with resolution
+    # Save the pdb id of structures with good resolution, because not all structures have resolution
+    # Available and we want to continue just with those with resolution
     good_structures = set()
-    with open(RESULTS_FOLDER / "validation" / "merged_rscc_rmsd.csv", "r") as f:
+    with open(config.validation_results / "merged_rscc_rmsd.csv", "r") as f:
         rscc_rmsd = DictReader(f)
         for row in rscc_rmsd:
             if float(row["resolution"]) <= max_resolution and row["type"] == "ligand": 
                 good_structures.add(row["pdb"])
-    
-    # delete those structures which are not in good_structures
+
+    # Delete those structures which are not in good_structures
     delete_strucutres = [pdb for pdb in ligands.keys() if pdb not in good_structures]
     for key in delete_strucutres: 
         del ligands[key]
 
-    # get individual resiudes which have bad rscc or rmsd
+    # Get individual resiudes which have bad rscc or rmsd
     delete_residues = defaultdict(list)
-    with open(RESULTS_FOLDER / "validation" / "merged_rscc_rmsd.csv", "r") as f:
+    with open(config.validation_results / "merged_rscc_rmsd.csv", "r") as f:
         rscc_rmsd = DictReader(f)
         for row in rscc_rmsd:
             if row["type"] == "ligand" and (float(row["rmsd"]) > max_rmsd or float(row["rscc"]) < min_rscc):
                 delete_residues[row["pdb"]].append({"name": row["name"], "num" : row["num"], "chain": row["chain"]}) 
-    
-    # save structures from which all residues were deleted
+
+    # Save structures from which all residues were deleted
     delete_empty_structures = set()
     for pdb, residues in ligands.items():
         if pdb in delete_residues:
@@ -60,10 +66,12 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float) -> N
         count += len(residues)
     print("number of residues after filtering: ", count)
 
-    with open(RESULTS_FOLDER / "categorization" / "filtered_ligands.json", "w") as f:
+    with open(config.categorization_results / "filtered_ligands.json", "w") as f:
         json.dump(ligands, f, indent=4)
 
 
 if __name__ == "__main__":
-    #TODO: add argparse if necessary - are these values solid, is it based on literature? if yes then set as default
-    filter_ligands(3.0, 0.8, 2.0)
+    config = Config.load("config.json")
+
+    #TODO: Add argparse if necessary - are these values solid, is it based on literature? if yes then set as default
+    filter_ligands(3.0, 0.8, 2.0, config)

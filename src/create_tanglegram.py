@@ -1,24 +1,24 @@
 from argparse import ArgumentParser
-from pathlib import Path
 
 import modified_tanglegram
 import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-TANGLEGRAMS = Path(__file__).parent.parent / "images" / "tanglegrams"
-TANGLEGRAMS.mkdir(exist_ok=True, parents=True)
+from config import Config
 
 
-def create_tanglegram(sugar: str, cluster_method: str) -> None:
-    #TODO: add docs
+def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
     """
-    Call the external script tanglegram, which is modified to show the data as needed for this analysis.
+    Call tanglegram function from an external script, which is modified to show the data as needed for this analysis
+
+    :param sugar: The sugar for which the representative binding site is being defined
+    :param cluster_method: Chosen clustering method for matrix computation
+    :param config: Config object
     """
 
-    data_super = np.load(RESULTS_FOLDER / "clusters" / sugar / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
-    data_align = np.load(RESULTS_FOLDER / "clusters" / sugar / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
+    data_super = np.load(config.results_folder / "clusters" / sugar / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
+    data_align = np.load(config.results_folder / "clusters" / sugar / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
     # Create densed form of the matrix
     D_super = spd.squareform(data_super)
     D_align = spd.squareform(data_align)
@@ -32,8 +32,8 @@ def create_tanglegram(sugar: str, cluster_method: str) -> None:
     n_data = Z_super.shape[0] + 1
     print(n_data)
 
-    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True)
-    fig.savefig(TANGLEGRAMS / f"tanglegram_{sugar}.svg")
+    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=config.results_folder)
+    fig.savefig(config.tanglegrams / f"tanglegram_{sugar}.svg")
     
 
 if __name__ == "__main__":
@@ -46,6 +46,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    create_tanglegram(args.sugar, args.cluster_method)
-    
+    config = Config.load("config.json")
+
+    config.tanglegrams.mkdir(exist_ok=True, parents=True)
+
+    create_tanglegram(args.sugar, args.cluster_method, config=config)
     #create_tanglegram("FUC", n_data=618, cluster_method="centroid")

@@ -3,23 +3,21 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
-
-data_path = RESULTS_FOLDER / "validation" / "merged_rscc_rmsd.csv"
-results_path = RESULTS_FOLDER / "graphs"
-results_path.mkdir(exist_ok=True, parents=True)
+from config import Config
 
 
-def make_corr_graphs():
-    #TODO: add docs
+def make_corr_graphs(config: Config, graphs: Path):
     """
-    Creates correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
-    glycosylated residues and residues in close contacts. Also cretates these graphs separately for each
-    of the 10 most abundant sugar types among pdb structures.
+    Create correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
+    glycosylated residues and residues in close contacts. Also cretate these graphs separately for each
+    of the 10 most abundant sugar types among pdb structures
+
+    :param config: Config objects
+    :param graphs: Path to save the results
     """
-    (results_path / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
-    data = pd.read_csv(data_path)
+
+    (graphs / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
+    data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
 
     residue_types  = ["all", "ligand", "glycosylated", "close"]
     most_abundant_residues = ["NAG", "MAN", "GLC", "BMA", "BGC", "GAL", "FUC", "SIA"]
@@ -34,7 +32,7 @@ def make_corr_graphs():
             plt.tick_params(labelsize="medium")
             plt.xlabel("RMSD")
             plt.ylabel("RSCC")
-            plt.savefig(results_path / f"all_{residue_type}")
+            plt.savefig(graphs / f"all_{residue_type}")
             plt.close()
 
         else:
@@ -45,7 +43,7 @@ def make_corr_graphs():
             plt.tick_params(labelsize="medium")
             plt.xlabel("RMSD")
             plt.ylabel("RSCC")
-            plt.savefig(results_path / f"all")
+            plt.savefig(graphs / f"all")
             plt.close()
 
     for res in most_abundant_residues:
@@ -57,14 +55,20 @@ def make_corr_graphs():
         plt.tick_params(labelsize="medium")
         plt.xlabel("RMSD", size="medium")
         plt.ylabel("RSCC", size="medium")
-        plt.savefig(results_path / "individual_sugars" / "correlation" / res)
+        plt.savefig(graphs / "individual_sugars" / "correlation" / res)
         plt.close()
 
 
-def make_histograms():
-    #TODO: add docs
-    (results_path / "individual_sugars" / "histograms").mkdir(exist_ok=True)
-    data = pd.read_csv(data_path)
+def make_histograms(config: Config, graphs: Path):
+    """
+    Make histograms for individual sugars
+
+    :param config: Config objects
+    :param graphs: Path to save the results
+    """
+
+    (graphs / "individual_sugars" / "histograms").mkdir(exist_ok=True)
+    data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
     new_data = data.filter(items=["rmsd"])
 
     most_abundant_residues = ["NAG", "MAN", "GLC", "BMA", "BGC", "GAL", "FUC", "SIA"]
@@ -80,13 +84,20 @@ def make_histograms():
 
         plt.legend().remove()
         #plt.show()
-        plt.savefig(results_path / "individual_sugars" / "histograms" / sugar)
+        plt.savefig(graphs / "individual_sugars" / "histograms" / sugar)
         plt.close()
 
 
-def make_3D_graph():
-    #TODO: add docs
-    data = pd.read_csv(data_path)
+def make_3D_graph(config: Config, graphs: Path):
+    #FIXME: Add docstring
+    """
+    [TODO:description]
+
+    :param config: Config objects
+    :param graphs: Path to save the results
+    """
+
+    data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     ax.set_xlabel("RMSD")
@@ -94,15 +105,20 @@ def make_3D_graph():
     ax.set_zlabel("RSCC")
     ax.scatter(data["rmsd"], data["resolution"], data["rscc"], linewidths=0.5, marker=".", color="green")
     #plt.show()
-    plt.savefig(results_path / f"3D_graph")
+    plt.savefig(graphs / f"3D_graph")
     plt.close()
 
 
-def main():
-    make_corr_graphs()
-    make_histograms()
-    make_3D_graph()
+def main(config: Config, graphs: Path):
+    make_corr_graphs(config, graphs)
+    make_histograms(config, graphs)
+    make_3D_graph(config, graphs)
 
 
 if __name__ == "__main__":
-    main()
+    config = Config.load("config.json")
+
+    graphs = config.results_folder / "graphs"
+    graphs.mkdir(exist_ok=True, parents=True)
+
+    main(config, graphs)

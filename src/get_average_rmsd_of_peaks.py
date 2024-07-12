@@ -1,23 +1,27 @@
-from pathlib import Path
-
+#TODO: Create one graph_analysis script
 import pandas as pd
 
-MERGED_CSV_PATH = Path("/Volumes/YangYang/diplomka/results/validation") / "merged_rscc_rmsd.csv"
+from config import Config
 
 
-def get_average_rmsd_of_peaks() -> None:
-    #TODO: add docs
+def get_average_rmsd_of_peaks(config: Config) -> None:
     """
-    Find average rmsd of those two peaks appearing in the histograms.
+    Find average rmsd of peaks in the histograms
+
+    :param config: Config object
     """
-    df = pd.read_csv(MERGED_CSV_PATH)
+    df = pd.read_csv(config.validation_results /  "merged_rscc_rmsd.csv")
     data = df[df["name"] == "BGC"]
-    filtered_df1 = data[data["rmsd"] <= 0.4]
-    filtered_df2 = data[(data["rmsd"] > 0.4) & (data["rmsd"] < 0.7)]
+    filtered_df1 = data[data["rmsd"] <= 0.4]#FIXME: Extract to variables
+    filtered_df2 = data[(data["rmsd"] > 0.4) & (data["rmsd"] < 0.7)]#FIXME: Extract to variables
     average1 = filtered_df1["rmsd"].mean()
     average2 = filtered_df2["rmsd"].mean()
 
-    print(average1, average2) #FIXME
+    print(average1, average2)
 
 if __name__ == "__main__":
-    get_average_rmsd_of_peaks()
+    #TODO: Add argparse
+
+    config = Config.load("config.json")
+
+    get_average_rmsd_of_peaks(config)

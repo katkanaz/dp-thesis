@@ -7,80 +7,81 @@ import subprocess
 from tempfile import TemporaryDirectory
 import zipfile
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
+from config import Config
 
-PQ_WORKING_PATH = Path(__file__).parent.parent / "pq_cmd_line" / "PatternQuery_1.1.23.12.27b"
-PQ_STRUCTURES = Path(__file__).parent.parent / "pq_cmd_line" / "structures"
-PQ_STRUCTURES.mkdir(exist_ok=True, parents=True)
-PQ_RESULTS = Path(__file__).parent.parent / "pq_cmd_line" / "pq_results"
-PQ_RESULTS.mkdir(exist_ok=True, parents=True)
 
 more_than_one_pattern = []			# just to check no more than one pattern for specific ResidueID was found
 pq_couldnt_find_pattern = []		# some ResidueID couldn't be found by PQ because they have different ResidueID somehow 
 result_folder_not_created = []		# just in case something else goes wrong
 
 def create_config(structure: str, residues, sugar: str) -> list:
+	#FIXME: Reword docstring, residues type and description
 	"""
-	Creates config file for the given structure.
+	Create config file for the given structure
+
 	Every stucture can contain 0 - n residues of interest specified by <sugar>.
 	If the current structure does not contain any rezidue of sugar of interest, empty list is returned - so the program can jump to the next structure.
 	If at least one residue of interest is present:
 	For every residue a separate query is needed. Therefore one config file with 1-n queries is created per structure.
 	Then it is saved and a list of all query names is returnd.
 	Name is in a form <pdb>_<name>_<num>_<chain>_*<case_sensitive_tag>*.pdb
-	#TODO: finish docs
-	@param structure The structure within witch the pattern is to be located
-	@param residues 
-	@param sugar The suugar for which representative binding sites are being defined
+
+	:param structure: PDB ID of structure
+	:param residues [TODO:type]: [TODO:description]
+	:param sugar: The sugar for which the representative binding site is being defined
+	:return: List of query IDs
 	"""
-	config = {
+
+	pq_config = {
 		"InputFolders": [
-			str(PQ_STRUCTURES),
+			str(config.pq_structures),
 		],
 		"Queries": [],
 		"StatisticsOnly": False,
 		"MaxParallelism": 2
 	}
 	query_names = []
+
 	#TODO: reword
 	# PQ queries are not case sensitive but there are structures which contain
 	# two chains with the same letter but one upper and the other lower.
 	# In that case eg. residues "GLC 1 M" and "GLC 1 m" would have the same
 	# query in PQ sense. Therefore, tag "_2" is added to such queries.
-	key_sensitive_check = []
+	case_sensitive_check = []
 	for residue in residues:
 		if residue["name"] == sugar:
-			key = f"{residue['num']}_{residue['chain']}"
-			if key.upper() in key_sensitive_check or key.lower() in key_sensitive_check:
+			case = f"{residue['num']}_{residue['chain']}"
+			if case.upper() in case_sensitive_check or case.lower() in case_sensitive_check:
 				query_id = f"{structure}_{residue['name']}_{residue['num']}_{residue['chain']}_2"
 			else:
-				key_sensitive_check.append(key)
+				case_sensitive_check.append(case)
 				query_id = f"{structure}_{residue['name']}_{residue['num']}_{residue['chain']}"
 			query_names.append(query_id)
 			query_str = f"ResidueIds('{residue['num']} {residue['chain']}').AmbientResidues(5)"
-			config["Queries"].append({"Id": query_id, "QueryString": query_str})
+			pq_config["Queries"].append({"Id": query_id, "QueryString": query_str})
 
 	if query_names:
 		# create respective config file for current structure, with queries for every ligand of sugar of interest in that structure
-		with open(PQ_WORKING_PATH / "configuration.json", "w") as f:
-			json.dump(config, f, indent=4)
+		with open(config.pq_working_path / "configuration.json", "w") as f:
+			json.dump(pq_config, f, indent=4)
 
 	return query_names
 
 
 def extract_results(target: Path, zip_result_folder: Path, query_names: list) -> None:
+	#FIXME: Reword the docstring
 	"""
+	Unzip the results and rename and move each sugar surrounding (pattern) to one common folder
+
 	Results are present in the zip folder, where every query has its own subfolder
 	with the name same as was its query name: <pdb>_<name>_<num>_<chain>_*<key_sensitive_tag>*.pdb
-	Each query is expected to have only one pattern found.
-	So the results are unzipped and the each pattern pdb (surrounding of one sugar)
-	is renamed and moved to one common folder.
-	#TODO: finish docs
-	@param target
-	@param zip_result_folder
-	@param query_names
+	Each query is expected to have only one pattern found
+
+	:param target: Common folder to move resulting binding sites to
+	:param zip_result_folder: Path to zip folder containing PQ results
+	:param query_names: List of query IDs
 	"""
+
 	with TemporaryDirectory() as temp_dir:
 		with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:
 			zip_ref.extractall(temp_dir)
@@ -102,40 +103,35 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: list) ->
 				shutil.move(str(src), str(target))
 
 
-def main(sugar: str) -> None:
-	"""
-	Create config, run pattern query and extract results.
-	
-	@param sugar The suugar for which representative binding sites are being defined
-	"""
-	with open(RESULTS_FOLDER / "categorization" / "filtered_ligands.json", "r") as f:
+def main(sugar: str, config: Config) -> None:
+	with open(config.categorization_results / "filtered_ligands.json", "r") as f:
 		ligands = json.load(f)
 	
-	target_dir = RESULTS_FOLDER / "binding_sites" / sugar
+	target_dir = config.binding_sites / sugar
 	target_dir.mkdir(exist_ok=True, parents=True)
 
-	#TODO: print what are residues, add type hints to create_config
 	for structure, residues in ligands.items():
 		structure = structure.lower()
 		query_names = create_config(structure, residues, sugar)
 		if not query_names:
 			continue
 		# Copy current structure to ./structures dir which is used as source by PQ.
-		src = DATA_FOLDER / "mmCIF_files" / f"{structure}.cif"
-		dst = PQ_STRUCTURES / f"{structure}.cif"
+		src = config.mmcif_files / f"{structure}.cif"
+		dst = config.pq_structures / f"{structure}.cif"
 		shutil.copyfile(src, dst)
+
 		#TODO: extract to function
 		# Run PQ
 		cmd = [
-			f"mono {PQ_WORKING_PATH}/WebChemistry.Queries.Service.exe {PQ_RESULTS} {PQ_WORKING_PATH}/configuration.json"
+			f"mono {config.pq_working_path}/WebChemistry.Queries.Service.exe {config.pq_results} {config.pq_working_path}/configuration.json"
 		]
 		subprocess.run(cmd, shell=True)
 
-		zip_result_folder = PQ_RESULTS / "result/result.zip"
+		zip_result_folder = config.pq_results / "result/result.zip"
 		if not zip_result_folder.exists():
 			result_folder_not_created.append(structure)
 			# delete the current structure from ./structures directory and continue to the next structure
-			Path(PQ_STRUCTURES / f"{structure}.cif").unlink()
+			Path(config.pq_structures / f"{structure}.cif").unlink()
 			continue
 		
 		extract_results(target_dir, zip_result_folder, query_names)
@@ -144,8 +140,8 @@ def main(sugar: str) -> None:
 			#break
 
 		# Delete the result folder and also the current structure from ./structures so the new one can be copied there
-		(PQ_STRUCTURES / f"{structure}.cif").unlink()
-		shutil.rmtree(PQ_RESULTS / "result")
+		(config.pq_structures / f"{structure}.cif").unlink()
+		shutil.rmtree(config.pq_results / "result")
 
 	print("more patterns for one id:", more_than_one_pattern, end="\n\n")
 	print("PQ could not find these patterns:", pq_couldnt_find_pattern, end="\n\n")
@@ -158,5 +154,10 @@ if __name__ == "__main__":
 	parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
 	
 	args = parser.parse_args()
+
+	config = Config.load("config.json")
+
+	config.pq_structures.mkdir(exist_ok=True, parents=True)
+	config.pq_results.mkdir(exist_ok=True, parents=True)
 	
-	main(args.sugar)
+	main(args.sugar, config)

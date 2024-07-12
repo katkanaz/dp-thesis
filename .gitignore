@@ -1,5 +1,8 @@
 danca/
+data/
 local_utils/
+pq_results/
+results/
 __pycache__/
 venv/
 *.cif

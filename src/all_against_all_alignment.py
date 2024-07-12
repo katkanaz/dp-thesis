@@ -6,28 +6,32 @@ import os
 from pathlib import Path
 
 import numpy as np
-from pymol import cmd
+from pymol import cmd#FIXME:
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
+from config import Config
 
 
-def refine_binding_sites(sugar: str, min_res: int) -> Path:
-    #TODO: add docs
+def refine_binding_sites(sugar: str, min_res: int, config: Config) -> Path:
     """
-    Filters the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
-    and gives the filtered structures unique ID, which will be used as an index for creating the
+    Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
+    and give the filtered structures unique ID, which will be used as an index for creating the
     rmsd matrix.
+
+    :param sugar: The sugar for which representative binding sites are being defined
+    :param min_res: Minimum of amino acids in the binding site
+    :param config: Config object
+    :return: Path to refined binding sites folder
     """
     # Path to the folder containing the PDB structures from PQ
-    structures_folder = RESULTS_FOLDER / "binding_sites" / sugar
+    structures_folder = config.binding_sites / sugar
 
     # Path to the new folder where the fixed structures will be saved
-    fixed_folder = RESULTS_FOLDER / "binding_sites" / f"{sugar}_fixed_{min_res}"
-    fixed_folder.mkdir(exist_ok=True)
+    fixed_folder = config.binding_sites / f"{sugar}_fixed_{min_res}"#FIXME:
+    fixed_folder.mkdir(exist_ok=True) #FIXME:
 
-    less_than_n_aa = []  # just to know how many structures were excluded
-    i = 0  # index
-    structures_keys = {} # to map index with structure
+    less_than_n_aa = []  # How many structures were excluded
+    i = 0  # Index
+    structures_keys = {} # To map index with structure
     for path_to_file in structures_folder.iterdir():
         filename = Path(path_to_file.name).stem
         cmd.delete("all")
@@ -36,11 +40,11 @@ def refine_binding_sites(sugar: str, min_res: int) -> Path:
         if count < min_res:
             less_than_n_aa.append(filename)
             continue
-        
+
         try:
-            pdb, res, num, chain = filename.split("_")
+            _, res, num, chain = filename.split("_")
         except ValueError:
-            pdb, res, num, chain, tag = filename.split("_")
+            _, res, num, chain, _ = filename.split("_")
         # For some reason, some structures have chains named eg. AaA but when loaded to PyMol
         # the the chain is reffered to just as A.
         if len(chain) > 1:
@@ -55,27 +59,32 @@ def refine_binding_sites(sugar: str, min_res: int) -> Path:
 
         cmd.save(f"{fixed_folder}/{i}_{filename}.pdb")
         structures_keys[i] = f"{i}_{filename}.pdb"
-        i += 1 # raise the index
+        i += 1 # Raise the index
         cmd.delete("all")
 
-    (RESULTS_FOLDER / "clusters" / sugar).mkdir(exist_ok=True, parents=True)
-    with open(RESULTS_FOLDER / "clusters" / sugar / f"{sugar}_structures_keys.json", "w") as f:
+    (config.results_folder / "clusters" / sugar).mkdir(exist_ok=True, parents=True)#FIXME:
+    with open(config.results_folder / "clusters" / sugar / f"{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
     print(f"number of structures with less than {min_res} AA: ", len(less_than_n_aa))
 
     return fixed_folder
 
+#FIXME: function description
+    # Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
+    # by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
+    # but without actually moving, so the rms_cur is eventually calculated from their position as is
+    # towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
+def all_against_all_alignment(sugar: str, structures_folder: Path, method: str, config: Config) -> None:
+    """
+    [TODO:description]
 
-def all_against_all_alignment(sugar: str, structures_folder: Path, method: str) -> None:
-    #TODO: add docs
+    :param sugar: The sugar for which representative binding sites are being defined
+    :param structures_folder: Path to refined binding sites
+    :param method: The PyMOL command used to calculate RMSD
+    :param config: Config object
     """
-    Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
-    by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
-    but without actually moving, so the rms_cur is eventually calculated from their position as is
-    towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
-    """
-    current_sugar_results_path = RESULTS_FOLDER / "clusters" / sugar / method
-    current_sugar_results_path.mkdir(parents=True, exist_ok=True)
+    current_sugar_results_path = config.results_folder / "clusters" / sugar / method
+    current_sugar_results_path.mkdir(parents=True, exist_ok=True) #FIXME:
 
     n = len(os.listdir(structures_folder))
     rmsd_values = np.zeros((n, n))
@@ -97,13 +106,13 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str) 
                 filename2 = str(Path(structure2).stem)
 
                 try:
-                    id1, pdb1, res1, num1, chain1 = filename1.split("_")
+                    id1, _, res1, num1, chain1 = filename1.split("_")
                 except ValueError:
-                    id1, pdb1, res1, num1, chain1, tag1 = filename1.split("_")
+                    id1, _, res1, num1, chain1, _ = filename1.split("_")
                 try:
-                    id2, pdb2, res2, num2, chain2 = filename2.split("_")
+                    id2, _, res2, num2, chain2 = filename2.split("_")
                 except ValueError:
-                    id2, pdb2, res2, num2, chain2, tag2 = filename2.split("_")
+                    id2, _, res2, num2, chain2, _ = filename2.split("_")
                 # For some reason, some structures has chains named eg. AaA but when loaded to PyMol
                 # the the chain is reffered to just as A.
                 if len(chain1) > 1:
@@ -133,7 +142,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str) 
 
                 cmd.delete("all") 
             except:
-                # save pairs with which something went wrong
+                # Save pairs with which something went wrong
                 something_wrong.append((structure1, structure2))
 
     np.save(current_sugar_results_path / f"{sugar}_all_pairs_rmsd_{method}.npy", rmsd_values)
@@ -142,18 +151,20 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str) 
     cmd.quit()
 
 
-def main(sugar: str, method: str) -> None:
-    # method: PyMOL command to be used for the calculation of RMSD {align or super}
-    fixed_folder = refine_binding_sites(sugar, 5)
-    all_against_all_alignment(sugar, fixed_folder, method)
+def main(sugar: str, method: str, config: Config) -> None:
+    # Method: PyMOL command to be used for the calculation of RMSD {align or super}
+    fixed_folder = refine_binding_sites(sugar, 5, config)#FIXME: fixed_folder and structures folder are the same
+    all_against_all_alignment(sugar, fixed_folder, method, config)
 
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    
+
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-a", "--align_method", help = "PyMOL cmd for the calculation of RMSD", type=str, choices=["super", "align"], required=True)
-    
+
     args = parser.parse_args()
-    
-    main(args.sugar, args.align_method)
+
+    config = Config.load("config.json")
+
+    main(args.sugar, args.align_method, config)

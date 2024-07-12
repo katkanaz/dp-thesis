@@ -1,11 +1,19 @@
 {
+    "binding_sites": "../results/binding_sites",
     "data_folder": "../data",
+    "mmcif_files" : "../data/mmcif_files",
+    "validation_files": "../data/validation_files",
     "results_folder": "../results",
     "mv_working_path": "../mv/MotiveValidator_1.1.23.12.27b",
     "mv_results": "../mv/results",
-    "pq_working_path": "../pq_cmd_line/PatternQuery_1.1.23.12.27b",
-    "pq_results": "../pq_cmd_line/results",
-    "pq_structures": "../pq_cmd_line/structures",
+    "pq_working_path": "../pq/PatternQuery_1.1.23.12.27b",
+    "pq_results": "../pq/results",
+    "pq_structures": "../pq/structures",
     "dendrograms": "../img/dendrograms",
-    "tanglegrams": "../img/tanglegrams"
+    "tanglegrams": "../img/tanglegrams",
+    "categorization_results": "../results/categorization",
+    "patterns_folder": "../pq_results/structures_with_sugars/patterns",
+    "validation_results": "../results/validation",
+    "removed_o6_folder" : "../data/mmcif_without_o6",
+    "graph_analysis" : "../results/graph_analysis"
 }

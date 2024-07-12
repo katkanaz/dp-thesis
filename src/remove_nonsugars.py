@@ -1,28 +1,29 @@
-from pathlib import Path
-
+#TODO: Add to run_mv
 import gemmi
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
+from config import Config
 
- 
-# before running MV
-def remove_nonsugar_residues() -> None:
-    #TODO: add docs
+
+# Before running MV
+def remove_nonsugar_residues(config: Config) -> None:
     """
-    Remove all non-saccharide residues from the model mmCIF file.
+    Remove all the non-sugar residues from the model mmCIF file
+
+    :param config: Config object
     """
-    doc = gemmi.cif.read(str(DATA_FOLDER / "components.cif.gz"))
+    doc = gemmi.cif.read(str(config.data_folder / "components.cif.gz"))
     for i in range(len(doc) - 1, -1, -1): 
         comp_type = doc[i].find_value('_chem_comp.type')
         if "saccharide" not in comp_type.lower(): 
             del doc[i]
-    
+
     options = gemmi.cif.WriteOptions()
     options.misuse_hash = True
     options.align_pairs = 48
     options.align_loops = 20
-    doc.write_file(str(DATA_FOLDER / "components_gemmi_0_6_4.cif"), options) #FIXME
+    doc.write_file(str(config.data_folder / "components_sugars_only.cif"), options)
 
 if __name__ == "__main__":
-    remove_nonsugar_residues()
+    config = Config.load("config.json")
+
+    remove_nonsugar_residues(config)

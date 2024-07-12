@@ -1,12 +1,10 @@
 import gemmi
 import json
-from pathlib import Path
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
+from gemmi.cif import Block #type: ignore
 
-results_path = RESULTS_FOLDER / "categorization"
-results_path.mkdir(exist_ok=True, parents=True)
+from config import Config
+
 
 ligands = {}  # all ligands from all structures
 glycosylated = {}  # all glycosylated residues according to conn category from all structures
@@ -52,8 +50,7 @@ AMINO_ACIDS = [
     "Ser","Thr", "Val", "Trp", "Tyr",
 ]
 
-with (DATA_FOLDER / "sugar_names.json").open() as f:
-    SUGAR_NAMES = json.load(f)
+SUGAR_NAMES = []
 
 #TODO: add type hints
 def extract_sugars(table):
@@ -78,16 +75,21 @@ def extract_sugars(table):
                 )
             else:
                 overall_conformers.append(res)
-    
+
     return extracted_sugars
 
-#TODO: add type hints
-def remove_connections(block, mono, oligo):
-    #TODO: add docs
+
+def remove_connections(block: Block, mono: list, oligo: list) -> list:
     """
-    Removes glycosylated residues from mono and oligo (modifies the lists in place)
-    and returns list of glycosylated residues (according to conn).
+    Remove glycosylated residues from mono and oligo (modify the lists in place)
+    and return list of glycosylated residues (according to conn)
+
+    :param block: mmCIF file block
+    :param mono: List of monosaccharides
+    :param oligo: List of oligosaccharides
+    :return: List of glycosylated residues
     """
+
     glycosylated_residues = []  # glycosylated residues according to conn
 
     # chain of the glycosylated residue that is part of the oligosacharide
@@ -131,7 +133,7 @@ def remove_connections(block, mono, oligo):
                 else:
                     if "glycosyl" not in row[5].lower():
                         pdb_not_anotated_glycosylation.add(block.name)
-                
+
 
     # add the whole glycosylated oligosacharide to glycosylated_residues
     # and remove it from the original list where we want only ligands
@@ -142,15 +144,20 @@ def remove_connections(block, mono, oligo):
 
     return glycosylated_residues
 
-#TODO: add type hints
-def remove_close_contacts(block, mono, oligo):
-    #TODO: add docs
+
+def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
     """
     Close contacts category lists pairs of atoms from all residues, which are in so close proximity
     we cannot be sure whether there is or is not a bond. Sometimes the residues from which the pair is
     are also listed in the conn category, so we assume there is a connection. Otherwise, we treat them as
     a separate category in order to not include potential glycosylation in ligands.
+
+    :param block: mmCIF file block
+    :param mono: List of monosaccharides
+    :param oligo: List of oligosaccharides
+    :return: List of residues that are in close contact
     """
+
     close_contact_residues = []
     close_contact_oligo_chains = set()  # chain to be deleted from ligands
 
@@ -183,16 +190,20 @@ def remove_close_contacts(block, mono, oligo):
 
     return close_contact_residues
 
+#TODO: refactor global variable
+def main(config: Config):
+    global SUGAR_NAMES
+    with (config.data_folder / "sugar_names.json").open() as f: 
+        SUGAR_NAMES = json.load(f)
 
-def main():
-    with (DATA_FOLDER / "pdb_ids_intersection_PQ_CCD.json").open() as f:
+    with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open() as f:
         pdb_files = json.load(f)
 
     for pdb in pdb_files:
         monosacharides = []
         oligosacharides = []
 
-        doc = gemmi.cif.read(str(DATA_FOLDER / "mmCIF_files" / f"{pdb}.cif"))
+        doc = gemmi.cif.read(str(config.mmcif_files / f"{pdb}.cif"))
         block = doc.sole_block()
         entities = block.find_values("_entity.type")
         entities = [entity for entity in entities]
@@ -206,8 +217,8 @@ def main():
 
         current_all_residues = oligosacharides.copy()
         current_all_residues.extend(monosacharides)
-    
-        # if no sugar residues were found, skip to the next structure
+
+        # If no sugar residues were found, skip to the next structure
         if not current_all_residues:
             pdb_sugars_in_wrong_category.add(block.name)
             continue
@@ -215,11 +226,11 @@ def main():
         all_residues[block.name] = current_all_residues
 
 
-        # remove glycosylations and close contacts from mono and oligosaccharides. Dictionaries are modified in place.
+        # Remove glycosylations and close contacts from mono and oligosaccharides. Dictionaries are modified in place.
         current_glycosylated = remove_connections(block, monosacharides, oligosacharides)
         current_close_contacts = remove_close_contacts(block, monosacharides, oligosacharides)
 
-        # what is left in mono and oligosaccharides are only ligands
+        # What is left in mono and oligosaccharides are only ligands
         current_ligands = monosacharides.copy()
         current_ligands.extend(oligosacharides)
 
@@ -250,35 +261,35 @@ def main():
 
     #TODO: extract to function
     # save everything
-    with open((results_path / "ligands.json"), "w") as f:
+    with open((config.categorization_results / "ligands.json"), "w") as f:
         json.dump(ligands, f, indent=4)
-    with open((results_path / "glycosylated.json"), "w") as f:
+    with open((config.categorization_results / "glycosylated.json"), "w") as f:
         json.dump(glycosylated, f, indent=4)
-    with open((results_path / "close_contacts.json"), "w") as f:
+    with open((config.categorization_results / "close_contacts.json"), "w") as f:
         json.dump(close_contacts, f, indent=4)
 
-    with open((results_path / "all_residues.json"), "w") as f:
+    with open((config.categorization_results / "all_residues.json"), "w") as f:
         json.dump(all_residues, f, indent=4)
 
-    with open((results_path / "pdb_only_ligands.json"), "w") as f:
+    with open((config.categorization_results / "pdb_only_ligands.json"), "w") as f:
         json.dump(pdb_only_ligands, f, indent=4)
-    with open((results_path / "pdb_only_glycosylated.json"), "w") as f:
+    with open((config.categorization_results / "pdb_only_glycosylated.json"), "w") as f:
         json.dump(pdb_only_glycosylated, f, indent=4)
-    with open((results_path / "pdb_only_close_contacts.json"), "w") as f:
+    with open((config.categorization_results / "pdb_only_close_contacts.json"), "w") as f:
         json.dump(pdb_only_close_contacts, f, indent=4)
 
-    with open((results_path / "pdb_ligand_glycosylated.json"), "w") as f:
+    with open((config.categorization_results / "pdb_ligand_glycosylated.json"), "w") as f:
         json.dump(pdb_ligand_glycosylated, f, indent=4)
-    with open((results_path / "pdb_ligand_close_contacts.json"), "w") as f:
+    with open((config.categorization_results / "pdb_ligand_close_contacts.json"), "w") as f:
         json.dump(pdb_ligand_close_contacts, f, indent=4)
-    with open((results_path / "pdb_glycosylated_close_contacts.json"), "w") as f:
+    with open((config.categorization_results / "pdb_glycosylated_close_contacts.json"), "w") as f:
         json.dump(pdb_glycosylated_close_contacts, f, indent=4)
-    with open((results_path / "pdb_lig_glyc_close.json"), "w") as f:
+    with open((config.categorization_results / "pdb_lig_glyc_close.json"), "w") as f:
         json.dump(pdb_lig_glyc_close, f, indent=4)
 
-    with open((results_path / "pdb_sugars_wrong_category.json"), "w") as f:
+    with open((config.categorization_results / "pdb_sugars_wrong_category.json"), "w") as f:
         json.dump(list(pdb_sugars_in_wrong_category), f, indent=4)
-    with open((results_path / "pdb_glycosylation_not_anotated.json"), "w") as f:
+    with open((config.categorization_results / "pdb_glycosylation_not_anotated.json"), "w") as f:
         json.dump(list(pdb_not_anotated_glycosylation), f, indent=4)
 
     #TODO: extract to function, print into file?
@@ -317,7 +328,7 @@ def main():
     print(f"PDB glycosylated and close contacts: {len(set(pdb_glycosylated_close_contacts))}\n")
     print(f"PDB ligands, glycosylated and close contacts: {len(set(pdb_lig_glyc_close))}\n")
 
-    
+
     print(f"res_gycosyl_residue_not_1 list: {len(res_gycosyl_residue_not_1)}\n")
     print(f"res_gycosyl_residue_not_1 set: {len(set(res_gycosyl_residue_not_1))}\n")
 
@@ -325,4 +336,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    config = Config.load("config.json")
+
+    config.categorization_results.mkdir(exist_ok=True, parents=True)
+
+    main(config)

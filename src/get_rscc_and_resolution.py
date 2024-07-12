@@ -1,31 +1,28 @@
 import csv
 import json
-from pathlib import Path
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 
-RESULTS_FOLDER = Path("/Volumes/YangYang/diplomka") / "results"
-DATA_FOLDER = Path("/Volumes/YangYang/diplomka") / "data"
-
-categorized_pdbs_path = RESULTS_FOLDER / "categorization"
-validation_files_path = DATA_FOLDER / "validation_files"
-
-results_path = RESULTS_FOLDER / "validation"
-results_path.mkdir(exist_ok=True, parents=True)
+from config import Config
 
 
-def extract_rscc_and_resolution() -> None:
-    #TODO: add docs
-    with open(categorized_pdbs_path / "all_residues.json", "r") as f:
+def extract_rscc_and_resolution(config: Config) -> None:
+    """
+    Extract overall resolution of structures and RSCC values for each of their residues (if said value exists)
+
+    :param config: Config object
+    """
+
+    with open(config.categorization_results / "all_residues.json", "r") as f:
         all_residues = json.load(f)
-    with open(categorized_pdbs_path / "ligands.json", "r") as f:
+    with open(config.categorization_results / "ligands.json", "r") as f:
         ligands = json.load(f)
-    with open(categorized_pdbs_path / "glycosylated.json", "r") as f:
+    with open(config.categorization_results / "glycosylated.json", "r") as f:
         glycosylated = json.load(f)
-    with open(categorized_pdbs_path / "close_contacts.json", "r") as f:
+    with open(config.categorization_results / "close_contacts.json", "r") as f:
         close_contacts = json.load(f)
 
-    with open(results_path / "all_rscc_and_resolution.csv", "w", newline="") as f:
+    with open(config.validation_results / "all_rscc_and_resolution.csv", "w", newline="") as f:
         all_rscc = csv.writer(f)
 
         no_resolution = set()
@@ -35,10 +32,12 @@ def extract_rscc_and_resolution() -> None:
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
         for structure, residues in all_residues.items():
             file = f"{structure.lower()}.xml"
-            with open(validation_files_path / file, "r") as file_xml:
+            with open(config.validation_files / file, "r") as file_xml:
                 d = file_xml.read()
             data = BeautifulSoup(d, "xml")
             structure_info = data.find("Entry")
+            if structure_info is None or isinstance(structure_info, NavigableString):
+                continue
             resolution = structure_info.get("PDB-resolution")
             if not resolution:
                 no_resolution.add(structure)
@@ -49,10 +48,13 @@ def extract_rscc_and_resolution() -> None:
                     no_residue_info.add(f"{structure}_{residue}")
                     continue
 
+                if residue_info is None or isinstance(residue_info, NavigableString):
+                    continue
                 rscc = residue_info.get("rscc")
                 if not rscc:
                     no_rscc.add(f"{structure}_{residue}")
                     continue
+                #TODO: refactor ifs
                 if structure in ligands:
                     if residue in ligands[structure]:
                         res_type = "ligand"
@@ -66,15 +68,18 @@ def extract_rscc_and_resolution() -> None:
                 all_rscc.writerow(row)
 
 
-    with open(results_path / "pdb_no_resolution.json", "w") as f:
+    with open(config.validation_results / "pdb_no_resolution.json", "w") as f:
         json.dump(list(no_resolution), f, indent=4)
 
-    with open(results_path / "no_residue_info.json", "w") as f:
+    with open(config.validation_results / "no_residue_info.json", "w") as f:
         json.dump(list(no_residue_info), f, indent=4)
 
-    with open(results_path / "no_rscc.json", "w") as f:
+    with open(config.validation_results / "no_rscc.json", "w") as f:
         json.dump(list(no_rscc), f, indent=4)
 
 
 if __name__ == "__main__":
-    extract_rscc_and_resolution()
+    config = Config.load("config.json")
+    config.validation_results.mkdir(exist_ok=True, parents=True)
+
+    extract_rscc_and_resolution(config)
