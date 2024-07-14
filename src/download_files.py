@@ -29,7 +29,7 @@ def get_components_file() -> None:
     """
 
     response = requests.get(f"https://files.wwpdb.org/pub/pdb/data/monomers/components.cif.gz")
-    with open(str(config.data_folder / "components.cif.gz"), "wb") as f:
+    with open((config.data_folder / "components.cif.gz"), "wb") as f:
         f.write(response.content)
 
 
@@ -99,10 +99,10 @@ def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewri
         try:
             # print(f"Downloading {pdb}")
             response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-            open(str(config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+            open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
 
             validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-            open(str(config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+            open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
         except Exception as e:
             print(f"An Error occured: {e}")
             failed_to_download.append(pdb)
@@ -123,10 +123,10 @@ def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewri
     for i, pdb in enumerate(failed_to_download):
         print(f"Downloading {pdb}")
         response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-        open(str(config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+        open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
 
         validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-        open(str(config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+        open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
 
         n += 1
         if n == 20:
@@ -160,10 +160,10 @@ def download_missing_files(missing_files: list) -> None:
         for i, pdb in enumerate(missing_files):
             try:
                 response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif", timeout=10)
-                open(str(config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+                open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
 
                 validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml", timeout=10)
-                open(str(config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+                open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
                 missing_files.pop(i)
             except Exception as e:
                 print(f"An Error occured: {e}")
