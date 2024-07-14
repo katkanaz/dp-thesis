@@ -8,8 +8,7 @@ class Config(BaseModel):
     mmcif_files: Path
     validation_files: Path
     results_folder: Path
-    mv_working_path: Path
-    mv_results: Path
+    mv_folder: Path
     pq_working_path: Path
     pq_results: Path
     pq_structures: Path
