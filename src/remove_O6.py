@@ -19,8 +19,8 @@ def get_pdb_ids_with_rscc(config: Config) -> None:
     with open(config.validation_results / "pdbs_with_rscc_and_resolution.json", "w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
-
-def remove_O6(config: Config, no_o6_mmcif) -> None:
+#NOTE: written specifically for previous work
+def remove_O6(config: Config) -> None:
     """
     Remove O6 atom of NAG, GAL, MAN, GLC and BGC from the structures
 
@@ -32,7 +32,7 @@ def remove_O6(config: Config, no_o6_mmcif) -> None:
     for pdb in pdb_ids_of_interest:
         with (config.mmcif_files / f"{pdb.lower()}.cif").open() as f:
             file = f.readlines()
-        with (no_o6_mmcif / f"{pdb.lower()}.cif").open("w") as f:
+        with (config.data_folder / "no_o6_mmcif" / f"{pdb.lower()}.cif").open("w") as f:
             for line in file:
                 if line.startswith("HETATM"): #FIXME: Refactor if else
                     if "MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line:
@@ -49,8 +49,7 @@ def remove_O6(config: Config, no_o6_mmcif) -> None:
 if __name__ == "__main__":
     config = Config.load("config.json")
 
-    no_o6_mmcif = config.data_folder / "no_o6_mmcif"
-    no_o6_mmcif.mkdir(exist_ok=True, parents=True)
+    (config.data_folder / "no_o6_mmcif").mkdir(exist_ok=True, parents=True)
 
     get_pdb_ids_with_rscc(config)
-    remove_O6(config, no_o6_mmcif)
+    remove_O6(config)
