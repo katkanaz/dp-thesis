@@ -9,9 +9,7 @@ class Config(BaseModel):
     validation_files: Path
     results_folder: Path
     mv_folder: Path
-    pq_working_path: Path
-    pq_results: Path
-    pq_structures: Path
+    pq_folder: Path
     dendrograms: Path
     tanglegrams: Path
     categorization_results: Path
@@ -21,7 +19,7 @@ class Config(BaseModel):
     graph_analysis: Path
 
     @classmethod
-    def load(cls, file_path: Path|str):
+    def load(cls, file_path: Path|str) -> "Config":
         with open(file_path, "r") as f:
             data = json.load(f)
         return  cls(**data)
