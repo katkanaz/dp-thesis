@@ -2,6 +2,8 @@ from argparse import ArgumentParser
 import json
 import os
 from pathlib import Path
+from platform import system
+import requests
 import shutil
 import subprocess
 from tempfile import TemporaryDirectory
@@ -13,8 +15,32 @@ from config import Config
 more_than_one_pattern = []			# just to check no more than one pattern for specific ResidueID was found
 pq_couldnt_find_pattern = []		# some ResidueID couldn't be found by PQ because they have different ResidueID somehow 
 result_folder_not_created = []		# just in case something else goes wrong
+#FIXME: Fix the pq_results folder coming from first pq
 
-def create_config(structure: str, residues, sugar: str) -> list:
+def download_pq(config: Config) -> None:
+    """
+    Download latest version of PatternQuery and extract the contents of a zip file
+
+    :param config: Config object
+    """
+
+    print("Downloading PatternQuery")
+
+    response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/PatternQuery/DownloadService")
+    with open((config.pq_folder / "PatternQuery.zip"), "wb") as f:
+        f.write(response.content)
+
+    with zipfile.ZipFile(config.pq_folder / "PatternQuery.zip", "r") as zip_ref:
+        zip_ref.extractall(config.pq_folder / "PatternQuery")
+
+
+# def update_mv(config: Config):#TODO: finish function
+    # download change log and read current version in it
+    # if version same delete changelog and do nothing else
+    # if not download again current mv and delete changelow
+
+
+def create_pq_config(structure: str, residues, sugar: str) -> list:
 	#FIXME: Reword docstring, residues type and description
 	"""
 	Create config file for the given structure
@@ -34,7 +60,7 @@ def create_config(structure: str, residues, sugar: str) -> list:
 
 	pq_config = {
 		"InputFolders": [
-			str(config.pq_structures),
+			str(config.pq_folder / "structures"),
 		],
 		"Queries": [],
 		"StatisticsOnly": False,
@@ -62,7 +88,7 @@ def create_config(structure: str, residues, sugar: str) -> list:
 
 	if query_names:
 		# create respective config file for current structure, with queries for every ligand of sugar of interest in that structure
-		with open(config.pq_working_path / "configuration.json", "w") as f:
+		with open(config.pq_folder / "PatternQuery" / "configuration.json", "w") as f:
 			json.dump(pq_config, f, indent=4)
 
 	return query_names
@@ -81,6 +107,8 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: list) ->
 	:param zip_result_folder: Path to zip folder containing PQ results
 	:param query_names: List of query IDs
 	"""
+
+	print("Extractiong results")
 
 	with TemporaryDirectory() as temp_dir:
 		with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:
@@ -103,35 +131,40 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: list) ->
 				shutil.move(str(src), str(target))
 
 
-def main(sugar: str, config: Config) -> None:
+def main(sugar: str, config: Config, is_unix: bool) -> None:
+	# download_pq(config)
+
 	with open(config.categorization_results / "filtered_ligands.json", "r") as f:
 		ligands = json.load(f)
 	
 	target_dir = config.binding_sites / sugar
 	target_dir.mkdir(exist_ok=True, parents=True)
 
+	print("Creating PatternQuerry configs")
+
 	for structure, residues in ligands.items():
 		structure = structure.lower()
-		query_names = create_config(structure, residues, sugar)
+		query_names = create_pq_config(structure, residues, sugar)
 		if not query_names:
 			continue
 		# Copy current structure to ./structures dir which is used as source by PQ.
 		src = config.mmcif_files / f"{structure}.cif"
-		dst = config.pq_structures / f"{structure}.cif"
+		dst = config.pq_folder / "structures" / f"{structure}.cif"
 		shutil.copyfile(src, dst)
 
 		#TODO: extract to function
 		# Run PQ
-		cmd = [
-			f"mono {config.pq_working_path}/WebChemistry.Queries.Service.exe {config.pq_results} {config.pq_working_path}/configuration.json"
-		]
-		subprocess.run(cmd, shell=True)
+		cmd = [f"{'mono ' if is_unix is True else ''}"
+			   f"{config.pq_folder / "PatternQuery"}/WebChemistry.Queries.Service.exe "
+			   f"{config.pq_folder / "results"} "
+			   f"{config.pq_folder / "PatternQuery"}/configuration.json"]
+		subprocess.run(cmd, shell=True)#TODO: log output
 
-		zip_result_folder = config.pq_results / "result/result.zip"
+		zip_result_folder = config.pq_folder / "results" / "result/result.zip"
 		if not zip_result_folder.exists():
 			result_folder_not_created.append(structure)
 			# delete the current structure from ./structures directory and continue to the next structure
-			Path(config.pq_structures / f"{structure}.cif").unlink()
+			Path(config.pq_folder / "structures" / f"{structure}.cif").unlink()
 			continue
 		
 		extract_results(target_dir, zip_result_folder, query_names)
@@ -140,8 +173,8 @@ def main(sugar: str, config: Config) -> None:
 			#break
 
 		# Delete the result folder and also the current structure from ./structures so the new one can be copied there
-		(config.pq_structures / f"{structure}.cif").unlink()
-		shutil.rmtree(config.pq_results / "result")
+		(config.pq_folder / "structures" / f"{structure}.cif").unlink()
+		shutil.rmtree(config.pq_folder / "results" / "result")
 
 	print("more patterns for one id:", more_than_one_pattern, end="\n\n")
 	print("PQ could not find these patterns:", pq_couldnt_find_pattern, end="\n\n")
@@ -157,7 +190,9 @@ if __name__ == "__main__":
 
 	config = Config.load("config.json")
 
-	config.pq_structures.mkdir(exist_ok=True, parents=True)
-	config.pq_results.mkdir(exist_ok=True, parents=True)
+	is_unix = system() != "Windows"
+
+	(config.pq_folder / "structures").mkdir(exist_ok=True, parents=True)
+	(config.pq_folder / "results").mkdir(exist_ok=True, parents=True)
 	
-	main(args.sugar, config)
+	main(args.sugar, config, is_unix)
