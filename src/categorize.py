@@ -191,7 +191,7 @@ def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
     return close_contact_residues
 
 #TODO: refactor global variable
-def main(config: Config):
+def categorize(config: Config):
     global SUGAR_NAMES
     with (config.data_folder / "sugar_names.json").open() as f: 
         SUGAR_NAMES = json.load(f)
@@ -340,4 +340,4 @@ if __name__ == "__main__":
 
     config.categorization_results.mkdir(exist_ok=True, parents=True)
 
-    main(config)
+    categorize(config)

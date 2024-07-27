@@ -131,7 +131,7 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: list) ->
 				shutil.move(str(src), str(target))
 
 
-def main(sugar: str, config: Config, is_unix: bool) -> None:
+def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
 	# download_pq(config)
 
 	with open(config.categorization_results / "filtered_ligands.json", "r") as f:
@@ -195,4 +195,4 @@ if __name__ == "__main__":
 	(config.pq_folder / "structures").mkdir(exist_ok=True, parents=True)
 	(config.pq_folder / "results").mkdir(exist_ok=True, parents=True)
 	
-	main(args.sugar, config, is_unix)
+	run_pq(args.sugar, config, is_unix)

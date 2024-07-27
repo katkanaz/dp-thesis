@@ -12,10 +12,10 @@ def compare_clusters(sugar: str, config: Config) -> None:
     :param config: Config object
     """
 
-    with (config.results_folder / "clusters" / sugar / "super" / "22_centroid_all_clusters.json").open() as f:
+    with (config.results_folder / "clusters" / sugar / "super" / "20_centroid_all_clusters.json").open() as f:#FIXME:
         clusters_super = json.load(f)
 
-    with (config.results_folder / "clusters" / sugar / "align" / "20_centroid_all_clusters.json").open() as f:
+    with (config.results_folder / "clusters" / sugar / "align" / "20_centroid_all_clusters.json").open() as f:#FIXME:
         clusters_align = json.load(f)
 
     # create dict in a form of {structure: cluster}

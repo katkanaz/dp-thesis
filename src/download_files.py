@@ -193,7 +193,7 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
     return found_error
 
 
-def main(config: Config):
+def download_files(config: Config):
     pdb_ids_pq_file = config.data_folder / "pdb_ids_pq.json"
     #get_components_file()
     sugar_names = get_sugars_from_ccd()
@@ -220,4 +220,4 @@ if __name__ == "__main__":
     config.mmcif_files.mkdir(exist_ok=True, parents=True)
     config.validation_files.mkdir(exist_ok=True, parents=True)
 
-    main(config)
+    download_files(config)

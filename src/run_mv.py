@@ -115,7 +115,7 @@ def get_rmsd_and_merge(config: Config) -> None:
     merged.to_csv(config.validation_results / "merged_rscc_rmsd.csv", index=False)
 
 
-def main(config: Config, is_unix: bool):
+def run_mv(config: Config, is_unix: bool):
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
     dir_path = config.mv_folder / "MotiveValidator"
@@ -141,4 +141,4 @@ if __name__ == "__main__":
 
     is_unix = system() != "Windows"
 
-    main(config, is_unix)
+    run_mv(config, is_unix)

@@ -4,7 +4,7 @@ import pandas as pd
 from config import Config
 
 
-def make_corr_graphs(config: Config):
+def plot_corr_graphs(config: Config):
     """
     Create correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
     glycosylated residues and residues in close contacts. Also cretate these graphs separately for each
@@ -57,7 +57,7 @@ def make_corr_graphs(config: Config):
         plt.close()
 
 
-def make_histograms(config: Config):
+def plot_histograms(config: Config):
     """
     Make histograms for individual sugars
 
@@ -86,7 +86,7 @@ def make_histograms(config: Config):
         plt.close()
 
 
-def make_3D_graph(config: Config):
+def plot_3D_graph(config: Config):
     #FIXME: Add docstring
     """
     [TODO:description]
@@ -107,10 +107,10 @@ def make_3D_graph(config: Config):
     plt.close()
 
 
-def main(config: Config):
-    make_corr_graphs(config)
-    make_histograms(config)
-    make_3D_graph(config)
+def plot_graphs(config: Config):
+    plot_corr_graphs(config)
+    plot_histograms(config)
+    plot_3D_graph(config)
 
 
 if __name__ == "__main__":
@@ -118,4 +118,4 @@ if __name__ == "__main__":
 
     (config.results_folder / "graphs").mkdir(exist_ok=True, parents=True)
 
-    main(config)
+    plot_graphs(config)

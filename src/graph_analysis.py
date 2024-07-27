@@ -48,7 +48,7 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
     print(len(sugars))
 
 
-def main(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float):
+def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float):
 
     get_average_rmsd_of_peaks(config)
     analyze_graph(min_rscc, max_rscc, min_rmsd, max_rmsd, config)
@@ -60,4 +60,4 @@ if __name__ == "__main__":
 
     (config.results_folder / "graph_analysis").mkdir(exist_ok=True, parents=True)
 
-    main(config, 0.85, 1.0, 2.0, 3.0)
+    graph_analysis(config, 0.85, 1.0, 2.0, 3.0)
