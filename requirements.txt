@@ -1,13 +1,19 @@
-beautifulsoup4==4.12.3
-gemmi==0.6.6
-lxml
-matplotlib==3.7.3
-numpy==1.24.4
-pandas==2.0.3
-pydantic==2.8.2
-requests==2.32.3
-scipy==1.10.0
-tqdm==4.66.4
-typing_extensions==4.12.2
-urllib3==2.2.2
-pymol==2.4.1
+name: dp
+channels:
+- conda-forge
+- schrodinger
+dependencies:
+- beautifulsoup4==4.12.3
+- gemmi==0.6.6
+- lxml
+- matplotlib==3.7.3
+- numpy==1.24.4
+- pandas==2.0.3
+- pydantic==2.8.2
+- pymol==2.4.1
+- requests==2.32.3
+- scipy==1.10.0
+- tqdm==4.66.4
+- typing_extensions==4.12.2
+- urllib3==2.2.2
+
