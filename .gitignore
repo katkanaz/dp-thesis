@@ -1,8 +1,16 @@
 danca/
 data/
+docs/
+debug/
+file_tree_begin/
+img/
 local_utils/
 pq_results/
+pq/
+mv/
 results/
 __pycache__/
+tmp/
 venv/
 *.cif
+
