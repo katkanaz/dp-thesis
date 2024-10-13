@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
-from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue
+from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue, AttributeQuery
 import shutil
 
 from Bio.PDB.PDBParser import PDBParser
@@ -47,8 +47,6 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
 
     structure = parser.get_structure(struc_name, path_to_file)
 
-    #TODO: needed parametrs: rmsd_cutoff 3, return_type assembly, attribute: "rcsb_comp_model_provenance.source_db", "operator": "exact_match", "negation": false, "value": "AlphaFoldDB
-
     models = list(structure)
     if len(models) < 1:
         raise ValueError("More than one model in the structure!")
@@ -73,9 +71,6 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
                 residues.append(StructureMotifResidue(struct_oper_id="1", chain_id=chain_id_map[chain.get_id()], label_seq_id=i)) # type: ignore
                 i += 1
 
-    # print(residues)
-    # print(len(residues))
-
     if len(residues) > 10:
         raise ValueError(f"More than 10 residues in the binding site: {path_to_file.name}")
 
@@ -83,14 +78,27 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
 
 
 def run_query(path_to_file: Path, residues: list):
-    query = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
-    print(query.to_json())
+    q1 = AttributeQuery(attribute="rcsb_comp_model_provenance.source_db", operator="exact_match",value="AlphaFoldDB", service="text", negation=False)
+    q2 = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
 
-    print(list(query(return_type="assembly")))
+    query = q1 & q2
+
+    # print(query.to_json())
+    print(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) #NOTE: Returns different scores of structures when "experimental" is and is not there
 
 
 def struct_motif_search():
-    path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/48_2fir_FUC_901_L.pdb")
+    # Files to test
+    # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/140_3lei_FUC_1186_A.pdb")
+    # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/511_7c38_FUC_404_B.pdb")
+    # path_to_file = Path("../results/structure_motif_search/input_representatives/GAL/1695_8axi_GAL_602_A.pdb")
+    # path_to_file = Path("../results/structure_motif_search/input_representatives/GAL/290_2bzd_GAL_1649_B.pdb")
+
+    # path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
+    # path_to_file = Path("../debug/sms_query_test/426_2nzy_FUC_4002_B.pdb")
+    path_to_file = Path("../debug/sms_query_test/523_1qot_FUC_2_H.pdb")
+
+
     struc_name = get_struc_name(path_to_file)
     run_query(path_to_file, define_residues(path_to_file, struc_name))
 
