@@ -1,3 +1,9 @@
+"""
+Script Name: run_pq.py
+Description: Download and run PatternQuery, then extract the results.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
 from argparse import ArgumentParser
 import json
 import os

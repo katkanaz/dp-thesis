@@ -1,3 +1,9 @@
+"""
+Script Name: cluster_data.py
+Description: Perform hierarchical clustering and create given number number of clusters.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
 from argparse import ArgumentParser
 from collections import defaultdict
 import csv

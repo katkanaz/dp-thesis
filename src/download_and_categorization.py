@@ -1,5 +1,7 @@
 """
-Download mmCIF files of structures with sugars from PDB and perform sugar categorization
+Script Name: download_and_categorization.py
+Description: Download structures with sugars from PDB and perform sugar categorization.
+Author: Kateřina Nazarčuková
 """
 
 #TODO: import libs

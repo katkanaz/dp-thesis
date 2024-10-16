@@ -1,7 +1,8 @@
 """
-Define representative binding sites for the sugar using PQ and PyMOL,
-cluster obtained data and choose representatives to perform structure
-motif search with
+Script Name: define_bs_do_sms.py
+Description: Define representative binding sites for a given sugar using PQ and PyMOL,
+cluster obtained data and choose representatives to perform structure motif search with.
+Author: Kateřina Nazarčuková
 """
 #TODO: import libs
 from argparse import ArgumentParser

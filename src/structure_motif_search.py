@@ -1,3 +1,8 @@
+"""
+Script Name: structure_motif_search.py
+Description: Extract input files, define residues for each input and perform structure based search.
+Author: Kateřina Nazarčuková
+"""
 from argparse import ArgumentParser
 import json
 from pathlib import Path

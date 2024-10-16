@@ -1,3 +1,9 @@
+"""
+Script Name: run_mv.py
+Description: Modify model file, download and run MotiveValidator and extract results.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
 import csv
 import json
 from platform import system
