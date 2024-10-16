@@ -4,6 +4,7 @@ Description: Modify model file, download and run MotiveValidator and extract res
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
+
 import csv
 import json
 from platform import system
@@ -62,7 +63,7 @@ def download_mv(config: Config) -> None:
     # if not download again current mv and delete changelow
 
 
-def create_mv_config(config: Config):
+def create_mv_config(config: Config) -> None:
     """
     Create MotiveValidator config file
 

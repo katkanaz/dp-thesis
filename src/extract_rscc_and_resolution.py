@@ -64,6 +64,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
                 if structure in close_contacts:
                     if residue in close_contacts[structure]:
                         res_type = "close"
+                #FIXME: Add assert
                 row = [str(structure), str(resolution), str(residue["name"]), residue["num"], residue["chain"], str(rscc), res_type]
                 all_rscc.writerow(row)
 

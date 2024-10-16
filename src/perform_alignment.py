@@ -118,7 +118,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str, 
                     id2, _, res2, num2, chain2 = filename2.split("_")
                 except ValueError:
                     id2, _, res2, num2, chain2, _ = filename2.split("_")
-                # For some reason, some structures has chains named eg. AaA but when loaded to PyMol
+                # For some reason, some structures have chains named eg. AaA but when loaded to PyMol
                 # the the chain is reffered to just as A.
                 if len(chain1) > 1:
                     chain1 = chain1[0]
