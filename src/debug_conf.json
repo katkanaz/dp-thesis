@@ -1,0 +1,16 @@
+{
+    "binding_sites": "../debug/missing_sugar/oct_22/both_fuc/results/binding_sites",
+    "data_folder": "../debug/missing_sugar/oct_22/both_fuc/data",
+    "mmcif_files": "../debug/missing_sugar/oct_22/both_fuc/data/mmcif_files",
+    "validation_files": "../debug/missing_sugar/oct_22/both_fuc/data/validation_files",
+    "results_folder": "../debug/missing_sugar/oct_22/both_fuc/results",
+    "mv_folder": "../debug/missing_sugar/oct_22/both_fuc/mv",
+    "pq_folder": "../debug/missing_sugar/oct_22/both_fuc/pq",
+    "dendrograms": "../debug/missing_sugar/oct_22/both_fuc/img/dendrograms",
+    "tanglegrams": "../debug/missing_sugar/oct_22/both_fuc/img/tanglegrams",
+    "categorization_results": "../debug/missing_sugar/oct_22/both_fuc/results/categorization",
+    "patterns_folder": "../pq_results/structures_with_sugars/patterns",
+    "validation_results": "../debug/missing_sugar/oct_22/both_fuc/results/validation",
+    "removed_o6_folder": "../debug/missing_sugar/oct_22/both_fuc/data/mmcif_without_o6",
+    "graph_analysis": "../debug/missing_sugar/oct_22/both_fuc/results/graph_analysis"
+}

@@ -74,8 +74,8 @@ def create_mv_config(config: Config) -> None:
 
     mv_config = {
         "ValidationType": "Sugars",
-        "InputFolder": f"{config.data_folder}/mmcif_files",
-        "ModelsSource": f"{config.mv_folder}/model_source/components_sugars_only.cif",
+        "InputFolder":  str(config.mmcif_files),
+        "ModelsSource": str(config.mv_folder / "model_source/components_sugars_only.cif"),
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,
         "SummaryOnly": False,
@@ -125,14 +125,14 @@ def get_rmsd_and_merge(config: Config) -> None:
 def run_mv(config: Config, is_unix: bool):
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
-    dir_path = config.mv_folder / "MotiveValidator"
-    if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
-        download_mv(config)
+    # dir_path = config.mv_folder / "MotiveValidator"
+    # if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
+    #     download_mv(config)
     # update_mv(config) #TODO: if just downloaded do not update
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"
-           f"{config.mv_folder}/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
+           f"../mv/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
            f"{config.mv_folder}/results "
            f"{config.mv_folder}/mv_config.json"]
     subprocess.run(cmd, shell=True)#TODO: log output
@@ -142,7 +142,7 @@ def run_mv(config: Config, is_unix: bool):
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
     (config.mv_folder / "model_source").mkdir(exist_ok=True, parents=True)
     (config.mv_folder / "results").mkdir(exist_ok=True, parents=True)
 

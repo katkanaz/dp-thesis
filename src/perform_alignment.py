@@ -160,8 +160,8 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str, 
 
 def perform_alignment(sugar: str, method: str, config: Config) -> None:
     # Method: PyMOL command to be used for the calculation of RMSD {align or super}
-    fixed_folder = refine_binding_sites(sugar, 5, config, pm_cmd)#FIXME: fixed_folder and structures folder are the same
-    all_against_all_alignment(sugar, fixed_folder, method, config, pm_cmd)
+    fixed_folder = refine_binding_sites(sugar, 5, config)#FIXME: fixed_folder and structures folder are the same
+    # all_against_all_alignment(sugar, fixed_folder, method, config)
 
 
 if __name__ == "__main__":
@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
     # pm_cmd = Pymol(gui=True)
 
     perform_alignment(args.sugar, args.align_method, config)

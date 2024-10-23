@@ -148,7 +148,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
 
     target_dir = config.binding_sites / sugar
     target_dir.mkdir(exist_ok=True, parents=True)
-
+    
     print("Creating PatternQuerry configs")
 
     for structure, residues in ligands.items():
@@ -164,9 +164,9 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
         #TODO: extract to function
         # Run PQ
         cmd = [f"{'mono ' if is_unix is True else ''}"
-               f"{config.pq_folder / "PatternQuery"}/WebChemistry.Queries.Service.exe "
-               f"{config.pq_folder / "results"} "
-               f"{config.pq_folder / "PatternQuery"}/configuration.json"]
+               f"../pq/PatternQuery/WebChemistry.Queries.Service.exe "
+               f"{config.pq_folder}/results "
+               f"{config.pq_folder}/PatternQuery/configuration.json"]
         subprocess.run(cmd, shell=True)#TODO: log output
 
         zip_result_folder = config.pq_folder / "results" / "result/result.zip"
@@ -197,11 +197,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
 
     is_unix = system() != "Windows"
 
     (config.pq_folder / "structures").mkdir(exist_ok=True, parents=True)
     (config.pq_folder / "results").mkdir(exist_ok=True, parents=True)
+    (config.pq_folder / "PatternQuery").mkdir(exist_ok=True, parents=True)
     
     run_pq(args.sugar, config, is_unix)

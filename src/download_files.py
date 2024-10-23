@@ -97,7 +97,7 @@ def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewri
     n = 0
     for i, pdb in enumerate(pdb_ids):
         try:
-            # print(f"Downloading {pdb}")
+            print(f"Downloading {pdb}")
             response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
             open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
 
@@ -118,23 +118,23 @@ def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewri
     print(failed_to_download)
 
     # To download files that raised an error in the first loop
-    timeout = 2
-    n = 0
-    for i, pdb in enumerate(failed_to_download):
-        print(f"Downloading {pdb}")
-        response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-        open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
-
-        validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-        open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
-
-        n += 1
-        if n == 20:
-            n = 0
-            print(f"Pausing for {timeout} seconds. Iteration {i+1}")
-            sleep(timeout)
-
-    print("Finished all iterations - second loop.")
+    # timeout = 2
+    # n = 0
+    # for i, pdb in enumerate(failed_to_download):
+    #     print(f"Downloading {pdb}")
+    #     response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
+    #     open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+    #
+    #     validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
+    #     open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+    #
+    #     n += 1
+    #     if n == 20:
+    #         n = 0
+    #         print(f"Pausing for {timeout} seconds. Iteration {i+1}")
+    #         sleep(timeout)
+    #
+    # print("Finished all iterations - second loop.")
 
 
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> list:
@@ -194,26 +194,29 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
 
 
 def download_files(config: Config):
-    pdb_ids_pq_file = config.data_folder / "pdb_ids_pq.json"
+    # pdb_ids_pq_file = config.data_folder / "pdb_ids_pq.json"
     #get_components_file()
-    sugar_names = get_sugars_from_ccd()
-    pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
-    get_pdb_ids_from_pq(pdb_ids_pq_file)
+    # sugar_names = get_sugars_from_ccd()
+    # pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
+    # get_pdb_ids_from_pq(pdb_ids_pq_file)
+    #
+    # with (pdb_ids_pq_file).open() as f:
+    #     pdb_ids_pq = json.load(f)
+    # pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
+    # with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
+    #     json.dump(list(pdb_ids), f, indent=4)
 
-    with (pdb_ids_pq_file).open() as f:
-        pdb_ids_pq = json.load(f)
-    pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
-    with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
-        json.dump(list(pdb_ids), f, indent=4)
+    #NOTE: Debug
+    pdb_ids = {"7b7c", "7c38"}
 
     download_structures_and_validation_files(pdb_ids)
-    check_downloaded_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files, config.mmcif_files)
+    # check_downloaded_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files, config.mmcif_files)
 
     # missing_files = get_ids_missing_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files)
     # download_missing_files(missing_files)
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
 
     config.data_folder.mkdir(exist_ok=True, parents=True)
     config.results_folder.mkdir(exist_ok=True, parents=True)

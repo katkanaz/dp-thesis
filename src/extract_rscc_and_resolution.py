@@ -80,7 +80,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
     config.validation_results.mkdir(exist_ok=True, parents=True)
 
     extract_rscc_and_resolution(config)

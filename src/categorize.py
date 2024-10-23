@@ -196,8 +196,11 @@ def categorize(config: Config):
     with (config.data_folder / "sugar_names.json").open() as f: 
         SUGAR_NAMES = json.load(f)
 
-    with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open() as f:
-        pdb_files = json.load(f)
+    # with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open() as f:
+    #     pdb_files = json.load(f)
+
+    #NOTE: Debug
+    pdb_files = ["7b7c", "7c38"] # List based on the json 
 
     for pdb in pdb_files:
         monosacharides = []
@@ -336,7 +339,7 @@ def categorize(config: Config):
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
 
     config.categorization_results.mkdir(exist_ok=True, parents=True)
 

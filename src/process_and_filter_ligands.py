@@ -115,14 +115,14 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
 
 def process_and_filter_ligands(config: Config):
 
-    get_pdb_ids_with_rscc(config)
-    remove_O6(config)
+    # get_pdb_ids_with_rscc(config)
+    # remove_O6(config)
     #TODO: Add argparse if necessary - are these values solid, is it based on literature? if yes then set as default
     filter_ligands(3.0, 0.8, 2.0, config)
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
 
     (config.data_folder / "no_o6_mmcif").mkdir(exist_ok=True, parents=True)
 
