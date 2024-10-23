@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from pydantic import BaseModel
+from typing import Union
 
 class Config(BaseModel):
     binding_sites: Path
@@ -19,7 +20,7 @@ class Config(BaseModel):
     graph_analysis: Path
 
     @classmethod
-    def load(cls, file_path: Path|str) -> "Config":
+    def load(cls, file_path: Union[Path, str]) -> "Config":
         with open(file_path, "r") as f:
             data = json.load(f)
         return  cls(**data)

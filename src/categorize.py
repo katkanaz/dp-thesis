@@ -31,7 +31,7 @@ pdb_lig_glyc_close = []
 
 res_gycosyl_residue_not_1 = []
 
-# some structures has sugars, but they are listed in the wrong category
+# some structures have sugars, but they are listed in the wrong category
 # so it is not possible to automatize the search - they are excluded
 pdb_sugars_in_wrong_category = set()
 

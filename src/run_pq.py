@@ -144,7 +144,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
     # download_pq(config)
 
     with open(config.categorization_results / "filtered_ligands.json", "r") as f:
-        ligands = json.load(f)
+        ligands: dict = json.load(f)
 
     target_dir = config.binding_sites / sugar
     target_dir.mkdir(exist_ok=True, parents=True)
@@ -157,7 +157,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
         if not query_names:
             continue
         # Copy current structure to ./structures dir which is used as source by PQ.
-        src = config.mmcif_files / f"{structure}.cif"
+        src = config.mmcif_files / f"{structure}.cif" #NOTE: why are we not using the no_o6_mmcifs?
         dst = config.pq_folder / "structures" / f"{structure}.cif"
         shutil.copyfile(src, dst)
 

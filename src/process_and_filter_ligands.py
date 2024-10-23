@@ -14,7 +14,7 @@ def get_pdb_ids_with_rscc(config: Config) -> None:
 
     with open(config.validation_results / "all_rscc_and_resolution.csv") as f:
         rscc = DictReader(f) #FIXME: Use pandas
-        pdb_ids = set()
+        pdb_ids = set() #TODO: define elsewhere?
         for row in rscc:
             pdb_ids.add(row["pdb"])
     with open(config.validation_results / "pdbs_with_rscc_and_resolution.json", "w") as f:
@@ -22,6 +22,7 @@ def get_pdb_ids_with_rscc(config: Config) -> None:
 
 
 #NOTE: written specifically for previous work
+#TODO: fix the 06
 def remove_O6(config: Config) -> None:
     """
     Remove O6 atom of NAG, GAL, MAN, GLC and BGC from the structures
@@ -48,14 +49,13 @@ def remove_O6(config: Config) -> None:
                     f.write(line)
 
 
-#TODO: Rename max_resolution variable
 def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:
     """
     Filter ligands.json to contain only the structures with overall resolution
     is better than <max_resolution> and residues with RSCC higher than <min_rscc>
     and rmsd lower than <max_rmsd>
 
-    :param max_resolution: Minimal overall resolution
+    :param max_resolution: Maximal overall resolution
     :param min_rscc: Minimum RSCC of residue
     :param max_rmsd: Maximum RMSD of residue
     :param config: [TODO:description]
