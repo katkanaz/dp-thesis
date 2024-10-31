@@ -4,6 +4,7 @@ Description: Perform hierarchical clustering and create given number number of c
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
+
 from argparse import ArgumentParser
 from collections import defaultdict
 import csv
@@ -21,7 +22,7 @@ from config import Config
 
 def cluster_data(sugar: str, n_clusters: int, cluster_method: str, 
                  align_method: str, config: Config, make_dendrogram: bool = False,
-                 color_threshold: Union[float, None] = None,) -> None:
+                 color_threshold: Union[float, None] = None) -> None:
     """
     Perform hierarchical clustering, using the specified clustering 
     method and create the given number of clusters
@@ -90,22 +91,24 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     average_rmsds = {}
 
     for cluster, structures in clusters.items():
-            lowest_rmsd_sum = np.inf
-            for i in structures:
-                sum = 0
-                for j in structures:
-                    sum += data[i, j]
+        lowest_rmsd_sum = np.inf
+        representative_structure = None
+        for i in structures:
+            sum = 0
+            for j in structures:
+                sum += data[i, j]
                 if sum < lowest_rmsd_sum:
                     lowest_rmsd_sum = sum
                     representative_structure = i
             length = len(structures)
+            assert representative_structure is not None, "For every cluster there should be a representative binding site"
             representatives[cluster] = representative_structure
             average_rmsds[cluster] = [lowest_rmsd_sum / length]
 
     for cluster, structure in representatives.items():
-            sum = 0
-            for _, structure2 in representatives.items():
-                sum += data[structure, structure2]
+        sum = 0
+        for _, structure2 in representatives.items():
+            sum += data[structure, structure2]
             average_rmsds[cluster].append(sum/n_clusters)
 
     with open(config.results_folder / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_average_rmsds.csv",
@@ -124,7 +127,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    
+
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
     parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,

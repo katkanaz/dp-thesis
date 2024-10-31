@@ -3,6 +3,7 @@ Script Name: structure_motif_search.py
 Description: Extract input files, define residues for each input and perform structure based search.
 Author: Kateřina Nazarčuková
 """
+
 from argparse import ArgumentParser
 import json
 from pathlib import Path
@@ -36,6 +37,7 @@ from Bio.PDB.PDBParser import PDBParser
 
 
 # def load_representatives(config: Config) -> list:
+    #TODO: Add docs
     # representatives = []
     # for file in sorted(Path("../results/structure_motif_search/input_representatives/FUC/").glob("*.pdb")):
         # representatives.append(file)
@@ -44,10 +46,12 @@ from Bio.PDB.PDBParser import PDBParser
 
 
 def get_struc_name(path_to_file: Path) -> str:
+    #TODO: Add docs
     return (path_to_file.name).split("_")[1]
 
 
 def define_residues(path_to_file: Path, struc_name: str) -> list:
+    #TODO: Add docs
     parser = PDBParser()
 
     structure = parser.get_structure(struc_name, path_to_file)
@@ -83,6 +87,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
 
 
 def run_query(path_to_file: Path, residues: list):
+    #TODO: Add docs
     q1 = AttributeQuery(attribute="rcsb_comp_model_provenance.source_db", operator="exact_match",value="AlphaFoldDB", service="text", negation=False)
     q2 = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
 
@@ -92,7 +97,7 @@ def run_query(path_to_file: Path, residues: list):
     print(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) #NOTE: Returns different scores of structures when "experimental" is and is not there
 
 
-def struct_motif_search():
+def structure_motif_search():
     # Files to test
     # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/140_3lei_FUC_1186_A.pdb")
     # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/511_7c38_FUC_404_B.pdb")
@@ -126,4 +131,4 @@ if __name__ == "__main__":
     # input_folder.mkdir(exist_ok=True, parents=True)
 
     # extract_representatives(args.sugar, args.align_method, args.number, args.method, config, input_folder)
-    struct_motif_search()
+    structure_motif_search()

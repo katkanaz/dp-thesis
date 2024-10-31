@@ -60,4 +60,4 @@ if __name__ == "__main__":
 
     (config.results_folder / "graph_analysis").mkdir(exist_ok=True, parents=True)
 
-    graph_analysis(config, 0.85, 1.0, 2.0, 3.0)
+    graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)#TODO: define variables above
