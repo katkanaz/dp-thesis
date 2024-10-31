@@ -9,6 +9,7 @@ from time import sleep
 from config import Config
 
 
+#TODO: implement function to run the pq to get pdb ids of structures with sugars
 def get_pdb_ids_from_pq(result_file: Path) -> None:
     """
     Get PDB IDs of structures from PQ results
@@ -207,7 +208,7 @@ def download_files(config: Config):
     #     json.dump(list(pdb_ids), f, indent=4)
 
     #NOTE: Debug
-    pdb_ids = {"7b7c", "7c38"}
+    pdb_ids = {"1gzt", "7khu", "4d4u"}
 
     download_structures_and_validation_files(pdb_ids)
     # check_downloaded_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files, config.mmcif_files)

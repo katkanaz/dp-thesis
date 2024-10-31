@@ -1,10 +1,10 @@
-import gemmi
+# TODO: add authors and description - main goal of script is to obtain only residues from the structures that can be classified as ligands
 import json
 
-from gemmi.cif import Block #type: ignore
+import gemmi
+from gemmi.cif import Block  # type: ignore
 
 from config import Config
-
 
 ligands = {}  # all ligands from all structures
 glycosylated = {}  # all glycosylated residues according to conn category from all structures
@@ -17,7 +17,7 @@ all_residues = {}  # all sugar residues from all structures
 # but this does not work for the sum of the pdb structures because
 # there can be ligand and also glycosylation and close_contact in one structure.
 # To make sure the script works properly, here are the control lists of pdb structures
-# for every group, to check whether the sum is right.
+# for every group, to check whether the sum is right.#FIXME: is it being checked somewhere?
 
 pdb_only_ligands = []
 pdb_only_glycosylated = []
@@ -33,7 +33,7 @@ res_gycosyl_residue_not_1 = []
 
 # some structures have sugars, but they are listed in the wrong category
 # so it is not possible to automatize the search - they are excluded
-pdb_sugars_in_wrong_category = set()
+pdb_sugars_in_wrong_category = set() # FIXME: Need to be excluded, currently script does not do that
 
 # after remediation of PDB database, all glycosylations should be anotated
 # in struct_conn.pdbx_role but some are still missing
@@ -44,26 +44,44 @@ overall_conformers = []
 
 
 AMINO_ACIDS = [
-    "Ala", "Cys", "Asp", "Glu", "Phe",
-    "Gly", "His", "Ile", "Lys", "Leu",
-    "Met", "Asn", "Pro", "Gln", "Arg",
-    "Ser","Thr", "Val", "Trp", "Tyr",
+    "Ala",
+    "Cys",
+    "Asp",
+    "Glu",
+    "Phe",
+    "Gly",
+    "His",
+    "Ile",
+    "Lys",
+    "Leu",
+    "Met",
+    "Asn",
+    "Pro",
+    "Gln",
+    "Arg",
+    "Ser",
+    "Thr",
+    "Val",
+    "Trp",
+    "Tyr",
 ]
 
 SUGAR_NAMES = []
 
-#TODO: add type hints
+
+# TODO: add type hints
 def extract_sugars(table):
-    #TODO: add docs
+    # TODO: add docs
     """
     Gets a list of dictionaries, in which one dictionary represents single
     sugar residue present in the given table (either monosacharide or one
     residue form oligosaccharide).
     """
+    # FIXME: do they need to be excluded? what needs to be done with such structures?
     extracted_sugars = []
     # there can be more conformers for some residues, and sometimes it
-    # means there will be two residues with the same num and chain,
-    # but different name listed in the mmCIF file. PQ can find only the first one.
+    # means there will be two residues with the same num and chain,#FIXME: what if they dont, see 7c38, 7b7c
+    # but different name listed in the mmCIF file. PQ can find only the first one.#FIXME: are we sure? GAL vs GLA in 4d6d
     conformers = []
     for row in table:
         if row[0] in SUGAR_NAMES:
@@ -90,11 +108,12 @@ def remove_connections(block: Block, mono: list, oligo: list) -> list:
     :return: List of glycosylated residues
     """
 
+    # FIXME: glycosylated residues should be removed
     glycosylated_residues = []  # glycosylated residues according to conn
 
     # chain of the glycosylated residue that is part of the oligosacharide
     # so it is possible to remove all residues from that chain
-    glycosylated_oligo_chains = set()
+    glycosylated_oligo_chains = set() # FIXME: dont understand the comment, are all residues from that hain being removed
 
     conn = block.find(
         "_struct_conn.",
@@ -117,7 +136,7 @@ def remove_connections(block: Block, mono: list, oligo: list) -> list:
 
             if res in mono:
                 glycosylated_residues.append(res)  # save the glycosylated mono
-                mono.remove(res)  # remove it from the original list where we want only ligands
+                mono.remove(res)  # remove it from the original list where we want only ligands#FIXME:
 
                 if has_role and "glycosyl" not in row[5].lower():
                     pdb_not_anotated_glycosylation.add(block.name)
@@ -136,7 +155,7 @@ def remove_connections(block: Block, mono: list, oligo: list) -> list:
 
 
     # add the whole glycosylated oligosacharide to glycosylated_residues
-    # and remove it from the original list where we want only ligands
+    # and remove it from the original list where we want only ligands#FIXME:
     for i in range(len(oligo) - 1, -1, -1):
         if oligo[i]["chain"] in glycosylated_oligo_chains:
             glycosylated_residues.append(oligo[i])
@@ -146,6 +165,7 @@ def remove_connections(block: Block, mono: list, oligo: list) -> list:
 
 
 def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
+    # TODO: reword
     """
     Close contacts category lists pairs of atoms from all residues, which are in so close proximity
     we cannot be sure whether there is or is not a bond. Sometimes the residues from which the pair is
@@ -188,19 +208,20 @@ def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
             close_contact_residues.append(oligo[i])
             del oligo[i]
 
-    return close_contact_residues
+    return close_contact_residues  # FIXME: do they need to be excluded?
 
-#TODO: refactor global variable
+
+# TODO: refactor global variable
 def categorize(config: Config):
     global SUGAR_NAMES
-    with (config.data_folder / "sugar_names.json").open() as f: 
+    with (config.data_folder / "sugar_names.json").open() as f:
         SUGAR_NAMES = json.load(f)
 
     # with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open() as f:
     #     pdb_files = json.load(f)
 
-    #NOTE: Debug
-    pdb_files = ["7b7c", "7c38"] # List based on the json 
+    # NOTE: Debug
+    pdb_files = ["7b7c", "7c38"]  # List based on the json
 
     for pdb in pdb_files:
         monosacharides = []
@@ -228,17 +249,17 @@ def categorize(config: Config):
 
         all_residues[block.name] = current_all_residues
 
-
+        # FIXME: is anything actually being removed?
         # Remove glycosylations and close contacts from mono and oligosaccharides. Dictionaries are modified in place.
         current_glycosylated = remove_connections(block, monosacharides, oligosacharides)
         current_close_contacts = remove_close_contacts(block, monosacharides, oligosacharides)
 
         # What is left in mono and oligosaccharides are only ligands
-        current_ligands = monosacharides.copy()
+        current_ligands = monosacharides.copy() # FIXME: so we only want to work with these
         current_ligands.extend(oligosacharides)
 
-        #TODO: extract to function
-        # store residues from the current structure to the appropirate groups
+        # TODO: extract to function
+        # store residues from the current structure to the appropirate groups#FIXME: what?
         if current_ligands:
             ligands[block.name] = current_ligands
         if current_glycosylated:
@@ -262,7 +283,7 @@ def categorize(config: Config):
         if current_ligands and current_glycosylated and current_close_contacts:
             pdb_lig_glyc_close.append(block.name)
 
-    #TODO: extract to function
+    # TODO: extract to function
     # save everything
     with open((config.categorization_results / "ligands.json"), "w") as f:
         json.dump(ligands, f, indent=4)
@@ -295,13 +316,15 @@ def categorize(config: Config):
     with open((config.categorization_results / "pdb_glycosylation_not_anotated.json"), "w") as f:
         json.dump(list(pdb_not_anotated_glycosylation), f, indent=4)
 
-    #TODO: extract to function, print into file?
+    # FIXME: print into file
+    # TODO: extract to function, print into file?
     # print counts of everything
     print("Number of residues with multiple conformations: ", len(overall_conformers))
     print("PDB with unannotated glycosylation:", len(pdb_not_anotated_glycosylation))
     print(f"PDB with sugars in the wrong category: {len(pdb_sugars_in_wrong_category)}\n")
     print()
 
+    # FIXME: what is happening here in the for loops?
     count = 0
     for residues in all_residues.values():
         count += len(residues)
