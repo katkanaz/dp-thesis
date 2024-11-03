@@ -125,6 +125,8 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     with open(config.results_folder / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_cluster_representatives.json", "w") as f:
         json.dump(representatives, f, indent=4)
 
+        # TODO: create main, call twice + add condition
+
 if __name__ == "__main__":
     parser = ArgumentParser()
 

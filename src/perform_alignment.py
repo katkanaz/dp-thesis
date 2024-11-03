@@ -135,6 +135,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, method: str, 
                 cmd.select(f"select polymer1, polymer and not {filename2}")
                 cmd.select(f"select polymer2, polymer and not {filename1}")
 
+                # TODO: rewrite to perform both types of alignemnt
                 cmd.align("original_sugar1", {sugar})
                 cmd.align("original_sugar2", {sugar})
                 if method == "align":
