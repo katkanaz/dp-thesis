@@ -1,10 +1,9 @@
-import gemmi
 import json
 
-from gemmi.cif import Block #type: ignore
+import gemmi
+from gemmi.cif import Block  # type: ignore
 
 from config import Config
-
 
 ligands = {}  # all ligands from all structures
 glycosylated = {}  # all glycosylated residues according to conn category from all structures
