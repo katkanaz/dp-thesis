@@ -29,8 +29,8 @@ def get_components_file() -> None:
     """
 
     response = requests.get(f"https://files.wwpdb.org/pub/pdb/data/monomers/components.cif.gz")
-    with open((config.data_folder / "components.cif.gz"), "wb") as f:
     # TODO: here will be path to data/the specific run instead of config.data_folder
+    with open((config.data_folder / "components" / "components.cif.gz"), "wb") as f:
         f.write(response.content)
 
 
