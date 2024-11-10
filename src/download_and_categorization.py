@@ -19,6 +19,7 @@ from plot_graphs import plot_graphs
 from graph_analysis import graph_analysis
 from process_and_filter_ligands import process_and_filter_ligands
 
+# TODO: add function that deletes sugar cif files from data/run/sugars
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float):#TODO: is main appropriate name?
 
     # download_files(config)

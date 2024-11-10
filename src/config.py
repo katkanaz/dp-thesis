@@ -19,6 +19,7 @@ class Config(BaseModel):
     validation_results: Path
     removed_o6_folder: Path
     graph_analysis: Path
+    img: Path
 
     @classmethod
     def load(cls, file_path: Union[Path, str]) -> "Config": # TODO: load take sugar argument

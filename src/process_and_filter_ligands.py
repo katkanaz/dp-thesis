@@ -22,7 +22,6 @@ def get_pdb_ids_with_rscc(config: Config) -> None:
 
 
 #NOTE: written specifically for previous work
-#TODO: fix the 06
 def remove_O6(config: Config) -> None:
     """
     Remove O6 atom of NAG, GAL, MAN, GLC and BGC from the structures
@@ -37,17 +36,11 @@ def remove_O6(config: Config) -> None:
             file = f.readlines()
         with (config.data_folder / "no_o6_mmcif" / f"{pdb.lower()}.cif").open("w") as f:
             for line in file:
-                if line.startswith("HETATM"): #FIXME: Refactor if else
-                    if "MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line:
-                        if "O6" in line:
-                            continue
-                        else:
-                            f.write(line)
-                    else:
-                        f.write(line)
-                else:
-                    f.write(line)
-
+                if (line.startswith("HETATM") and
+                    ("MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line) and
+                    "O6" in line):
+                    continue
+                f.write(line)
 
 def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:
     """

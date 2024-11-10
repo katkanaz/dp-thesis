@@ -14,7 +14,7 @@ def plot_corr_graphs(config: Config):
     :param graphs: Path to save the results
     """
 
-    (config.results_folder / "graphs" / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
+    (config.img / "graphs" / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
     data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
 
     residue_types  = ["all", "ligand", "glycosylated", "close"]
@@ -30,7 +30,7 @@ def plot_corr_graphs(config: Config):
             plt.tick_params(labelsize="medium")
             plt.xlabel("RMSD")
             plt.ylabel("RSCC")
-            plt.savefig(config.results_folder / "graphs" / f"all_{residue_type}.svg")
+            plt.savefig(config.img / "graphs" / f"all_{residue_type}.svg")
             plt.close()
 
         else:
@@ -41,7 +41,7 @@ def plot_corr_graphs(config: Config):
             plt.tick_params(labelsize="medium")
             plt.xlabel("RMSD")
             plt.ylabel("RSCC")
-            plt.savefig(config.results_folder / "graphs" / "all.svg")
+            plt.savefig(config.img / "graphs" / "all.svg")
             plt.close()
 
     for res in most_abundant_residues:
@@ -53,7 +53,7 @@ def plot_corr_graphs(config: Config):
         plt.tick_params(labelsize="medium")
         plt.xlabel("RMSD", size="medium")
         plt.ylabel("RSCC", size="medium")
-        plt.savefig(config.results_folder / "graphs" / "individual_sugars" / "correlation" / f"{res}.svg")
+        plt.savefig(config.img / "graphs" / "individual_sugars" / "correlation" / f"{res}.svg")
         plt.close()
 
 
@@ -65,7 +65,7 @@ def plot_histograms(config: Config):
     :param graphs: Path to save the results
     """
 
-    (config.results_folder / "graphs" / "individual_sugars" / "histograms").mkdir(exist_ok=True)
+    (config.img / "graphs" / "individual_sugars" / "histograms").mkdir(exist_ok=True)
     data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
     new_data = data.filter(items=["rmsd"])
 
@@ -82,7 +82,7 @@ def plot_histograms(config: Config):
 
         plt.legend().remove()
         #plt.show()
-        plt.savefig(config.results_folder / "graphs" / "individual_sugars" / "histograms" / f"{sugar}.svg")
+        plt.savefig(config.img / "graphs" / "individual_sugars" / "histograms" / f"{sugar}.svg")
         plt.close()
 
 
@@ -103,7 +103,7 @@ def plot_3D_graph(config: Config):
     ax.set_zlabel("RSCC")#FIXME:
     ax.scatter(data["rmsd"], data["resolution"], data["rscc"], linewidths=0.5, marker=".", color="green")
     #plt.show()
-    plt.savefig(config.results_folder / "graphs" / f"3D_graph.svg")
+    plt.savefig(config.img / "graphs" / f"3D_graph.svg")
     plt.close()
 
 
@@ -116,6 +116,6 @@ def plot_graphs(config: Config):
 if __name__ == "__main__":
     config = Config.load("config.json")
 
-    (config.results_folder / "graphs").mkdir(exist_ok=True, parents=True)
+    (config.img / "graphs").mkdir(exist_ok=True, parents=True)
 
     plot_graphs(config)

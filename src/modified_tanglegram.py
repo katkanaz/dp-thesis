@@ -154,7 +154,7 @@ def tanglegram(a, b, n_data, results_folder: Path, labelsA=None, labelsB=None, e
     dflt_col = "#808080"
 
     link_cols = {}
-    for i in range(618): #TODO: does this need to be hardcoded?
+    for i in range(n_data):
         link_cols[i] = [colors[int(cluster)] for cluster, struc in clusters.items() if i in struc][0]
 
     for i, i12 in enumerate(link1[:,:2].astype(int)):

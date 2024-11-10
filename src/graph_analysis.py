@@ -55,7 +55,7 @@ def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: f
 
 
 if __name__ == "__main__":
-    #TODO: Add argparse (might not be needed if all in two main scripts)
+    #TODO: Extract values into changable variables?
     config = Config.load("config.json")
 
     (config.results_folder / "graph_analysis").mkdir(exist_ok=True, parents=True)

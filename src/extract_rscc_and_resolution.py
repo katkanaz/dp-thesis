@@ -54,17 +54,15 @@ def extract_rscc_and_resolution(config: Config) -> None:
                 if not rscc:
                     no_rscc.add(f"{structure}_{residue}")
                     continue
-                #TODO: refactor ifs
-                if structure in ligands:
-                    if residue in ligands[structure]:
+
+                res_type = None
+                if structure in ligands and residue in ligands[structure]:
                         res_type = "ligand"
-                if structure in glycosylated:
-                    if residue in glycosylated[structure]:
+                if structure in glycosylated and residue in glycosylated[structure]:
                         res_type = "glycosylated"
-                if structure in close_contacts:
-                    if residue in close_contacts[structure]:
+                if structure in close_contacts and residue in close_contacts[structure]:
                         res_type = "close"
-                #FIXME: Add assert
+                assert res_type is not None, "Residue should be one of the following type: ligand, glycosylated, close contact" 
                 row = [str(structure), str(resolution), str(residue["name"]), residue["num"], residue["chain"], str(rscc), res_type]
                 all_rscc.writerow(row)
 

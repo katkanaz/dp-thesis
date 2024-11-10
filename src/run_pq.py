@@ -7,6 +7,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from argparse import ArgumentParser
 import json
+from typing import List
 import os
 from pathlib import Path
 from platform import system
@@ -47,7 +48,7 @@ def download_pq(config: Config) -> None:
     # if not download again current mv and delete changelow
 
 
-def create_pq_config(structure: str, residues, sugar: str) -> list:
+def create_pq_config(structure: str, residues: List[dict], sugar: str) -> list:
     #FIXME: Reword docstring, residues type and description
     """
     Create config file for the given structure
@@ -65,8 +66,6 @@ def create_pq_config(structure: str, residues, sugar: str) -> list:
     :return: List of query IDs
     """
     
-    print(type(residues))
-
     pq_config = {
         "InputFolders": [
             str(config.pq_folder / "structures"),
@@ -103,7 +102,7 @@ def create_pq_config(structure: str, residues, sugar: str) -> list:
     return query_names
 
 
-def extract_results(target: Path, zip_result_folder: Path, query_names: list) -> None:
+def extract_results(target: Path, zip_result_folder: Path, query_names: List[str]) -> None:
     #FIXME: Reword
     """
     Unzip the results and rename and move each sugar surrounding (pattern) to one common folder
@@ -128,6 +127,7 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: list) ->
                     pq_couldnt_find_pattern.append(query_name)
                     continue
                 # It is expected to have only one pattern found for one query, but checking just in case
+                # TODO: add error flag
                 if len(os.listdir(results_path)) > 1:
                     #global END_FLAG
                     #END_FLAG = True
@@ -157,7 +157,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
         if not query_names:
             continue
         # Copy current structure to ./structures dir which is used as source by PQ.
-        src = config.mmcif_files / f"{structure}.cif" #NOTE: why are we not using the no_o6_mmcifs?
+        src = config.mmcif_files / f"{structure}.cif"
         dst = config.pq_folder / "structures" / f"{structure}.cif"
         shutil.copyfile(src, dst)
 

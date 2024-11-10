@@ -4,7 +4,6 @@ Description: Perform hierarchical clustering and create given number number of c
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
-
 from argparse import ArgumentParser
 from collections import defaultdict
 import csv
@@ -53,8 +52,9 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     if make_dendrogram:
         # Plot the dendrogram
         plt.figure(figsize=(12, 8))
-        #TODO: add labels to axis
-        dendr = sch.dendrogram(Z1, color_threshold=color_threshold)
+        sch.dendrogram(Z1, color_threshold=color_threshold, no_labels=True)
+        plt.xlabel("Binding sites", fontsize=20)
+        plt.ylabel("RMSD", fontsize=20)
         if color_threshold is None:
             print(f"Color threshold is: {0.7*max(Z1[:,2])}")
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    config = Config.load("debug_conf.json")
 
     config.dendrograms.mkdir(exist_ok=True, parents=True)
 
