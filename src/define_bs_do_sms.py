@@ -1,12 +1,10 @@
 """
 Script Name: define_bs_do_sms.py
 Description: Define representative binding sites for a given sugar using PQ and PyMOL,
-cluster obtained data and choose representatives to perform structure motif search with.
+             cluster obtained data and choose representatives to perform structure motif search with.
 Author: Kateřina Nazarčuková
 """
 
-#NOTE: what if a want to run the scripts one by one, just commnet it?
-#TODO: do i need all the libs from other scripts imported or just the ones used in this specidic script
 from argparse import ArgumentParser
 from pathlib import Path
 from platform import system
@@ -47,7 +45,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")#TODO: fix confing for python 3.8
+    config = Config.load("config.json")
     is_unix = system() != "Windows"
     #TODO: are positional?
 
