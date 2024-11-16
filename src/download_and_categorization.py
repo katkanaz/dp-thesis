@@ -28,10 +28,12 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
     categorize(config)
     extract_rscc_and_resolution(config)
     run_mv(config, is_unix)
-    plot_graphs(config)
-    graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)
-    process_and_filter_ligands(config)
+
+    if make_graphs:
+        plot_graphs(config)
+        graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)
         get_ids_and_remove_o6(config)
+
     filter_ligands(res, rscc, rmsd, config)
 
 if __name__ == "__main__":
