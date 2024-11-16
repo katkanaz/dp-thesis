@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from config import Config
+from configuration import Config
 # from pymol_api import Pymol
 from pymol import cmd
 

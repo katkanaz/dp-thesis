@@ -6,7 +6,7 @@ import gemmi
 import requests
 from time import sleep
 
-from config import Config
+from configuration import Config
 
 
 def get_pdb_ids_from_pq(result_file: Path) -> None:

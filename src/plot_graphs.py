@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from config import Config
+from configuration import Config
 
 
 def plot_corr_graphs(config: Config):

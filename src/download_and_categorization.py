@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 from platform import system
 
-from config import Config
+from configuration import Config
 
 from download_files import download_files
 from categorize import categorize

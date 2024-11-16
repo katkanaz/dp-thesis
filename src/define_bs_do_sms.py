@@ -12,7 +12,7 @@ from pathlib import Path
 from platform import system
 from typing import Union
 
-from config import Config
+from configuration import Config
 
 from run_pq import run_pq #TODO: should the main functions have documentation, in this way it wont be readable what it does
 from perform_alignment import perform_alignment

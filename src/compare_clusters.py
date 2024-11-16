@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 import json
 
-from config import Config
+from configuration import Config
 
 
 def compare_clusters(sugar: str, config: Config) -> None:

@@ -16,7 +16,7 @@ import numpy as np
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
 
-from config import Config
+from configuration import Config
 
 
 def cluster_data(sugar: str, n_clusters: int, cluster_method: str, 

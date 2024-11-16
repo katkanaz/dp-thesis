@@ -5,7 +5,7 @@ import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
 
-from config import Config
+from configuration import Config
 
 
 def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:

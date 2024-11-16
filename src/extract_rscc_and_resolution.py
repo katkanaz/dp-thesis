@@ -3,7 +3,7 @@ import json
 
 from bs4 import BeautifulSoup, NavigableString
 
-from config import Config
+from configuration import Config
 
 
 def extract_rscc_and_resolution(config: Config) -> None:

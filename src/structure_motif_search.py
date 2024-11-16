@@ -14,7 +14,7 @@ import shutil
 
 from Bio.PDB.PDBParser import PDBParser
 
-# from config import Config
+from configuration import Config
 
 
 # def extract_representatives(sugar: str, align_method: str, num: int, method: str, config: Config, input_folder: Path) -> None:

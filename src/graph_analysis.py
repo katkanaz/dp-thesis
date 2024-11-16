@@ -2,7 +2,7 @@ from csv import DictReader, DictWriter
 
 import pandas as pd
 
-from config import Config
+from configuration import Config
 
 
 def get_average_rmsd_of_peaks(config: Config) -> None:

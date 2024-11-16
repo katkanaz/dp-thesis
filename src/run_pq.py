@@ -17,7 +17,7 @@ import subprocess
 from tempfile import TemporaryDirectory
 import zipfile
 
-from config import Config
+from configuration import Config
 
 
 more_than_one_pattern = []          # just to check no more than one pattern for specific ResidueID was found
