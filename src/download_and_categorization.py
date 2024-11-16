@@ -17,7 +17,8 @@ from extract_rscc_and_resolution import extract_rscc_and_resolution
 from run_mv import run_mv
 from plot_graphs import plot_graphs
 from graph_analysis import graph_analysis
-from process_and_filter_ligands import process_and_filter_ligands
+from remove_o6 import get_ids_and_remove_o6
+from filter_ligands import filter_ligands
 
 # TODO: add function that deletes sugar cif files from data/run/sugars
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float,
@@ -30,6 +31,8 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
     plot_graphs(config)
     graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)
     process_and_filter_ligands(config)
+        get_ids_and_remove_o6(config)
+    filter_ligands(res, rscc, rmsd, config)
 
 if __name__ == "__main__":
     parser = ArgumentParser()
