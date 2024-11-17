@@ -21,16 +21,16 @@ def extract_rscc_and_resolution(config: Config) -> None:
     :param config: Config object
     """
 
-    with open(config.categorization_results / "all_residues.json", "r") as f:
+    with open(config.categorization_results / "all_residues.json", "r", encoding="utf8") as f:
         all_residues = json.load(f)
-    with open(config.categorization_results / "ligands.json", "r") as f:
+    with open(config.categorization_results / "ligands.json", "r", encoding="utf8") as f:
         ligands = json.load(f)
-    with open(config.categorization_results / "glycosylated.json", "r") as f:
+    with open(config.categorization_results / "glycosylated.json", "r", encoding="utf8") as f:
         glycosylated = json.load(f)
-    with open(config.categorization_results / "close_contacts.json", "r") as f:
+    with open(config.categorization_results / "close_contacts.json", "r", encoding="utf8") as f:
         close_contacts = json.load(f)
 
-    with open(config.validation_results / "all_rscc_and_resolution.csv", "w", newline="") as f:
+    with open(config.validation_results / "all_rscc_and_resolution.csv", "w", newline="", encoding="utf8") as f:
         all_rscc = csv.writer(f)
 
         no_resolution = set()
@@ -40,7 +40,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
         for structure, residues in all_residues.items():
             file = f"{structure.lower()}.xml"
-            with open(config.validation_files / file, "r") as file_xml:
+            with open(config.validation_files / file, "r", encoding="utf8") as file_xml:
                 d = file_xml.read()
             data = BeautifulSoup(d, "xml")
             structure_info = data.find("Entry")
@@ -75,13 +75,13 @@ def extract_rscc_and_resolution(config: Config) -> None:
                 all_rscc.writerow(row)
 
 
-    with open(config.validation_results / "pdb_no_resolution.json", "w") as f:
+    with open(config.validation_results / "pdb_no_resolution.json", "w", encoding="utf8") as f:
         json.dump(list(no_resolution), f, indent=4)
 
-    with open(config.validation_results / "no_residue_info.json", "w") as f:
+    with open(config.validation_results / "no_residue_info.json", "w", encoding="utf8") as f:
         json.dump(list(no_residue_info), f, indent=4)
 
-    with open(config.validation_results / "no_rscc.json", "w") as f:
+    with open(config.validation_results / "no_rscc.json", "w", encoding="utf8") as f:
         json.dump(list(no_rscc), f, indent=4)
 
 
