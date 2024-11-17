@@ -1,3 +1,11 @@
+"""
+Script Name: compare_clusters.py
+Description: Compare clusters from align and super data.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 from argparse import ArgumentParser
 import json
 

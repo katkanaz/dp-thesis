@@ -1,3 +1,11 @@
+"""
+Script Name: categorize.py
+Description: Categorize sugar residues from all structures to separate the lignads.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 import json
 
 import gemmi

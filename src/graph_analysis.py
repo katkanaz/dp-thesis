@@ -1,3 +1,12 @@
+"""
+Script Name: graph_analysis.py
+Description: Perform different kinds of analysis of obtained graphs.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
+from argparse import ArgumentParser
 from csv import DictReader, DictWriter
 
 import pandas as pd

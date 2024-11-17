@@ -1,3 +1,11 @@
+"""
+Script Name: extract_rscc_and_resolution.py
+Description: Extract resolution of structures and RSCC values of their residues if available.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 import csv
 import json
 

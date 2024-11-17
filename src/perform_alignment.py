@@ -1,3 +1,11 @@
+"""
+Script Name: perform_alignment.py
+Description: Filter and modify binding sites from PatternQuery and calculate RMSD values by aligning all against all using PyMOL.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 from argparse import ArgumentParser
 import csv
 import itertools

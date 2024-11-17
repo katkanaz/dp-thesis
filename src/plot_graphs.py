@@ -1,3 +1,11 @@
+"""
+Script Name: plot_graphs.py
+Description: Plot different types of graphs for the sugar residues.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -7,8 +15,8 @@ from configuration import Config
 def plot_corr_graphs(config: Config):
     """
     Create correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
-    glycosylated residues and residues in close contacts. Also cretate these graphs separately for each
-    of the 10 most abundant sugar types among pdb structures
+    glycosylated residues and residues in close contacts. Also create these graphs separately for each
+    of the 10 most abundant sugar types among PDB structures
 
     :param config: Config objects
     :param graphs: Path to save the results

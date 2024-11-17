@@ -1,3 +1,11 @@
+"""
+Script Name: download_files.py
+Description: Acquire IDs of PDB structures with sugars and download said structures and their validation files.
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 import json
 from os import listdir
 from pathlib import Path
@@ -5,6 +13,7 @@ from pathlib import Path
 import gemmi
 import requests
 from time import sleep
+from typing import List, Set
 
 from configuration import Config
 
@@ -34,7 +43,7 @@ def get_components_file() -> None:
         f.write(response.content)
 
 
-def get_sugars_from_ccd() -> list:
+def get_sugars_from_ccd() -> List[str]:
     """Get a list of all sugar abbreviations that appear in PDB database
 
     :return list: List of sugar abbreviations
@@ -52,7 +61,7 @@ def get_sugars_from_ccd() -> list:
     return list(sugar_names)
 
 
-def get_pdb_ids_with_sugars(sugar_names: list) -> set:
+def get_pdb_ids_with_sugars(sugar_names: List[str]) -> Set[str]:
     """Get a set of PDB IDs for all structures containing any of the sugars
 
     :param list sugar_names: List of sugar abbreviations
