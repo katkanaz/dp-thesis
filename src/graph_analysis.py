@@ -58,15 +58,26 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
 
 
 def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float):
-
     get_average_rmsd_of_peaks(config)
     analyze_graph(min_rscc, max_rscc, min_rmsd, max_rmsd, config)
 
 
 if __name__ == "__main__":
-    #TODO: Extract values into changable variables?
+    parser = ArgumentParser()
+
+    parser.add_argument("--min_rscc", help="Minimum RSCC used to define graph area",
+                        type="float", default=0.85)
+    parser.add_argument("--max_rscc", help="Maximum RSCC used to define graph area",
+                        type="float", default=1.0)
+    parser.add_argument("--min_rmsd", help="Minimum RMSD used to define graph area",
+                        type="float", default=2.0)
+    parser.add_argument("--max_rmsd", help="Maximum RMSD used to define graph area",
+                        type="float", default=3.0)
+
+    args = parser.parse_args()
+
     config = Config.load("config.json")
 
     (config.results_folder / "graph_analysis").mkdir(exist_ok=True, parents=True)
 
-    graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)#TODO: define variables above
+    graph_analysis(config, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd)
