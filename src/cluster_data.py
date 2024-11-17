@@ -10,13 +10,13 @@ from argparse import ArgumentParser
 from collections import defaultdict
 import csv
 import json
-# from pathlib import Path
 from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -145,6 +145,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("debug_conf.json")
+    setup_logger(config.log_path)
 
     config.dendrograms.mkdir(exist_ok=True, parents=True)
 

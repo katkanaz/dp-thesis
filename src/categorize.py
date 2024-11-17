@@ -10,6 +10,7 @@ import json
 
 import gemmi
 from gemmi.cif import Block  # type: ignore
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -344,6 +345,7 @@ def categorize(config: Config):
 
 if __name__ == "__main__":
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     config.categorization_results.mkdir(exist_ok=True, parents=True)
 

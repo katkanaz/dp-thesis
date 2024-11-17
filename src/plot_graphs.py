@@ -8,6 +8,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -123,6 +124,7 @@ def plot_graphs(config: Config):
 
 if __name__ == "__main__":
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     (config.img / "graphs").mkdir(exist_ok=True, parents=True)
 

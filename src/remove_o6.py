@@ -9,6 +9,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from csv import DictReader
 import json
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -57,6 +58,7 @@ def get_ids_and_remove_o6(config: Config):
 
 if __name__ == "__main__":
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     (config.data_folder / "no_o6_mmcif").mkdir(exist_ok=True, parents=True)
 

@@ -8,12 +8,13 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 import csv
 import json
 from platform import system
-import requests
 import subprocess
 from zipfile import ZipFile
 
 import gemmi
 import pandas as pd
+import requests
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -144,6 +145,8 @@ def run_mv(config: Config, is_unix: bool):
 
 if __name__ == "__main__":
     config = Config.load("config.json")
+    setup_logger(config.log_path)
+
     (config.results_folder / "mv_results" / "results").mkdir(exist_ok=True, parents=True)
 
     is_unix = system() != "Windows"

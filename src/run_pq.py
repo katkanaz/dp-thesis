@@ -11,11 +11,13 @@ from typing import List
 import os
 from pathlib import Path
 from platform import system
-import requests
 import shutil
 import subprocess
 from tempfile import TemporaryDirectory
 import zipfile
+
+import requests
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -198,10 +200,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     is_unix = system() != "Windows"
 
     (config.pq_folder / "structures").mkdir(exist_ok=True, parents=True)
     (config.pq_folder / "results").mkdir(exist_ok=True, parents=True)
-    
+
     run_pq(args.sugar, config, is_unix)

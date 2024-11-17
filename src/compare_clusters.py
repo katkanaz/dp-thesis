@@ -8,6 +8,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from argparse import ArgumentParser
 import json
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -57,5 +58,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     compare_clusters(args.sugar, config)

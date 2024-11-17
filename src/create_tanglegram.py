@@ -4,6 +4,7 @@ import modified_tanglegram
 import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -44,6 +45,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     config.tanglegrams.mkdir(exist_ok=True, parents=True)
 

@@ -5,10 +5,11 @@ Description: Define representative binding sites for a given sugar using PQ and 
 Author: Kateřina Nazarčuková
 """
 
+
 from argparse import ArgumentParser
-from pathlib import Path
 from platform import system
 from typing import Union
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -19,7 +20,7 @@ from compare_clusters import compare_clusters
 from create_tanglegram import create_tanglegram
 from structure_motif_search import structure_motif_search
 
-#TODO: is union not in python 3.8
+
 def main(sugar: str, align_method: str, n_clusters: int, cluster_method: str, make_dendrogram: bool,
          color_threshold: Union[float, None] = None, config: Config, is_unix: bool):
     run_pq(sugar, config, is_unix)
@@ -46,6 +47,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("config.json")
+    setup_logger(config.log_path)
+
     is_unix = system() != "Windows"
     #TODO: are positional?
 

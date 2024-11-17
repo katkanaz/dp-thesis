@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 from csv import DictReader, DictWriter
 
 import pandas as pd
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -77,6 +78,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     (config.results_folder / "graph_analysis").mkdir(exist_ok=True, parents=True)
 

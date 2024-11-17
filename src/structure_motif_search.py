@@ -13,6 +13,7 @@ from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue, Attrib
 import shutil
 
 from Bio.PDB.PDBParser import PDBParser
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -126,7 +127,9 @@ if __name__ == "__main__":
     #
     # # args = parser.parse_args()
     #
-    # config = Config.load("config.json")
+    config = Config.load("config.json")
+    setup_logger(config.log_path)
+
     # input_folder = (config.results_folder / "structure_motif_search" / "input_representatives" / args.sugar)
     # input_folder.mkdir(exist_ok=True, parents=True)
 

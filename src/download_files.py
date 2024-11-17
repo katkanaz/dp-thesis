@@ -9,20 +9,22 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 import json
 from os import listdir
 from pathlib import Path
+from time import sleep
+from typing import List, Set
 
 import gemmi
 import requests
-from time import sleep
-from typing import List, Set
+from logger import logger, setup_logger
 
 from configuration import Config
 
 
-def get_pdb_ids_from_pq(result_file: Path) -> None:
+def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:
     """
     Get PDB IDs of structures from PQ results
 
     :param result_file: Path to file for writing results
+    :param config: Config object
     """
 
     structures = set()
@@ -32,9 +34,11 @@ def get_pdb_ids_from_pq(result_file: Path) -> None:
         json.dump(list(structures), f, indent=4)
 
 
-def get_components_file() -> None:
+def get_components_file(config: Config) -> None:
     """
     Download components.cif.gz from CCD
+
+    :param config: Config object
     """
 
     response = requests.get(f"https://files.wwpdb.org/pub/pdb/data/monomers/components.cif.gz")
@@ -147,11 +151,11 @@ def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewri
     print("Finished all iterations - second loop.")
 
 
-def get_ids_missing_files(json_file: Path, validation_files: Path) -> list:
+def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
     #TODO: Add docs
     missing_files = []
     # Load json with needed structures
-    with open(json_file, "r") as f:
+    with open(json_file, "r", encoding="utf8") as f:
         all_structures: list[str] = json.load(f)
     # Get a list of downloaded files
     file_names: list[str] = [f.split(".")[0] for f in listdir(validation_files)]
@@ -162,7 +166,7 @@ def get_ids_missing_files(json_file: Path, validation_files: Path) -> list:
     return missing_files
 
 
-def download_missing_files(missing_files: list) -> None:
+def download_missing_files(missing_files: List[str]) -> None:
     #TODO: Add docs
     timeout = 2
     n = 0
@@ -205,10 +209,10 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
 
 def download_files(config: Config):
     pdb_ids_pq_file = config.data_folder / "pdb_ids_pq.json"
-    #get_components_file()
+    get_components_file(config)
     sugar_names = get_sugars_from_ccd()
     pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
-    get_pdb_ids_from_pq(pdb_ids_pq_file)
+    get_pdb_ids_from_pq(pdb_ids_pq_file, config)
 
     with (pdb_ids_pq_file).open() as f:
         pdb_ids_pq = json.load(f)
@@ -219,11 +223,12 @@ def download_files(config: Config):
     download_structures_and_validation_files(pdb_ids)
     check_downloaded_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files, config.mmcif_files)
 
-    # missing_files = get_ids_missing_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files)
-    # download_missing_files(missing_files)
+    missing_files = get_ids_missing_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files)
+    download_missing_files(missing_files)
 
 if __name__ == "__main__":
     config = Config.load("config.json")
+    setup_logger(config.log_path)
 
     config.data_folder.mkdir(exist_ok=True, parents=True)
     config.results_folder.mkdir(exist_ok=True, parents=True)

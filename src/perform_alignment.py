@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import numpy as np
+from logger import logger, setup_logger
 
 from configuration import Config
 # from pymol_api import Pymol
@@ -207,6 +208,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = Config.load("config.json")
+    setup_logger(config.log_path)
     # pm_cmd = Pymol(gui=True)
 
     perform_alignment(args.sugar, args.perform_align, config)

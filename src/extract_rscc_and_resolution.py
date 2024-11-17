@@ -10,6 +10,7 @@ import csv
 import json
 
 from bs4 import BeautifulSoup, NavigableString
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -87,6 +88,8 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
 if __name__ == "__main__":
     config = Config.load("config.json")
+    setup_logger(config.log_path)
+
     config.validation_results.mkdir(exist_ok=True, parents=True)
 
     extract_rscc_and_resolution(config)
