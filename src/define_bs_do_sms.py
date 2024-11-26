@@ -21,13 +21,13 @@ from create_tanglegram import create_tanglegram
 from structure_motif_search import structure_motif_search
 
 
-def main(sugar: str, align_method: str, n_clusters: int, cluster_method: str, make_dendrogram: bool,
-         color_threshold: Union[float, None] = None, config: Config, is_unix: bool):
+def main(sugar: str, config: Config, is_unix: bool, align_method: str, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
+         color_threshold: Union[float, None] = None):
     run_pq(sugar, config, is_unix)
-    perform_alignment(sugar, align_method, config)
+    perform_alignment(sugar, perform_align, config)
     cluster_data(sugar, n_clusters, cluster_method, align_method, config, make_dendrogram, color_threshold)
-    compare_clusters()
-    create_tanglegram()
+    compare_clusters(sugar, config)
+    create_tanglegram(sugar, cluster_method, config)
     structure_motif_search()
 
 
@@ -35,8 +35,9 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-s", "--sugar", help="The sugar abbreviation", type="str", required=True)
-    parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", choices=["super", "align"],
-                        type="str", required=True)
+    # parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", choices=["super", "align"],
+    #                     type="str", required=True)
+    parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
     parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
     parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
@@ -53,7 +54,7 @@ if __name__ == "__main__":
     #TODO: are positional?
 
     #TODO: make the number of clusters optional
-    main(args.sugar, args.align_method, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold, config, is_unix)
+    main(args.sugar, config, is_unix, args.align_method, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
 
 
 
