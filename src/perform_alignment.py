@@ -21,7 +21,7 @@ from configuration import Config
 from pymol import cmd
 
 
-def refine_binding_sites(sugar: str, min_res: int, config: Config) -> Path:
+def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
     and give the filtered structures unique ID, which will be used as an index for creating the
@@ -37,10 +37,11 @@ def refine_binding_sites(sugar: str, min_res: int, config: Config) -> Path:
 
     # Path to the new folder where the fixed structures will be saved
     # TODO: extract into config
-    fixed_folder = config.binding_sites / f"{sugar}_fixed_{min_res}"
+    fixed_folder = config.binding_sites / f"{sugar}_fixed_{min_residues}"
     fixed_folder.mkdir(exist_ok=True)
 
     less_than_n_aa = []  # How many structures were excluded
+    more_than_max_aa = []
     i = 0  # Index
     structures_keys = {} # To map index with structure
     for path_to_file in structures_folder.iterdir():
@@ -53,7 +54,7 @@ def refine_binding_sites(sugar: str, min_res: int, config: Config) -> Path:
         # count = int(pm_cmd('print(cmd.count_atoms("n. CA and polymer"))')[-1])
         # pm_cmd('res = cmd.count_atoms("n. CA and polymer")')[-1]
         # count = int(pm_cmd('print(res)')[-1])
-        if count < min_res:
+        if count < min_residues:
             less_than_n_aa.append(filename)
             continue
 
@@ -82,7 +83,7 @@ def refine_binding_sites(sugar: str, min_res: int, config: Config) -> Path:
     (config.results_folder / "clusters" / sugar).mkdir(exist_ok=True, parents=True)
     with open(config.results_folder / "clusters" / sugar / f"{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
-    print(f"number of structures with less than {min_res} AA: ", len(less_than_n_aa))
+    print(f"number of structures with less than {min_residues} AA: ", len(less_than_n_aa))
 
     return fixed_folder
 
@@ -192,8 +193,12 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
 
 
 def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
-    min_res = 5
-    fixed_folder = refine_binding_sites(sugar, min_res, config)
+    # Fixed values based on literature and structure motif search limit
+    min_residues = 5
+    max_residues = 10
+
+    fixed_folder = refine_binding_sites(sugar, min_residues, max_residues, config)
+
     save_path = "../debug/missing_sugar/oct_27/data/sugars/"
     all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config)
 

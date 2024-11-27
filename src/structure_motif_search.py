@@ -37,7 +37,7 @@ from configuration import Config
 #         structure_keys: dicutil.copyfile((path_to_file / structure), (input_folder / structure))
 
 
-# def load_representatives(config: Config) -> list:
+# def load_representatives(config: Config) -> List[Path]:
     #TODO: Add docs
     # representatives = []
     # for file in sorted(Path("../results/structure_motif_search/input_representatives/FUC/").glob("*.pdb")):
