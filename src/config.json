@@ -1,16 +1,7 @@
 {
-    "binding_sites": "../results/binding_sites",
-    "data_folder": "../data",
-    "mmcif_files" : "../data/mmcif_files",
-    "validation_files": "../data/validation_files",
-    "results_folder": "../results",
-    "mv_folder": "../mv",
-    "pq_folder": "../pq",
-    "dendrograms": "../img/dendrograms",
-    "tanglegrams": "../img/tanglegrams",
-    "categorization_results": "../results/categorization",
-    "patterns_folder": "../pq_results/structures_with_sugars/patterns",
-    "validation_results": "../results/validation",
-    "removed_o6_folder" : "../data/mmcif_without_o6",
-    "graph_analysis" : "../results/graph_analysis"
+    "data_dir": "../data",
+    "results_dir": "../results",
+    "images_dir": "../img",
+    "mv_dir": "../mv",
+    "pq_dir": "../pq"
 }
