@@ -4,24 +4,30 @@ from pydantic import BaseModel
 from typing import Union
 
 class Config(BaseModel):
-    # TODO: change based on canvas
-    binding_sites: Path
-    data_folder: Path
-    mmcif_files: Path
-    validation_files: Path
-    results_folder: Path
-    mv_folder: Path
-    pq_folder: Path
-    dendrograms: Path
-    tanglegrams: Path
-    categorization_results: Path
-    patterns_folder: Path
-    validation_results: Path
-    removed_o6_folder: Path
-    graph_analysis: Path
-    img: Path
-    log_path: Path
+    data_dir: Path
+    results_dir: Path
+    images_dir: Path
+    mv_dir: Path
+    pq_dir: Path
 
+    sugar_binding_patterns_dir: Path
+    components_dir: Path
+    mmcif_files_dir: Path
+    no_o6_mmcif_dir: Path
+    validation_files_dir: Path
+    sugars_dir: Path
+    categorization_dir: Path
+    validation_dir: Path
+    mv_run_dir: Path
+    graph_analysis_dir: Path
+    residue_graphs_dir: Path
+    pq_run_dir: Path
+    raw_binding_sites_dir: Path
+    filtered_binding_sites_dir: Path
+    clusters_dir: Path
+    structure_motif_search_dir: Path
+    dendrograms_dir: Path
+    tanglegrams_dir: Path
     @classmethod
     def load(cls, file_path: Union[Path, str]) -> "Config": # TODO: load take sugar argument
         with open(file_path, "r") as f:
