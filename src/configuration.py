@@ -28,6 +28,8 @@ class Config(BaseModel):
     structure_motif_search_dir: Path
     dendrograms_dir: Path
     tanglegrams_dir: Path
+
+
     @classmethod
     def load(cls, file_path: Union[Path, str], sugar: str, current_run: str, data_run: str) -> "Config":
         with open(file_path, "r") as f:
@@ -62,3 +64,6 @@ class Config(BaseModel):
         self.tanglegrams_dir = self.images_dir / f"binding_sites/{sugar}/{current_run}/tanglegrams"
 
     
+    @classmethod
+    def get_current_run(cls):
+        pass
