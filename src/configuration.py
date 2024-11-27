@@ -29,8 +29,10 @@ class Config(BaseModel):
     dendrograms_dir: Path
     tanglegrams_dir: Path
     @classmethod
-    def load(cls, file_path: Union[Path, str]) -> "Config": # TODO: load take sugar argument
+    def load(cls, file_path: Union[Path, str], sugar: str, current_run: str, data_run: str) -> "Config":
         with open(file_path, "r") as f:
             data = json.load(f)
-        return  cls(**data)
-# TODO: run date from system here as variable
+        config = cls(**data)
+        config._update_relative_paths(sugar, current_run, data_run)
+
+        return config
