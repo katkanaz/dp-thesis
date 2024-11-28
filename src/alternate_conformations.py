@@ -1,3 +1,9 @@
+"""
+Script Name: alternate_conformations.py
+Description: Create separate mmCIF files for alternate sugar conformations
+Author: Kateřina Nazarčuková
+"""
+
 import gemmi
 from gemmi.cif import Block  # type: ignore
 from pathlib import Path
@@ -15,6 +21,12 @@ def load_mmcif(config: Config) -> List[Path]:
 
 def delete_alternate_conformations():
     pass
+
+def separate_alternate_conformations():
+    pass
+    
+
+if __name__ == "__main__":
     current_run = Config.get_current_run()
     config = Config.load("config.json", None, current_run, None)
 
