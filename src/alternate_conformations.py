@@ -15,3 +15,9 @@ def load_mmcif(config: Config) -> List[Path]:
 
 def delete_alternate_conformations():
     pass
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
+    setup_logger(config.log_path)
+    
+    separate_alternate_conformations()
