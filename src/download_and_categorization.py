@@ -8,7 +8,7 @@ Author: Kateřina Nazarčuková
 
 from argparse import ArgumentParser
 from platform import system
-from logger import logger, setup_logger
+from logger import setup_logger
 
 from configuration import Config
 
@@ -60,7 +60,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
     is_unix = system() != "Windows"
@@ -68,3 +70,5 @@ if __name__ == "__main__":
     # TODO: Create object to pass arguments
     main(config, is_unix, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd,
          args.res, args.rscc, args.rmsd, args.make_graphs)
+
+    Config.clear_current_run()

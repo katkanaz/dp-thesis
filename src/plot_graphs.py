@@ -23,8 +23,8 @@ def plot_corr_graphs(config: Config):
     :param graphs: Path to save the results
     """
 
-    (config.img / "graphs" / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
-    data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
+    (config.residue_graphs_dir / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
+    data = pd.read_csv(config.validation_dir / "merged_rscc_rmsd.csv")
 
     residue_types  = ["all", "ligand", "glycosylated", "close"]
     most_abundant_residues = ["NAG", "MAN", "GLC", "BMA", "BGC", "GAL", "FUC", "SIA"]
@@ -39,7 +39,7 @@ def plot_corr_graphs(config: Config):
             plt.tick_params(labelsize="medium")
             plt.xlabel("RMSD")
             plt.ylabel("RSCC")
-            plt.savefig(config.img / "graphs" / f"all_{residue_type}.svg")
+            plt.savefig(config.residue_graphs_dir / f"all_{residue_type}.svg")
             plt.close()
 
         else:
@@ -50,7 +50,7 @@ def plot_corr_graphs(config: Config):
             plt.tick_params(labelsize="medium")
             plt.xlabel("RMSD")
             plt.ylabel("RSCC")
-            plt.savefig(config.img / "graphs" / "all.svg")
+            plt.savefig(config.residue_graphs_dir / "all.svg")
             plt.close()
 
     for res in most_abundant_residues:
@@ -62,7 +62,7 @@ def plot_corr_graphs(config: Config):
         plt.tick_params(labelsize="medium")
         plt.xlabel("RMSD", size="medium")
         plt.ylabel("RSCC", size="medium")
-        plt.savefig(config.img / "graphs" / "individual_sugars" / "correlation" / f"{res}.svg")
+        plt.savefig(config.residue_graphs_dir / "individual_sugars" / "correlation" / f"{res}.svg")
         plt.close()
 
 
@@ -74,8 +74,8 @@ def plot_histograms(config: Config):
     :param graphs: Path to save the results
     """
 
-    (config.img / "graphs" / "individual_sugars" / "histograms").mkdir(exist_ok=True)
-    data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
+    (config.residue_graphs_dir / "individual_sugars" / "histograms").mkdir(exist_ok=True)
+    data = pd.read_csv(config.validation_dir / "merged_rscc_rmsd.csv")
     new_data = data.filter(items=["rmsd"])
 
     most_abundant_residues = ["NAG", "MAN", "GLC", "BMA", "BGC", "GAL", "FUC", "SIA"]
@@ -91,7 +91,7 @@ def plot_histograms(config: Config):
 
         plt.legend().remove()
         #plt.show()
-        plt.savefig(config.img / "graphs" / "individual_sugars" / "histograms" / f"{sugar}.svg")
+        plt.savefig(config.residue_graphs_dir / "individual_sugars" / "histograms" / f"{sugar}.svg")
         plt.close()
 
 
@@ -104,7 +104,7 @@ def plot_3D_graph(config: Config):
     :param graphs: Path to save the results
     """
 
-    data = pd.read_csv(config.validation_results / "merged_rscc_rmsd.csv")
+    data = pd.read_csv(config.validation_dir / "merged_rscc_rmsd.csv")
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     ax.set_xlabel("RMSD")
@@ -112,7 +112,7 @@ def plot_3D_graph(config: Config):
     ax.set_zlabel("RSCC")#FIXME:
     ax.scatter(data["rmsd"], data["resolution"], data["rscc"], linewidths=0.5, marker=".", color="green")
     #plt.show()
-    plt.savefig(config.img / "graphs" / f"3D_graph.svg")
+    plt.savefig(config.residue_graphs_dir / f"3D_graph.svg")
     plt.close()
 
 
@@ -123,9 +123,11 @@ def plot_graphs(config: Config):
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
-    (config.img / "graphs").mkdir(exist_ok=True, parents=True)
+    (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
 
     plot_graphs(config)

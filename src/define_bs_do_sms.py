@@ -9,7 +9,7 @@ Author: Kateřina Nazarčuková
 from argparse import ArgumentParser
 from platform import system
 from typing import Union
-from logger import logger, setup_logger
+from logger import setup_logger
 
 from configuration import Config
 
@@ -26,7 +26,7 @@ def main(sugar: str, config: Config, is_unix: bool, align_method: str, perform_a
     run_pq(sugar, config, is_unix)
     perform_alignment(sugar, perform_align, config)
     cluster_data(sugar, n_clusters, cluster_method, align_method, config, make_dendrogram, color_threshold)
-    compare_clusters(sugar, config)
+    compare_clusters(config)
     create_tanglegram(sugar, cluster_method, config)
     structure_motif_search()
 
@@ -47,14 +47,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
 
     is_unix = system() != "Windows"
-    #TODO: are positional?
 
     #TODO: make the number of clusters optional
     main(args.sugar, config, is_unix, args.align_method, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
 
-
-
+    Config.clear_current_run()

@@ -32,19 +32,17 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     :param config: Config object
     :return: Path to refined binding sites folder
     """
-    # Path to the folder containing the PDB structures from PQ
-    structures_folder = config.binding_sites / sugar
 
-    # Path to the new folder where the fixed structures will be saved
-    # TODO: extract into config
-    fixed_folder = config.binding_sites / f"{sugar}_fixed_{min_residues}"
-    fixed_folder.mkdir(exist_ok=True)
+    raw_binding_sites_dir = config.raw_binding_sites_dir
+
+    filtered_binding_sites = config.filtered_binding_sites_dir / f"min_{min_residues}_aa"
+    filtered_binding_sites.mkdir(exist_ok=True)
 
     less_than_n_aa = []  # How many structures were excluded
     more_than_max_aa = []
     i = 0  # Index
     structures_keys = {} # To map index with structure
-    for path_to_file in structures_folder.iterdir():
+    for path_to_file in raw_binding_sites_dir.iterdir():
         filename = Path(path_to_file).stem
         cmd.delete("all") # delete all
         # pm_cmd("delete all")
@@ -74,18 +72,18 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
 
-        cmd.save(f"{fixed_folder}/{i}_{filename}.pdb") # save path_to_file
+        cmd.save(f"{filtered_binding_sites}/{i}_{filename}.pdb") # save path_to_file
         structures_keys[i] = f"{i}_{filename}.pdb"
         i += 1 # Raise the index
         cmd.delete("all")
 
-    # TODO: extract into config
-    (config.results_folder / "clusters" / sugar).mkdir(exist_ok=True, parents=True)
-    with open(config.results_folder / "clusters" / sugar / f"{sugar}_structures_keys.json", "w") as f:
+    (config.clusters_dir).mkdir(exist_ok=True, parents=True)
+    with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
-    print(f"number of structures with less than {min_residues} AA: ", len(less_than_n_aa))
 
-    return fixed_folder
+    logger.info(f"Number of structures with less than {min_residues} AA: ", len(less_than_n_aa))
+
+    return filtered_binding_sites
 
 # FIXME: refactor all_against_all_alignment function - create object, that represents all manipulation with data (csv, numpy), object has atribute writer, save (numpy), check everywhere if one of the objects is None
 # FIXME: function description
@@ -102,8 +100,8 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
     :param method: The PyMOL command used to calculate RMSD
     :param config: Config object
     """
-    # TODO: extract into config
-    super_results_path = config.results_folder / "clusters" / sugar / "super"
+
+    super_results_path = config.clusters_dir / "super"
     super_results_path.mkdir(parents=True, exist_ok=True)
 
     n = len(os.listdir(structures_folder))
@@ -116,7 +114,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
     align_results_path = None
     align_file = None
     if perform_align:
-        align_results_path = config.results_folder / "clusters" / sugar / "align"
+        align_results_path = config.clusters_dir / "align"
         align_results_path.mkdir(parents=True, exist_ok=True)
         align_file = open(align_results_path / f"{sugar}_all_pairs_rmsd_align.csv", "w", newline="")
         align_writer = csv.writer(align_file)
@@ -131,7 +129,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
                 cmd.load(f"{structures_folder}/{structure1}")
                 cmd.load(f"{structures_folder}/{structure2}")
 
-                cmd.fetch(sugar, path=save_path)
+                cmd.fetch(sugar, path=save_path) # FIXME:
 
                 filename1 = Path(structure1).stem
                 filename2 = Path(structure2).stem
@@ -181,25 +179,26 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
             except Exception as e:
                 # Save pairs with which something went wrong
                 something_wrong.append((structure1, structure2))
-                print("Something went wrong!", e)
+                logger.error("Something went wrong!", e)
 
     if align_file is not None and align_results_path is not None:
         align_file.close()
         np.save(align_results_path / f"{sugar}_all_pairs_rmsd_align.npy", align_rmsd_values)
 
     np.save(super_results_path / f"{sugar}_all_pairs_rmsd_super.npy", super_rmsd_values)
-    with open((config.results_folder / "clusters" / sugar / "something_wrong.json"), "w") as f:
+    with open((config.clusters_dir / "something_wrong.json"), "w") as f:
         json.dump(something_wrong, f, indent=4)
 
 
 def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     # Fixed values based on literature and structure motif search limit
+    # TODO: Extract as arguments with default
     min_residues = 5
     max_residues = 10
 
     fixed_folder = refine_binding_sites(sugar, min_residues, max_residues, config)
 
-    save_path = "../debug/missing_sugar/oct_27/data/sugars/"
+    save_path = "../debug/missing_sugar/oct_27/data/sugars/" # FIXME:
     all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config)
 
 
@@ -212,7 +211,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    # data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
     # pm_cmd = Pymol(gui=True)
 

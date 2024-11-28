@@ -22,16 +22,16 @@ def extract_rscc_and_resolution(config: Config) -> None:
     :param config: Config object
     """
 
-    with open(config.categorization_results / "all_residues.json", "r", encoding="utf8") as f:
+    with open(config.categorization_dir / "all_residues.json", "r", encoding="utf8") as f:
         all_residues = json.load(f)
-    with open(config.categorization_results / "ligands.json", "r", encoding="utf8") as f:
+    with open(config.categorization_dir / "ligands.json", "r", encoding="utf8") as f:
         ligands = json.load(f)
-    with open(config.categorization_results / "glycosylated.json", "r", encoding="utf8") as f:
+    with open(config.categorization_dir / "glycosylated.json", "r", encoding="utf8") as f:
         glycosylated = json.load(f)
-    with open(config.categorization_results / "close_contacts.json", "r", encoding="utf8") as f:
+    with open(config.categorization_dir / "close_contacts.json", "r", encoding="utf8") as f:
         close_contacts = json.load(f)
 
-    with open(config.validation_results / "all_rscc_and_resolution.csv", "w", newline="", encoding="utf8") as f:
+    with open(config.validation_dir / "all_rscc_and_resolution.csv", "w", newline="", encoding="utf8") as f:
         all_rscc = csv.writer(f)
 
         no_resolution = set()
@@ -41,7 +41,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
         for structure, residues in all_residues.items():
             file = f"{structure.lower()}.xml"
-            with open(config.validation_files / file, "r", encoding="utf8") as file_xml:
+            with open(config.validation_files_dir / file, "r", encoding="utf8") as file_xml:
                 d = file_xml.read()
             data = BeautifulSoup(d, "xml")
             structure_info = data.find("Entry")
@@ -76,20 +76,22 @@ def extract_rscc_and_resolution(config: Config) -> None:
                 all_rscc.writerow(row)
 
 
-    with open(config.validation_results / "pdb_no_resolution.json", "w", encoding="utf8") as f:
+    with open(config.validation_dir / "pdb_no_resolution.json", "w", encoding="utf8") as f:
         json.dump(list(no_resolution), f, indent=4)
 
-    with open(config.validation_results / "no_residue_info.json", "w", encoding="utf8") as f:
+    with open(config.validation_dir / "no_residue_info.json", "w", encoding="utf8") as f:
         json.dump(list(no_residue_info), f, indent=4)
 
-    with open(config.validation_results / "no_rscc.json", "w", encoding="utf8") as f:
+    with open(config.validation_dir / "no_rscc.json", "w", encoding="utf8") as f:
         json.dump(list(no_rscc), f, indent=4)
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
-    config.validation_results.mkdir(exist_ok=True, parents=True)
+    config.validation_dir.mkdir(exist_ok=True, parents=True)
 
     extract_rscc_and_resolution(config)

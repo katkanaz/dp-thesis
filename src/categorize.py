@@ -344,9 +344,11 @@ def categorize(config: Config):
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
-    config.categorization_results.mkdir(exist_ok=True, parents=True)
+    config.categorization_dir.mkdir(exist_ok=True, parents=True)
 
     categorize(config)

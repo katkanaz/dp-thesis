@@ -21,14 +21,15 @@ def get_average_rmsd_of_peaks(config: Config) -> None:
 
     :param config: Config object
     """
-    df = pd.read_csv(config.validation_results /  "merged_rscc_rmsd.csv")
+    df = pd.read_csv(config.validation_dir /  "merged_rscc_rmsd.csv")
     data = df[df["name"] == "BGC"]
     filtered_df1 = data[data["rmsd"] <= 0.4]#FIXME: Extract to variables
     filtered_df2 = data[(data["rmsd"] > 0.4) & (data["rmsd"] < 0.7)]#FIXME: Extract to variables
     average1 = filtered_df1["rmsd"].mean()
     average2 = filtered_df2["rmsd"].mean()
 
-    print(average1, average2, sep="\n")#FIXME: Print in main
+    logger.info(f"Average RMSD of peaks for RMSD <= 0.4: {average1}")
+    logger.info(f"Average RMSD of peaks for RMSD > 0.4 and < 0.7: {average2}")
 
 
 def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float, config: Config) -> None:
@@ -42,10 +43,10 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
     :param config: Config object
     """
     #FIXME: Load merged_rscc_rmsd.csv to pandas, filter (delete data for which the if is not true), then save to graph_analysis file
-    with open(config.results_folder / "graph_analysis" / f"graph_analysis_{min_rscc}_{max_rscc}_{min_rmsd}_{max_rmsd}.csv", "w", newline="") as f:
+    with open(config.graph_analysis_dir / f"graph_analysis_{min_rscc}_{max_rscc}_{min_rmsd}_{max_rmsd}.csv", "w", newline="") as f:
         writer = DictWriter(f, ["pdb", "resolution", "name", "num", "chain", "rscc", "type", "rmsd"])
         writer.writeheader()
-        with open(config.validation_results /  "merged_rscc_rmsd.csv", "r") as f:
+        with open(config.validation_dir /  "merged_rscc_rmsd.csv", "r") as f:
             rscc_rmsd = DictReader(f)
             sugars = set()
             for row in rscc_rmsd:
@@ -54,8 +55,8 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
                     #print(row)
                     writer.writerow(row)
 
-    print(sugars)#FIXME: Print in main
-    print(len(sugars))
+    logger.info(f"Number of sugars in the defined area of the graph {len(sugars)}")
+    logger.info(f"Types of sugars in the defined area of the graph: {sugars}")
 
 
 def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float):
@@ -77,9 +78,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
-    (config.results_folder / "graph_analysis").mkdir(exist_ok=True, parents=True)
+    config.graph_analysis_dir.mkdir(exist_ok=True, parents=True)
 
     graph_analysis(config, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd)

@@ -227,7 +227,9 @@ def download_files(config: Config):
     download_missing_files(missing_files)
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
     config.data_folder.mkdir(exist_ok=True, parents=True)

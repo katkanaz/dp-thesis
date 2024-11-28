@@ -4,7 +4,7 @@ import modified_tanglegram
 import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
-from logger import logger, setup_logger
+from logger import setup_logger
 
 from configuration import Config
 
@@ -18,8 +18,9 @@ def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
     :param config: Config object
     """
 
-    data_super = np.load(config.results_folder / "clusters" / sugar / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
-    data_align = np.load(config.results_folder / "clusters" / sugar / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
+    data_super = np.load(config.clusters_dir / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
+    data_align = np.load(config.clusters_dir / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
+
     # Create densed form of the matrix
     D_super = spd.squareform(data_super)
     D_align = spd.squareform(data_align)
@@ -28,25 +29,28 @@ def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
     Z_super = sph.linkage(D_super, method=cluster_method)
     Z_align = sph.linkage(D_align, method=cluster_method)
 
-    # Total number of binding sites given sugar
+    # Total number of binding sites for given sugar
     n_data = Z_super.shape[0] + 1
 
-    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=config.results_folder)
-    fig.savefig(config.tanglegrams / f"tanglegram_{sugar}.svg")
+    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=config.results_dir)
+    fig.savefig(config.tanglegrams_dir / f"tanglegram_{sugar}.svg")
     
 
 if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
-    #parser.add_argument("n_data", help = "", type=int)
-    parser.add_argument("-c", "--cluster_method", help = "Clustering method", type=str, choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"], required=True)
+    parser.add_argument("-c", "--cluster_method", help = "Clustering method", type=str,
+                        choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"], required=True)
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    # data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
 
-    config.tanglegrams.mkdir(exist_ok=True, parents=True)
+    config.tanglegrams_dir.mkdir(exist_ok=True, parents=True)
 
     create_tanglegram(args.sugar, args.cluster_method, config=config)

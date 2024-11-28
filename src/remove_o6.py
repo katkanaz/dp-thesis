@@ -9,7 +9,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from csv import DictReader
 import json
-from logger import logger, setup_logger
+from logger import setup_logger
 
 from configuration import Config
 
@@ -21,12 +21,12 @@ def get_pdb_ids_with_rscc(config: Config) -> None:
     :param config: Config object
     """
 
-    with open(config.validation_results / "all_rscc_and_resolution.csv", "r", encoding="utf8") as f:
-        rscc = DictReader(f) #FIXME: Use pandas
+    with open(config.validation_dir / "all_rscc_and_resolution.csv", "r", encoding="utf8") as f:
+        rscc = DictReader(f) # FIXME: Use pandas
         pdb_ids = set()
         for row in rscc:
             pdb_ids.add(row["pdb"])
-    with open(config.validation_results / "pdbs_with_rscc_and_resolution.json", "w", encoding="utf8") as f:
+    with open(config.validation_dir / "pdbs_with_rscc_and_resolution.json", "w", encoding="utf8") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
 
@@ -37,12 +37,12 @@ def remove_o6(config: Config) -> None:
     :param config: Config object
     """
 
-    with open(config.validation_results / "pdbs_with_rscc_and_resolution.json", "r", encoding="utf8") as f:
+    with open(config.validation_dir / "pdbs_with_rscc_and_resolution.json", "r", encoding="utf8") as f:
         pdb_ids_of_interest = json.load(f)
     for pdb in pdb_ids_of_interest:
-        with (config.mmcif_files / f"{pdb.lower()}.cif").open() as f:
+        with (config.mmcif_files_dir / f"{pdb.lower()}.cif").open() as f:
             file = f.readlines()
-        with (config.data_folder / "no_o6_mmcif" / f"{pdb.lower()}.cif").open("w") as f:
+        with (config.no_o6_mmcif_dir / f"{pdb.lower()}.cif").open("w") as f:
             for line in file:
                 if (line.startswith("HETATM") and
                     ("MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line) and
@@ -57,9 +57,11 @@ def get_ids_and_remove_o6(config: Config):
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
-    (config.data_folder / "no_o6_mmcif").mkdir(exist_ok=True, parents=True)
+    (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
 
     get_ids_and_remove_o6(config)

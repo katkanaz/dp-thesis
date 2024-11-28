@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
-from logger import logger, setup_logger
+from logger import setup_logger
 
 from configuration import Config
 
@@ -38,7 +38,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     :param color_threshold: The color threshold for the dendrogram plot, defaults to None
     """
 
-    data = np.load(config.results_folder / "clusters" / sugar / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
+    data = np.load(config.clusters_dir / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
 
     # Create densed form of the matrix
     D = ssd.squareform(data)
@@ -48,7 +48,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
 
     #TODO: try to calculate the num of clusters from matrix with given threshold
     # something times threshold - 1
-    dendro_sugar_folder = config.dendrograms / sugar
+    dendro_sugar_folder = config.dendrograms_dir
     dendro_sugar_folder.mkdir(exist_ok=True, parents=True)
 
     if make_dendrogram:
@@ -82,7 +82,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
         clusters[int(label)].append(index)
         index += 1
     clusters = dict(sorted(clusters.items(), key=lambda x:x[0]))
-    with open(config.results_folder / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_all_clusters.json", "w") as f:
+    with open(config.clusters_dir / align_method / f"{n_clusters}_{cluster_method}_all_clusters.json", "w") as f:
         json.dump(clusters, f, indent=4)
 
     # Calculate the representative structure for each cluster
@@ -113,7 +113,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
             sum += data[structure, structure2]
             average_rmsds[cluster].append(sum/n_clusters)
 
-    with open(config.results_folder / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_average_rmsds.csv",
+    with open(config.clusters_dir / align_method / f"{n_clusters}_{cluster_method}_average_rmsds.csv",
               "w", newline="") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(["# intra_avg_rmsd: Average RMSD of the representative surroundings with other surroundings in the respective cluster"])
@@ -124,7 +124,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
             writer.writerow([cluster, rmsds[0], rmsds[1]])
 
 
-    with open(config.results_folder / "clusters" / sugar / align_method / f"{n_clusters}_{cluster_method}_cluster_representatives.json", "w") as f:
+    with open(config.clusters_dir / align_method / f"{n_clusters}_{cluster_method}_cluster_representatives.json", "w") as f:
         json.dump(representatives, f, indent=4)
 
         # TODO: create main, call twice + add condition
@@ -144,11 +144,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("debug_conf.json")
+    current_run = Config.get_current_run()
+    # data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
 
-    config.dendrograms.mkdir(exist_ok=True, parents=True)
+    config.dendrograms_dir.mkdir(exist_ok=True, parents=True)
 
     #TODO: make number of clusters optional
     cluster_data(args.sugar, args.n_clusters, args.cluster_method, args.align_method, config, args.make_dendrogram, args.color_threshold)
-

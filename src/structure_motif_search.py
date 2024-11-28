@@ -95,7 +95,7 @@ def run_query(path_to_file: Path, residues: list):
     query = q1 & q2
 
     # print(query.to_json())
-    print(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) #NOTE: Returns different scores of structures when "experimental" is and is not there
+    logger.info(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) #NOTE: Returns different scores of structures when "experimental" is and is not there
 
 
 def structure_motif_search():
@@ -126,12 +126,17 @@ if __name__ == "__main__":
     # parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True)
     #
     # # args = parser.parse_args()
-    #
-    config = Config.load("config.json")
+
+    current_run = Config.get_current_run()
+    # data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
 
-    # input_folder = (config.results_folder / "structure_motif_search" / "input_representatives" / args.sugar)
-    # input_folder.mkdir(exist_ok=True, parents=True)
+    input_folder = config.structure_motif_search_dir / "input_representatives"
+    input_folder.mkdir(exist_ok=True, parents=True)
 
     # extract_representatives(args.sugar, args.align_method, args.number, args.method, config, input_folder)
     structure_motif_search()
+
+    config.clear_current_run()

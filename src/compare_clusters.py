@@ -13,7 +13,7 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-def compare_clusters(sugar: str, config: Config) -> None:
+def compare_clusters(config: Config) -> None:
     """
     How many clusters from align-data correspond to one cluster from super-data, and vice versa
 
@@ -21,18 +21,18 @@ def compare_clusters(sugar: str, config: Config) -> None:
     :param config: Config object
     """
 
-    with (config.results_folder / "clusters" / sugar / "super" / "20_centroid_all_clusters.json").open() as f:#FIXME:
+    with (config.clusters_dir / "super" / "20_centroid_all_clusters.json").open() as f:
         clusters_super = json.load(f)
 
-    with (config.results_folder / "clusters" / sugar / "align" / "20_centroid_all_clusters.json").open() as f:#FIXME:
+    with (config.clusters_dir / "align" / "20_centroid_all_clusters.json").open() as f:
         clusters_align = json.load(f)
 
-    # create dict in a form of {structure: cluster}
+    # Create dict in a form of {structure: cluster}
     reversed_clusters_align = {}
     for cluster, structures in clusters_align.items():
         reversed_clusters_align.update({structure: cluster for structure in structures})
 
-    # iterate over structures from super clusters and save cluster ids of those structures in align clusters
+    # Iterate over structures from super clusters and save cluster ids of those structures in align clusters
     overall_spread_from_super = {}
     for cluster, structures in clusters_super.items():
         overall_spread_from_super[cluster] = {reversed_clusters_align[structure] for structure in structures}
@@ -46,8 +46,8 @@ def compare_clusters(sugar: str, config: Config) -> None:
     for c, ss in clusters_align.items():
         overall_spread_from_align[c] = {reversed_clusters_super[s] for s in ss}
 
-    print(overall_spread_from_super)
-    print(overall_spread_from_align)
+    logger.info(f"Overall spread from super: {overall_spread_from_super}")
+    logger.info(f"Overall spread from align: {overall_spread_from_align}")
 
 
 if __name__ == "__main__":
@@ -57,7 +57,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    # data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
 
-    compare_clusters(args.sugar, config)
+    compare_clusters(config)

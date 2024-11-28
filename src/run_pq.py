@@ -145,13 +145,13 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
 def run_pq(sugar: str, config: Config, is_unix: bool):
     # download_pq(config)
 
-    with open(config.categorization_results / "filtered_ligands.json", "r") as f:
+    with open(config.categorization_dir / "filtered_ligands.json", "r") as f:
         ligands: dict = json.load(f)
 
-    target_dir = config.binding_sites / sugar
+    target_dir = config.raw_binding_sites_dir / sugar
     target_dir.mkdir(exist_ok=True, parents=True)
 
-    print("Creating PatternQuerry configs")
+    logger.info("Creating PatternQuerry configs")
 
     for structure, residues in ligands.items():
         structure = structure.lower()
@@ -159,7 +159,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
         if not query_names:
             continue
         # Copy current structure to ./structures dir which is used as source by PQ.
-        src = config.mmcif_files / f"{structure}.cif"
+        src = config.mmcif_files_dir / f"{structure}.cif"
         dst = config.pq_folder / "structures" / f"{structure}.cif"
         shutil.copyfile(src, dst)
 
@@ -187,9 +187,9 @@ def run_pq(sugar: str, config: Config, is_unix: bool):
         (config.pq_folder / "structures" / f"{structure}.cif").unlink()
         shutil.rmtree(config.pq_folder / "results" / "result")
 
-    print("more patterns for one id:", more_than_one_pattern, end="\n\n")
-    print("PQ could not find these patterns:", pq_couldnt_find_pattern, end="\n\n")
-    print("result folder not created:", result_folder_not_created)
+    logger.error("More patterns for one id found:", more_than_one_pattern)
+    logger.error("PQ could not find these patterns:", pq_couldnt_find_pattern)
+    logger.error("Result folder not created:", result_folder_not_created)
 
 
 if __name__ == "__main__":
@@ -199,7 +199,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    # data_run = Config.get_data_run()
+    config = Config.load("config.json", args.sugar, current_run, data_run)
+
     setup_logger(config.log_path)
 
     is_unix = system() != "Windows"

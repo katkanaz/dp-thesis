@@ -16,7 +16,7 @@ from configuration import Config
 
 
 def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:
-    # TODO: explain default values origin
+    # TODO: Explain default values origin
     """
     Filter ligands.json to contain only the structures with overall resolution
     is better than <max_resolution> and residues with RSCC higher than <min_rscc>
@@ -28,19 +28,22 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     :param config: Config object
     """
 
-    with open(config.categorization_results / "ligands.json", "r", encoding="utf8") as f:
+    with open(config.categorization_dir / "ligands.json", "r", encoding="utf8") as f:
         ligands = json.load(f)
-    print("number of structures before filtering: ", len(ligands.keys()))
+
+    logger.info("Number of structures before filtering: ", len(ligands.keys()))
+
     # TODO: Extract 3 lines below into function 
     count = 0
     for pdb, residues in ligands.items():
         count += len(residues)
-    print("number of residues before filtering: ", count)
+
+    logger.info("Number of residues before filtering: ", count)
 
     # Save the pdb id of structures with good resolution, because not all structures have resolution
     # Available and we want to continue just with those with resolution
     good_structures = set()
-    with open(config.validation_results / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
+    with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
         rscc_rmsd = DictReader(f)
         for row in rscc_rmsd:
             if float(row["resolution"]) <= max_resolution and row["type"] == "ligand":
@@ -53,7 +56,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
 
     # Get individual resiudes which have bad rscc or rmsd
     delete_residues = defaultdict(list)
-    with open(config.validation_results / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
+    with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
         rscc_rmsd = DictReader(f)
         for row in rscc_rmsd:
             if row["type"] == "ligand" and (float(row["rmsd"]) > max_rmsd or float(row["rscc"]) < min_rscc):
@@ -71,14 +74,16 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     for key in delete_empty_structures:
         del ligands[key]
 
-    print("number of structures after filtering: ", len(ligands.keys()))
+    logger.info("Number of structures after filtering: ", len(ligands.keys()))
+
     # TODO: Extract 3 lines below into function 
     count = 0
     for pdb, residues in ligands.items():
         count += len(residues)
-    print("number of residues after filtering: ", count)
 
-    with open(config.categorization_results / "filtered_ligands.json", "w", encoding="utf8") as f:
+    logger.info("Number of residues after filtering: ", count)
+
+    with open(config.categorization_dir / "filtered_ligands.json", "w", encoding="utf8") as f:
         json.dump(ligands, f, indent=4)
 
 
@@ -94,7 +99,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
     filter_ligands(args.res, args.rscc, args.rmsd, config)
+
+    Config.clear_current_run()

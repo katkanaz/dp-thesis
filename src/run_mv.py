@@ -76,7 +76,7 @@ def create_mv_config(config: Config) -> None:
 
     mv_config = {
         "ValidationType": "Sugars",
-        "InputFolder":  str(config.mmcif_files),
+        "InputFolder":  str(config.mmcif_files_dir),
         "ModelsSource": str(config.data_folder / "components" / "components_sugars_only.cif"),
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,
@@ -104,7 +104,7 @@ def get_rmsd_and_merge(config: Config) -> None:
 
     with open(config.results_folder / "mv_results/results/result/result/result.json") as f:
         data = json.load(f)
-    with open(config.validation_results / "all_rmsd.csv", "w", newline="") as f:
+    with open(config.validation_dir / "all_rmsd.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["pdb", "name", "num", "chain", "rmsd"])
         for model in data["Models"]:
@@ -117,11 +117,11 @@ def get_rmsd_and_merge(config: Config) -> None:
                     continue
                 writer.writerow(row)
 
-    rscc = pd.read_csv(config.results_folder / "validation" / "all_rscc_and_resolution.csv")
-    rmsd = pd.read_csv(config.results_folder / "validation" / "all_rmsd.csv")
+    rscc = pd.read_csv(config.validation_dir / "all_rscc_and_resolution.csv")
+    rmsd = pd.read_csv(config.validation_dir / "all_rmsd.csv")
 
     merged = rscc.merge(rmsd, on=["pdb", "name", "num", "chain"])
-    merged.to_csv(config.validation_results / "merged_rscc_rmsd.csv", index=False)
+    merged.to_csv(config.validation_dir / "merged_rscc_rmsd.csv", index=False)
 
 
 def run_mv(config: Config, is_unix: bool):
@@ -144,7 +144,9 @@ def run_mv(config: Config, is_unix: bool):
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json")
+    current_run = Config.get_current_run()
+    config = Config.load("config.json", None, current_run, None)
+
     setup_logger(config.log_path)
 
     (config.results_folder / "mv_results" / "results").mkdir(exist_ok=True, parents=True)
