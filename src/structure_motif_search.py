@@ -38,7 +38,7 @@ from configuration import Config
 
 
 # def load_representatives(config: Config) -> List[Path]:
-    #TODO: Add docs
+    # TODO: Add docs
     # representatives = []
     # for file in sorted(Path("../results/structure_motif_search/input_representatives/FUC/").glob("*.pdb")):
         # representatives.append(file)
@@ -47,12 +47,12 @@ from configuration import Config
 
 
 def get_struc_name(path_to_file: Path) -> str:
-    #TODO: Add docs
+    # TODO: Add docs
     return (path_to_file.name).split("_")[1]
 
 
 def define_residues(path_to_file: Path, struc_name: str) -> list:
-    #TODO: Add docs
+    # TODO: Add docs
     parser = PDBParser()
 
     structure = parser.get_structure(struc_name, path_to_file)
@@ -73,7 +73,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
     residues = []
     for chain in chains:
         i = 1
-        for residue in chain: #NOTE: also possible to only iterate over all residues in a model
+        for residue in chain: # NOTE: also possible to only iterate over all residues in a model
             residue: Residue = residue
             chain: Chain = chain
             # Excludes fucose
@@ -95,7 +95,7 @@ def run_query(path_to_file: Path, residues: list):
     query = q1 & q2
 
     # print(query.to_json())
-    logger.info(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) #NOTE: Returns different scores of structures when "experimental" is and is not there
+    logger.info(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) # NOTE: Returns different scores of structures when "experimental" is and is not there
 
 
 def structure_motif_search():
@@ -117,19 +117,17 @@ def structure_motif_search():
 #TODO: check if original structure is returned
 
 if __name__ == "__main__":
-    # parser = ArgumentParser()
-    #
-    # parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
-    # parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
-    #                     choices=["super", "align"], required=True)
-    # parser.add_argument("-n", "--number", help="Number of clusters", type=str, required=True)
-    # parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True)
-    #
-    # # args = parser.parse_args()
+    parser = ArgumentParser()
 
-    current_run = Config.get_current_run()
-    # data_run = Config.get_data_run()
-    config = Config.load("config.json", args.sugar, current_run, data_run)
+    parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
+    parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
+                        choices=["super", "align"], required=True)
+    parser.add_argument("-n", "--number", help="Number of clusters", type=str, required=True)
+    parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True)
+
+    args = parser.parse_args()
+
+    config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
 

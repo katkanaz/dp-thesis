@@ -46,7 +46,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     # Calculate the linkage matrix using given cluster_method
     Z1 = sch.linkage(D, method=cluster_method)
 
-    #TODO: try to calculate the num of clusters from matrix with given threshold
+    # TODO: Try to calculate the num of clusters from matrix with given threshold
     # something times threshold - 1
     dendro_sugar_folder = config.dendrograms_dir
     dendro_sugar_folder.mkdir(exist_ok=True, parents=True)
@@ -72,7 +72,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     # Cut the dendrogram at the desired number of clusters
     labels = sch.fcluster(Z1, t=n_clusters, criterion="maxclust")
 
-    #TODO: reword
+    # TODO: Reword
     # Save the clusters and the IDs of the structures belonging to each
     # cluster. "labels" contains a list of cluster IDs whose indices
     # correspond to the IDs of the structures belonging to the cluster.
@@ -88,7 +88,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     # Calculate the representative structure for each cluster
     # as the structure with the lowest sum of RMSD with all other
     # structures in the cluster
-    #TODO: extract to function
+    # TODO: Extract to function
     representatives = {}
     average_rmsds = {}
 
@@ -127,7 +127,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     with open(config.clusters_dir / align_method / f"{n_clusters}_{cluster_method}_cluster_representatives.json", "w") as f:
         json.dump(representatives, f, indent=4)
 
-        # TODO: create main, call twice + add condition
+        # TODO: Create main, call twice + add condition
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -144,13 +144,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    current_run = Config.get_current_run()
-    # data_run = Config.get_data_run()
-    config = Config.load("config.json", args.sugar, current_run, data_run)
+    config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
 
     config.dendrograms_dir.mkdir(exist_ok=True, parents=True)
 
-    #TODO: make number of clusters optional
+    # TODO: Make number of clusters optional
     cluster_data(args.sugar, args.n_clusters, args.cluster_method, args.align_method, config, args.make_dendrogram, args.color_threshold)

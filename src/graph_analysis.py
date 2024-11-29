@@ -23,8 +23,8 @@ def get_average_rmsd_of_peaks(config: Config) -> None:
     """
     df = pd.read_csv(config.validation_dir /  "merged_rscc_rmsd.csv")
     data = df[df["name"] == "BGC"]
-    filtered_df1 = data[data["rmsd"] <= 0.4]#FIXME: Extract to variables
-    filtered_df2 = data[(data["rmsd"] > 0.4) & (data["rmsd"] < 0.7)]#FIXME: Extract to variables
+    filtered_df1 = data[data["rmsd"] <= 0.4] # FIXME: Extract to variables
+    filtered_df2 = data[(data["rmsd"] > 0.4) & (data["rmsd"] < 0.7)] # FIXME: Extract to variables
     average1 = filtered_df1["rmsd"].mean()
     average2 = filtered_df2["rmsd"].mean()
 
@@ -42,7 +42,7 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
     :param max_rmsd: Maximum RMSD used to define graph area
     :param config: Config object
     """
-    #FIXME: Load merged_rscc_rmsd.csv to pandas, filter (delete data for which the if is not true), then save to graph_analysis file
+    # FIXME: Load merged_rscc_rmsd.csv to pandas, filter (delete data for which the if is not true), then save to graph_analysis file
     with open(config.graph_analysis_dir / f"graph_analysis_{min_rscc}_{max_rscc}_{min_rmsd}_{max_rmsd}.csv", "w", newline="") as f:
         writer = DictWriter(f, ["pdb", "resolution", "name", "num", "chain", "rscc", "type", "rmsd"])
         writer.writeheader()
@@ -78,8 +78,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    current_run = Config.get_current_run()
-    config = Config.load("config.json", None, current_run, None)
+    config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
 

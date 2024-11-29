@@ -45,9 +45,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    current_run = Config.get_current_run()
-    # data_run = Config.get_data_run()
-    config = Config.load("config.json", args.sugar, current_run, data_run)
+    config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
 

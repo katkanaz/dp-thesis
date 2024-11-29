@@ -87,8 +87,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
 
 if __name__ == "__main__":
-    current_run = Config.get_current_run()
-    config = Config.load("config.json", None, current_run, None)
+    config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
 

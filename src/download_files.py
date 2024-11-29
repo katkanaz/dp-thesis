@@ -28,7 +28,7 @@ def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:
     """
 
     structures = set()
-    for i in config.patterns_folder.iterdir():
+    for i in config.sugar_binding_patterns_dir.iterdir():
         structures.add(str(i.name).split("_")[0])
     with open(result_file, "w") as f:
         json.dump(list(structures), f, indent=4)
@@ -42,8 +42,8 @@ def get_components_file(config: Config) -> None:
     """
 
     response = requests.get(f"https://files.wwpdb.org/pub/pdb/data/monomers/components.cif.gz")
-    # TODO: here will be path to data/the specific run instead of config.data_folder
-    with open((config.data_folder / "components" / "components.cif.gz"), "wb") as f:
+    # TODO: here will be path to data/the specific run instead of config.data_dir
+    with open((config.data_dir / "components" / "components.cif.gz"), "wb") as f:
         f.write(response.content)
 
 
@@ -53,14 +53,14 @@ def get_sugars_from_ccd() -> List[str]:
     :return list: List of sugar abbreviations
     """
 
-    doc = gemmi.cif.read(str(config.data_folder / "components.cif.gz"))
+    doc = gemmi.cif.read(str(config.data_dir / "components.cif.gz"))
     sugar_names = set()
     for block in doc:
         comp_type = block.get_mmcif_category("_chem_comp.")["type"][0]
         if "saccharide" in comp_type.lower():
             sugar_names.add(block.name)
 
-    with (config.data_folder / "sugar_names.json").open("w") as f:
+    with (config.data_dir / "sugar_names.json").open("w") as f:
         json.dump(list(sugar_names), f, indent=4)
     return list(sugar_names)
 
@@ -84,27 +84,27 @@ def get_pdb_ids_with_sugars(sugar_names: List[str]) -> Set[str]:
         pdb_ids.update(structures[sugar])
         counts_structures_with_sugar[sugar] = len(structures[sugar])
 
-    with (config.data_folder / "pdb_ids_ccd.json").open("w") as f:
+    with (config.data_dir / "pdb_ids_ccd.json").open("w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
     sorted_counts = dict(sorted(counts_structures_with_sugar.items(), key=lambda x: x[1], reverse=True))
-    with (config.results_folder / "counts_structures_with_sugar.json").open("w") as f:
+    with (config.results_dir / "counts_structures_with_sugar.json").open("w") as f:
         json.dump(sorted_counts, f, indent=4)
 
-    with (config.results_folder / "sugars_not_present_in_any_structure.json").open("w") as f:
+    with (config.results_dir / "sugars_not_present_in_any_structure.json").open("w") as f:
         json.dump(sugars_not_present_in_any_structure, f, indent=4)
 
     return pdb_ids
 
 
-def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewrite function to deal with timeout
+def download_structures_and_validation_files(pdb_ids: set) -> None: # FIXME: Rewrite function to deal with timeout
     """
     Download mmCIF files of structures with sugars and their xml validation files
 
     :param pdb_ids: PDB IDs of structures to download 
     """
 
-    print("Downloading files")
+    logger.info("Downloading files")
 
     failed_to_download = []
     timeout = 2
@@ -113,46 +113,46 @@ def download_structures_and_validation_files(pdb_ids: set) -> None:#FIXME: Rewri
         try:
             # print(f"Downloading {pdb}")
             response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-            open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+            open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
 
             validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-            open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+            open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
         except Exception as e:
-            print(f"An Error occured: {e}")
+            logger.info(f"An Error occured: {e}")
             failed_to_download.append(pdb)
             continue
 
         n += 1
         if n == 20:
             n = 0
-            print(f"Pausing for {timeout} seconds. Iteration {i+1}")
+            logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
             sleep(timeout)
 
-    print("Finished all iterations - first loop.")
-    print(failed_to_download)
+    logger.info("Finished all iterations - first loop.")
+    logger.info(failed_to_download)
 
     # To download files that raised an error in the first loop
     timeout = 2
     n = 0
     for i, pdb in enumerate(failed_to_download):
-        print(f"Downloading {pdb}")
+        logger.info(f"Downloading {pdb}")
         response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-        open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+        open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
 
         validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-        open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+        open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
 
         n += 1
         if n == 20:
             n = 0
-            print(f"Pausing for {timeout} seconds. Iteration {i+1}")
+            logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
             sleep(timeout)
 
-    print("Finished all iterations - second loop.")
+    logger.info("Finished all iterations - second loop.")
 
 
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
-    #TODO: Add docs
+    # TODO: Add docs
     missing_files = []
     # Load json with needed structures
     with open(json_file, "r", encoding="utf8") as f:
@@ -161,54 +161,54 @@ def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
     file_names: list[str] = [f.split(".")[0] for f in listdir(validation_files)]
     # Intersect to get a list a files needed to download
     missing_files = [f for f in all_structures if f not in file_names]
-    print(missing_files)
-    print(len(missing_files))
+    logger.info(missing_files)
+    logger.info(len(missing_files))
     return missing_files
 
 
 def download_missing_files(missing_files: List[str]) -> None:
-    #TODO: Add docs
+    # TODO: Add docs
     timeout = 2
     n = 0
     while len(missing_files) != 0: 
         for i, pdb in enumerate(missing_files):
             try:
                 response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif", timeout=10)
-                open((config.mmcif_files / f"{pdb}.cif"), "wb").write(response.content) 
+                open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
 
                 validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml", timeout=10)
-                open((config.validation_files / f"{pdb}.xml"), "wb").write(validation_data.content)
+                open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
                 missing_files.pop(i)
             except Exception as e:
-                print(f"An Error occured: {e}")
+                logger.info(f"An Error occured: {e}")
                 continue
 
             n += 1
             if n == 50:
                 n = 0
-                print(f"Pausing for {timeout} seconds. Iteration {i+1}")
+                logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
                 sleep(timeout)
 
 def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files: Path) -> bool:
-    #TODO: Add docs
+    # TODO: Add docs
     found_error = False
     with open(json_file, "r") as f:
         all_structures: set[str] = set(json.load(f))
     validation_names: set[str] = set([f.split(".")[0] for f in listdir(validation_files)])
     mmcif_names: set[str] = set([f.split(".")[0] for f in listdir(mmcif_files)])
     if all_structures != validation_names:
-        print("Error in validation files")
-        print(f"Missing validation files {all_structures - validation_names} {len(all_structures - validation_names)}")
+        logger.info("Error in validation files")
+        logger.info(f"Missing validation files {all_structures - validation_names} {len(all_structures - validation_names)}")
         found_error = True
     if all_structures != mmcif_names:
-        print("Error in mmcif files")
-        print(f"Missing mmcif files {all_structures - mmcif_names} {len(all_structures - mmcif_names)}")
+        logger.info("Error in mmcif files")
+        logger.info(f"Missing mmcif files {all_structures - mmcif_names} {len(all_structures - mmcif_names)}")
         found_error = True
     return found_error
 
 
 def download_files(config: Config):
-    pdb_ids_pq_file = config.data_folder / "pdb_ids_pq.json"
+    pdb_ids_pq_file = config.data_dir / "pdb_ids_pq.json"
     get_components_file(config)
     sugar_names = get_sugars_from_ccd()
     pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
@@ -217,24 +217,23 @@ def download_files(config: Config):
     with (pdb_ids_pq_file).open() as f:
         pdb_ids_pq = json.load(f)
     pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
-    with (config.data_folder / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
+    with (config.data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
     download_structures_and_validation_files(pdb_ids)
-    check_downloaded_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files, config.mmcif_files)
+    check_downloaded_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
 
-    missing_files = get_ids_missing_files(config.data_folder / "pdb_ids_intersection_pq_ccd.json", config.validation_files)
+    missing_files = get_ids_missing_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
     download_missing_files(missing_files)
 
 if __name__ == "__main__":
-    current_run = Config.get_current_run()
-    config = Config.load("config.json", None, current_run, None)
+    config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
 
-    config.data_folder.mkdir(exist_ok=True, parents=True)
-    config.results_folder.mkdir(exist_ok=True, parents=True)
-    config.mmcif_files.mkdir(exist_ok=True, parents=True)
-    config.validation_files.mkdir(exist_ok=True, parents=True)
+    config.data_dir.mkdir(exist_ok=True, parents=True)
+    config.results_dir.mkdir(exist_ok=True, parents=True)
+    config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
+    config.validation_files_dir.mkdir(exist_ok=True, parents=True)
 
     download_files(config)

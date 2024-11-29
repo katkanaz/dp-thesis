@@ -57,8 +57,7 @@ def get_ids_and_remove_o6(config: Config):
 
 
 if __name__ == "__main__":
-    current_run = Config.get_current_run()
-    config = Config.load("config.json", None, current_run, None)
+    config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
 

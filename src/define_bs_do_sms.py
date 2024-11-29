@@ -47,15 +47,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    current_run = Config.get_current_run()
-    data_run = Config.get_data_run()
-    config = Config.load("config.json", args.sugar, current_run, data_run)
+    config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
 
     is_unix = system() != "Windows"
 
-    #TODO: make the number of clusters optional
+    #TODO: Make the number of clusters optional
     main(args.sugar, config, is_unix, args.align_method, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()

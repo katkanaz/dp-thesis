@@ -5,6 +5,7 @@ Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
 
+
 import csv
 import json
 from platform import system
@@ -26,9 +27,9 @@ def remove_nonsugar_residues(config: Config) -> None:
     :param config: Config object
     """
 
-    print("Creating model file")
+    logger.info("Creating model file")
 
-    doc = gemmi.cif.read(str(config.data_folder / "components" / "components.cif.gz"))
+    doc = gemmi.cif.read(str(config.data_dir / "components" / "components.cif.gz"))
     for i in range(len(doc) - 1, -1, -1): 
         comp_type = doc[i].find_value('_chem_comp.type')
         if "saccharide" not in comp_type.lower(): 
@@ -38,7 +39,7 @@ def remove_nonsugar_residues(config: Config) -> None:
     options.misuse_hash = True
     options.align_pairs = 48
     options.align_loops = 20
-    doc.write_file(str(config.data_folder / "components" / "components_sugars_only.cif"), options)
+    doc.write_file(str(config.data_dir / "components" / "components_sugars_only.cif"), options)
 
 
 def download_mv(config: Config) -> None:
@@ -48,14 +49,14 @@ def download_mv(config: Config) -> None:
     :param config: Config object
     """
 
-    print("Downloading MotiveValidator")
+    logger.info("Downloading MotiveValidator")
 
     response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadService")
-    with open((config.mv_folder / "MotiveValidator.zip"), "wb") as f:
+    with open((config.mv_dir / "MotiveValidator.zip"), "wb") as f:
         f.write(response.content)
 
-    with ZipFile(config.mv_folder / "MotiveValidator.zip", "r") as zip_ref:
-        zip_ref.extractall(config.mv_folder / "MotiveValidator")
+    with ZipFile(config.mv_dir / "MotiveValidator.zip", "r") as zip_ref:
+        zip_ref.extractall(config.mv_dir / "MotiveValidator")
 
 
 # TODO: finish function
@@ -72,12 +73,12 @@ def create_mv_config(config: Config) -> None:
     :param config: Config object
     """
 
-    print("Creating config file")
+    logger.info("Creating config file")
 
     mv_config = {
         "ValidationType": "Sugars",
         "InputFolder":  str(config.mmcif_files_dir),
-        "ModelsSource": str(config.data_folder / "components" / "components_sugars_only.cif"),
+        "ModelsSource": str(config.data_dir / "components" / "components_sugars_only.cif"),
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,
         "SummaryOnly": False,
@@ -86,7 +87,7 @@ def create_mv_config(config: Config) -> None:
         "MaxDegreeOfParallelism": 8
     }
 
-    with open(config.results_folder / "mv_results" / "mv_config.json", "w") as f:
+    with open(config.mv_run_dir / "mv_config.json", "w") as f:
         json.dump(mv_config, f, indent=4)
 
 
@@ -97,12 +98,12 @@ def get_rmsd_and_merge(config: Config) -> None:
     :param config: Config object
     """
 
-    print("Extracting results")
+    logger.info("Extracting results")
 
-    with ZipFile(config.results_folder / "mv_results/results/result/result.zip", "r") as zip_ref:
-        zip_ref.extractall(config.results_folder / "mv_results/results/result/result")
+    with ZipFile(config.mv_run_dir / "results/result/result.zip", "r") as zip_ref:
+        zip_ref.extractall(config.mv_run_dir / "results/result/result")
 
-    with open(config.results_folder / "mv_results/results/result/result/result.json") as f:
+    with open(config.mv_run_dir / "results/result/result/result.json") as f:
         data = json.load(f)
     with open(config.validation_dir / "all_rmsd.csv", "w", newline="") as f:
         writer = csv.writer(f)
@@ -124,32 +125,31 @@ def get_rmsd_and_merge(config: Config) -> None:
     merged.to_csv(config.validation_dir / "merged_rscc_rmsd.csv", index=False)
 
 
-def run_mv(config: Config, is_unix: bool):
+def run_mv(config: Config, is_unix: bool) -> None:
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
-    dir_path = config.mv_folder / "MotiveValidator"
+    dir_path = config.mv_dir / "MotiveValidator"
     if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
         download_mv(config)
-    # update_mv(config) #TODO: if just downloaded do not update
+    # update_mv(config) # TODO: if just downloaded do not update
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"
            f"../mv/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
-           f"{config.results_folder}/mv_results/results "
-           f"{config.results_folder}/mv_results/mv_config.json"]
-    subprocess.run(cmd, shell=True)#TODO: log output
+           f"{config.mv_run_dir}/results "
+           f"{config.mv_run_dir}/mv_config.json"]
+    subprocess.run(cmd, shell=True) # TODO: log output
 
     # Extract results
     get_rmsd_and_merge(config)
 
 
 if __name__ == "__main__":
-    current_run = Config.get_current_run()
-    config = Config.load("config.json", None, current_run, None)
+    config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
 
-    (config.results_folder / "mv_results" / "results").mkdir(exist_ok=True, parents=True)
+    (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
 
     is_unix = system() != "Windows"
 

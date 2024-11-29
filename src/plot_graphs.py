@@ -8,7 +8,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from logger import logger, setup_logger
+from logger import setup_logger
 
 from configuration import Config
 
@@ -90,13 +90,12 @@ def plot_histograms(config: Config):
         plt.tick_params(labelsize="medium")
 
         plt.legend().remove()
-        #plt.show()
         plt.savefig(config.residue_graphs_dir / "individual_sugars" / "histograms" / f"{sugar}.svg")
         plt.close()
 
 
 def plot_3D_graph(config: Config):
-    #FIXME: Add docstring
+    # FIXME: Add docstring
     """
     [TODO:description]
 
@@ -109,9 +108,8 @@ def plot_3D_graph(config: Config):
     ax = fig.add_subplot(projection='3d')
     ax.set_xlabel("RMSD")
     ax.set_ylabel("Resolution")
-    ax.set_zlabel("RSCC")#FIXME:
+    ax.set_zlabel("RSCC")
     ax.scatter(data["rmsd"], data["resolution"], data["rscc"], linewidths=0.5, marker=".", color="green")
-    #plt.show()
     plt.savefig(config.residue_graphs_dir / f"3D_graph.svg")
     plt.close()
 
@@ -123,8 +121,7 @@ def plot_graphs(config: Config):
 
 
 if __name__ == "__main__":
-    current_run = Config.get_current_run()
-    config = Config.load("config.json", None, current_run, None)
+    config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
 
