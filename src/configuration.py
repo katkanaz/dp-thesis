@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from pydantic import BaseModel
-from typing import Union
+from typing import List, Union
 from datetime import datetime
 import os
 from logger import logger
@@ -13,6 +13,9 @@ class Config(BaseModel):
     images_dir: Path
     mv_dir: Path
     pq_dir: Path
+
+    pdb_ids_list: List[str] # TODO: Handle if the list is not given in config.json
+
 
     log_path: Path
     sugar_binding_patterns_dir: Path
@@ -51,11 +54,11 @@ class Config(BaseModel):
         if data_run is None:
             data_run = current_run
 
-        self.log_path = self.results_dir / f"" # FIXME: how to setup the log? if one where? or 2 for 2 runs?
+        path_to_logfile = f"ligand_sort/{data_run}/{data_run}.log"
         self.sugar_binding_patterns_dir = self.data_dir / f"{data_run}/sugar_binding_patterns"
         self.components_dir = self.data_dir / f"{data_run}/components"
         self.mmcif_files_dir = self.data_dir / f"{data_run}/mmcif_files"
-        self.no_o6_mmcif_dir = self.data_dir / f"{data_run}/no_o6_mmcif" # FIXME: check if this is first or second run?
+        self.no_o6_mmcif_dir = self.data_dir / f"{data_run}/no_o6_mmcif"
         self.validation_files_dir = self.data_dir / f"{data_run}/validation_files"
         self.categorization_dir = self.results_dir / f"ligand_sort/{data_run}/categorization"
         self.validation_dir = self.results_dir / f"ligand_sort/{data_run}/validation"
@@ -67,6 +70,7 @@ class Config(BaseModel):
         self.sugars_dir = self.data_dir / f"{data_run}/sugars"
 
         if sugar is not None:
+            path_to_logfile = f"motif_based_search/{sugar}/{current_run}/{current_run}.log"
             self.pq_run_dir = self.results_dir / f"motif_based_search/{sugar}/{current_run}/pq_run"
             self.raw_binding_sites_dir = self.results_dir / f"motif_based_search/{sugar}/{current_run}/raw_binding_sites"
             self.filtered_binding_sites_dir = self.results_dir / f"motif_based_search/{sugar}/{current_run}/filtered_binding_sites"
@@ -74,6 +78,9 @@ class Config(BaseModel):
             self.structure_motif_search_dir = self.results_dir / f"motif_based_search/{sugar}/{current_run}/structure_motif_search"
             self.dendrograms_dir = self.images_dir / f"binding_sites/{sugar}/{current_run}/dendrograms"
             self.tanglegrams_dir = self.images_dir / f"binding_sites/{sugar}/{current_run}/tanglegrams"
+
+
+        self.log_path = self.results_dir / path_to_logfile
 
     
     @classmethod
