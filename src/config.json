@@ -3,5 +3,6 @@
     "results_dir": "../results",
     "images_dir": "../img",
     "mv_dir": "../mv",
-    "pq_dir": "../pq"
+    "pq_dir": "../pq",
+    "pdb_ids_list": ["1gzt", "4d4u", "7khu", "9fa3", "5dzx"]
 }
