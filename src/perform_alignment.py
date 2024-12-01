@@ -20,7 +20,7 @@ from configuration import Config
 # from pymol_api import Pymol
 from pymol import cmd
 
-
+# TODO: To log pymol - turn of stdout log output before, let pymol write to stdout, then read it and write it to log, then turn on stdout log output again
 def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
