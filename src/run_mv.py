@@ -9,7 +9,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 import csv
 import json
 from platform import system
-import subprocess
+from subprocess import Popen, PIPE
 from zipfile import ZipFile
 
 import gemmi
@@ -131,14 +131,26 @@ def run_mv(config: Config, is_unix: bool) -> None:
     dir_path = config.mv_dir / "MotiveValidator"
     if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
         download_mv(config)
-    # update_mv(config) # TODO: if just downloaded do not update
+    # update_mv(config) # TODO: If just downloaded do not update
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"
-           f"../mv/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
+           f"{config.mv_dir}/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
            f"{config.mv_run_dir}/results "
            f"{config.mv_run_dir}/mv_config.json"]
-    subprocess.run(cmd, shell=True) # TODO: log output
+
+    with Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, text=True) as mv_proc:
+        assert mv_proc.stdout is not None, "stdout is set to PIPE in Popen" 
+        for line in mv_proc.stdout:
+            logger.info(f"STDOUT: {line.strip()}")
+        assert mv_proc.stderr is not None, "stderr is set to PIPE in Popen" 
+        for line in mv_proc.stderr:
+            logger.error(f"STDERR: {line.strip()}")
+
+    if mv_proc.returncode != 0:
+        logger.error(f"MV process exited with code {mv_proc.returncode}")
+    else:
+        logger.info("MV process completed successfully")
 
     # Extract results
     get_rmsd_and_merge(config)

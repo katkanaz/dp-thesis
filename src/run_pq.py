@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 from platform import system
 import shutil
-import subprocess
+from subprocess import Popen, PIPE
 from tempfile import TemporaryDirectory
 import zipfile
 
@@ -164,12 +164,26 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
         shutil.copyfile(src, dst)
 
         # TODO: Extract to function
+
         # Run PQ
         cmd = [f"{'mono ' if is_unix is True else ''}"
-               f"{config.pq_dir / "PatternQuery"}/WebChemistry.Queries.Service.exe "
+               f"{config.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
                f"{config.pq_run_dir / "results"} "
                f"{config.pq_run_dir}/pq_config.json"]
-        subprocess.run(cmd, shell=True) # TODO: Log output
+
+
+        with Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, text=True) as pq_proc:
+            assert pq_proc.stdout is not None, "stdout is set to PIPE in Popen" 
+            for line in pq_proc.stdout:
+                logger.info(f"STDOUT: {line.strip()}")
+            assert pq_proc.stderr is not None, "stderr is set to PIPE in Popen" 
+            for line in pq_proc.stderr:
+                logger.error(f"STDERR: {line.strip()}")
+
+        if pq_proc.returncode != 0:
+            logger.error(f"PQ process exited with code {pq_proc.returncode}")
+        else:
+            logger.info("PQ process completed successfully")
 
         zip_result_folder = config.pq_run_dir / "results" / "result/result.zip"
         if not zip_result_folder.exists():
