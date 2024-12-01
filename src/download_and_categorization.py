@@ -21,7 +21,7 @@ from graph_analysis import graph_analysis
 from remove_o6 import get_ids_and_remove_o6
 from filter_ligands import filter_ligands
 
-# TODO: add function that deletes sugar cif files from data/run/sugars
+# TODO: Possibly add function that deletes sugar cif files from data/run/sugars?
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float,
          max_rmsd: float, res: float, rscc: float, rmsd: float, make_graphs: bool = False):
 
@@ -40,6 +40,8 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
 if __name__ == "__main__":
     parser = ArgumentParser()
 
+    parser.add_argument("-t", "--test_mode", action="store_true",
+                        help="Weather to run the whole process in a test mode")
     parser.add_argument("--min_rscc", help="Minimum RSCC used to define graph area",
                         type="float", default=0.85)
     parser.add_argument("--max_rscc", help="Maximum RSCC used to define graph area",
@@ -48,7 +50,7 @@ if __name__ == "__main__":
                         type="float", default=2.0)
     parser.add_argument("--max_rmsd", help="Maximum RMSD used to define graph area",
                         type="float", default=3.0)
-    #FIXME: should they have default? how to automate this, it originates in residue graphs?
+    # FIXME: Should they have default? how to automate this, it originates in residue graphs?
     parser.add_argument("--res", help="Value of maximum overall resolution of structure",
                         type="float", default=3.0)
     parser.add_argument("--rscc", help="Value of minimum RSCC of residue",

@@ -6,6 +6,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 """
 
 
+from argparse import ArgumentParser
 import json
 from os import listdir
 from pathlib import Path
@@ -42,8 +43,8 @@ def get_components_file(config: Config) -> None:
     """
 
     response = requests.get(f"https://files.wwpdb.org/pub/pdb/data/monomers/components.cif.gz")
-    # TODO: here will be path to data/the specific run instead of config.data_dir
-    with open((config.data_dir / "components" / "components.cif.gz"), "wb") as f:
+
+    with open((config.components_dir / "components.cif.gz"), "wb") as f:
         f.write(response.content)
 
 
@@ -53,7 +54,7 @@ def get_sugars_from_ccd() -> List[str]:
     :return list: List of sugar abbreviations
     """
 
-    doc = gemmi.cif.read(str(config.data_dir / "components.cif.gz"))
+    doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
     sugar_names = set()
     for block in doc:
         comp_type = block.get_mmcif_category("_chem_comp.")["type"][0]
@@ -62,6 +63,7 @@ def get_sugars_from_ccd() -> List[str]:
 
     with (config.data_dir / "sugar_names.json").open("w") as f:
         json.dump(list(sugar_names), f, indent=4)
+
     return list(sugar_names)
 
 
@@ -207,26 +209,36 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
     return found_error
 
 
-def download_files(config: Config):
-    pdb_ids_pq_file = config.data_dir / "pdb_ids_pq.json"
+def download_files(config: Config, test_mode: bool = False):
     get_components_file(config)
     sugar_names = get_sugars_from_ccd()
-    pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
-    get_pdb_ids_from_pq(pdb_ids_pq_file, config)
 
-    with (pdb_ids_pq_file).open() as f:
-        pdb_ids_pq = json.load(f)
-    pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
+    if not test_mode: 
+        pdb_ids_pq_file = config.data_dir / "pdb_ids_pq.json"
+        pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
+        get_pdb_ids_from_pq(pdb_ids_pq_file, config)
+
+        with (pdb_ids_pq_file).open() as f:
+            pdb_ids_pq = json.load(f)
+        pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
+    else:
+        pdb_ids = set(config.pdb_ids_list)
+
     with (config.data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
     download_structures_and_validation_files(pdb_ids)
     check_downloaded_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
-
     missing_files = get_ids_missing_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
     download_missing_files(missing_files)
 
 if __name__ == "__main__":
+    parser = ArgumentParser()
+
+    parser.add_argument("-t", "--test_mode", action="store_true", help="Weather to run the whole process in a test mode")
+
+    args = parser.parse_args()
+
     config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
@@ -236,4 +248,4 @@ if __name__ == "__main__":
     config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
     config.validation_files_dir.mkdir(exist_ok=True, parents=True)
 
-    download_files(config)
+    download_files(config, args.test_mode)
