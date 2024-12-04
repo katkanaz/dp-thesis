@@ -21,6 +21,8 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
     :param config: Config object
     """
+    # Tmp # FIXME:
+    config.validation_dir.mkdir(exist_ok=True, parents=True)
 
     with open(config.categorization_dir / "all_residues.json", "r", encoding="utf8") as f:
         all_residues = json.load(f)
@@ -91,6 +93,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    config.validation_dir.mkdir(exist_ok=True, parents=True)
+    # config.validation_dir.mkdir(exist_ok=True, parents=True)
 
     extract_rscc_and_resolution(config)

@@ -52,6 +52,9 @@ def remove_o6(config: Config) -> None:
 
 
 def get_ids_and_remove_o6(config: Config):
+    # Tmp # FIXME:
+    (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
+
     get_pdb_ids_with_rscc(config)
     remove_o6(config)
 
@@ -61,6 +64,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
+    # (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
 
     get_ids_and_remove_o6(config)

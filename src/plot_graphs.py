@@ -115,6 +115,9 @@ def plot_3D_graph(config: Config):
 
 
 def plot_graphs(config: Config):
+    # Tmp # FIXME:
+    (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
+
     plot_corr_graphs(config)
     plot_histograms(config)
     plot_3D_graph(config)
@@ -125,6 +128,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
+    # (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
 
     plot_graphs(config)

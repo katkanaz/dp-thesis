@@ -29,7 +29,7 @@ def remove_nonsugar_residues(config: Config) -> None:
 
     logger.info("Creating model file")
 
-    doc = gemmi.cif.read(str(config.data_dir / "components" / "components.cif.gz"))
+    doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
     for i in range(len(doc) - 1, -1, -1): 
         comp_type = doc[i].find_value('_chem_comp.type')
         if "saccharide" not in comp_type.lower(): 
@@ -39,7 +39,7 @@ def remove_nonsugar_residues(config: Config) -> None:
     options.misuse_hash = True
     options.align_pairs = 48
     options.align_loops = 20
-    doc.write_file(str(config.data_dir / "components" / "components_sugars_only.cif"), options)
+    doc.write_file(str(config.components_dir / "components_sugars_only.cif"), options)
 
 
 def download_mv(config: Config) -> None:
@@ -78,7 +78,7 @@ def create_mv_config(config: Config) -> None:
     mv_config = {
         "ValidationType": "Sugars",
         "InputFolder":  str(config.mmcif_files_dir),
-        "ModelsSource": str(config.data_dir / "components" / "components_sugars_only.cif"),
+        "ModelsSource": str(config.components_dir / "components_sugars_only.cif"),
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,
         "SummaryOnly": False,
@@ -126,6 +126,9 @@ def get_rmsd_and_merge(config: Config) -> None:
 
 
 def run_mv(config: Config, is_unix: bool) -> None:
+    # Tmp # FIXME:
+    (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
+
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
     dir_path = config.mv_dir / "MotiveValidator"
@@ -161,7 +164,7 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
+    # (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
 
     is_unix = system() != "Windows"
 

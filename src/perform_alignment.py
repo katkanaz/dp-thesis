@@ -33,16 +33,16 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     :return: Path to refined binding sites folder
     """
 
-    raw_binding_sites_dir = config.raw_binding_sites_dir
+    raw_binding_sites = config.raw_binding_sites_dir
 
     filtered_binding_sites = config.filtered_binding_sites_dir / f"min_{min_residues}_aa"
-    filtered_binding_sites.mkdir(exist_ok=True)
+    filtered_binding_sites.mkdir(exist_ok=True, parents=True)
 
     less_than_n_aa = []  # How many structures were excluded
     more_than_max_aa = []
     i = 0  # Index
     structures_keys = {} # To map index with structure
-    for path_to_file in raw_binding_sites_dir.iterdir():
+    for path_to_file in raw_binding_sites.iterdir():
         filename = Path(path_to_file).stem
         cmd.delete("all") # delete all
         # pm_cmd("delete all")
@@ -129,7 +129,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
                 cmd.load(f"{structures_folder}/{structure1}")
                 cmd.load(f"{structures_folder}/{structure2}")
 
-                cmd.fetch(sugar, path=save_path) # FIXME:
+                cmd.fetch(sugar, path=save_path)
 
                 filename1 = Path(structure1).stem
                 filename2 = Path(structure2).stem
@@ -198,7 +198,8 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
 
     fixed_folder = refine_binding_sites(sugar, min_residues, max_residues, config)
 
-    save_path = "../debug/missing_sugar/oct_27/data/sugars/" # FIXME:
+    save_path = config.sugars_dir
+    save_path.mkdir(exist_ok=True, parents=True)
     all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config)
 
 

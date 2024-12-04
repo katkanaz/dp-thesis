@@ -210,6 +210,13 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
 
 
 def download_files(config: Config, test_mode: bool = False):
+    # Tmp # FIXME:
+    config.data_dir.mkdir(exist_ok=True, parents=True)
+    config.results_dir.mkdir(exist_ok=True, parents=True)
+    config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
+    config.validation_files_dir.mkdir(exist_ok=True, parents=True)
+    config.components_dir.mkdir(exist_ok=True, parents=True)
+
     get_components_file(config)
     sugar_names = get_sugars_from_ccd()
 
@@ -243,9 +250,9 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    config.data_dir.mkdir(exist_ok=True, parents=True)
-    config.results_dir.mkdir(exist_ok=True, parents=True)
-    config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
-    config.validation_files_dir.mkdir(exist_ok=True, parents=True)
+    # config.data_dir.mkdir(exist_ok=True, parents=True)
+    # config.results_dir.mkdir(exist_ok=True, parents=True)
+    # config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
+    # config.validation_files_dir.mkdir(exist_ok=True, parents=True)
 
     download_files(config, args.test_mode)

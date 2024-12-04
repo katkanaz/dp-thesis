@@ -149,7 +149,7 @@ def tanglegram(a, b, n_data, results_folder: Path, labelsA=None, labelsB=None, e
         13: '#9a6324', 14: '#fffac8', 15: '#800000', 16: '#aaffc3', 17: '#808000', 18: '#ffd8b1',
         19: '#000075', 20: '#61ffff', 21: '#d300ff', 22: '#000000',
     }
-    with (results_folder / "clusters" / "FUC" / "super" / "20_centroid_all_clusters.json").open() as f:#FIXME:
+    with (results_folder).open() as f: # FIXME:
         clusters = json.load(f)
     dflt_col = "#808080"
 

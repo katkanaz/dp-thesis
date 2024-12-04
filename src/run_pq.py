@@ -98,7 +98,7 @@ def create_pq_config(structure: str, residues: List[dict], sugar: str) -> list:
 
     if query_names:
         # Create respective config file for current structure, with queries for every ligand of sugar of interest in that structure
-        with open(config.pq_run_dir / "PatternQuery" / "configuration.json", "w") as f:
+        with open(config.pq_run_dir / "pq_config.json", "w") as f:
             json.dump(pq_config, f, indent=4)
 
     return query_names
@@ -144,11 +144,15 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
 
 def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     # download_pq(config)
+    # Tmp # FIXME:
+    (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)
+    (config.pq_run_dir / "results").mkdir(exist_ok=True, parents=True)
+
 
     with open(config.categorization_dir / "filtered_ligands.json", "r") as f:
         ligands: dict = json.load(f)
 
-    target_dir = config.raw_binding_sites_dir / sugar
+    target_dir = config.raw_binding_sites_dir
     target_dir.mkdir(exist_ok=True, parents=True)
 
     logger.info("Creating PatternQuerry configs")
@@ -168,7 +172,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
         # Run PQ
         cmd = [f"{'mono ' if is_unix is True else ''}"
                f"{config.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
-               f"{config.pq_run_dir / "results"} "
+               f"{config.pq_run_dir}/results "
                f"{config.pq_run_dir}/pq_config.json"]
 
 

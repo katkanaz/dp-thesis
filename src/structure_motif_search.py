@@ -99,6 +99,8 @@ def run_query(path_to_file: Path, residues: list):
 
 
 def structure_motif_search():
+    input_folder = config.structure_motif_search_dir / "input_representatives"
+    input_folder.mkdir(exist_ok=True, parents=True)
     # Files to test
     # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/140_3lei_FUC_1186_A.pdb")
     # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/511_7c38_FUC_404_B.pdb")
@@ -107,7 +109,7 @@ def structure_motif_search():
 
     # path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
     # path_to_file = Path("../debug/sms_query_test/426_2nzy_FUC_4002_B.pdb")
-    path_to_file = Path("../debug/sms_query_test/523_1qot_FUC_2_H.pdb")
+    # path_to_file = Path("../debug/sms_query_test/523_1qot_FUC_2_H.pdb")
 
 
     struc_name = get_struc_name(path_to_file)
@@ -130,9 +132,6 @@ if __name__ == "__main__":
     config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
-
-    input_folder = config.structure_motif_search_dir / "input_representatives"
-    input_folder.mkdir(exist_ok=True, parents=True)
 
     # extract_representatives(args.sugar, args.align_method, args.number, args.method, config, input_folder)
     structure_motif_search()
