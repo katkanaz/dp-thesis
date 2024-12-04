@@ -21,8 +21,10 @@ def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: 
     if not perform_align:
         logger.info("Align was not performed - cannot make tanglegram!")
         return
+
     logger.info("Creating tanglegram")
     config.tanglegrams_dir.mkdir(exist_ok=True, parents=True)
+
     data_super = np.load(config.clusters_dir / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
     data_align = np.load(config.clusters_dir / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
 
@@ -37,7 +39,8 @@ def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: 
     # Total number of binding sites for given sugar
     n_data = Z_super.shape[0] + 1
 
-    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=config.results_dir)
+    path_to_file = config.clusters_dir / "super" / f"{n_clusters}_{cluster_method}_all_clusters.json" # FIXME:
+    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=path_to_file)
     fig.savefig(config.tanglegrams_dir / f"tanglegram_{sugar}.svg")
     
 
@@ -55,6 +58,5 @@ if __name__ == "__main__":
     config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
-
 
     create_tanglegram(args.sugar, args.n_clusters, args.cluster_method, config, args.perform_align)
