@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
+from typing import List
 from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue, AttributeQuery
 import shutil
 
@@ -103,8 +104,11 @@ def run_query(path_to_file: Path, residues: list):
 
 
 def structure_motif_search(config: Config):
+    logger.info("Structure motif search not automated yet")
     input_folder = config.structure_motif_search_dir / "input_representatives"
     input_folder.mkdir(exist_ok=True, parents=True)
+
+
     # Files to test
     # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/140_3lei_FUC_1186_A.pdb")
     # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/511_7c38_FUC_404_B.pdb")
@@ -115,9 +119,10 @@ def structure_motif_search(config: Config):
     # path_to_file = Path("../debug/sms_query_test/426_2nzy_FUC_4002_B.pdb")
     # path_to_file = Path("../debug/sms_query_test/523_1qot_FUC_2_H.pdb")
 
-
-    struc_name = get_struc_name(path_to_file)
-    run_query(path_to_file, define_residues(path_to_file, struc_name))
+    # min_residues = 5 # TODO: figure out how to handle this
+    # extract_representatives(args.sugar, args.align_method, args.number, min_residues args.method, config, input_folder)
+    # struc_name = get_struc_name(path_to_file)
+    # run_query(path_to_file, define_residues(path_to_file, struc_name))
 
 
 # TODO: Check if original structure is returned
