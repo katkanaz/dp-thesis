@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from typing import List, Union
 from datetime import datetime
 import os
+
+from rcsbsearchapi.search import Optional
 from logger import logger
 
 
@@ -17,25 +19,25 @@ class Config(BaseModel):
     pdb_ids_list: List[str] # TODO: Handle if the list is not given in config.json
 
 
-    log_path: Path
-    sugar_binding_patterns_dir: Path
-    components_dir: Path
-    mmcif_files_dir: Path
-    no_o6_mmcif_dir: Path
-    validation_files_dir: Path
-    sugars_dir: Path
-    categorization_dir: Path
-    validation_dir: Path
-    mv_run_dir: Path
-    graph_analysis_dir: Path
-    residue_graphs_dir: Path
-    pq_run_dir: Path
-    raw_binding_sites_dir: Path
-    filtered_binding_sites_dir: Path
-    clusters_dir: Path
-    structure_motif_search_dir: Path
-    dendrograms_dir: Path
-    tanglegrams_dir: Path
+    log_path: Optional[Path] = None
+    sugar_binding_patterns_dir: Optional[Path] = None
+    components_dir: Optional[Path] = None
+    mmcif_files_dir: Optional[Path] = None
+    no_o6_mmcif_dir: Optional[Path] = None
+    validation_files_dir: Optional[Path] = None
+    sugars_dir: Optional[Path] = None
+    categorization_dir: Optional[Path] = None
+    validation_dir: Optional[Path] = None
+    mv_run_dir: Optional[Path] = None
+    graph_analysis_dir: Optional[Path] = None
+    residue_graphs_dir: Optional[Path] = None
+    pq_run_dir: Optional[Path] = None
+    raw_binding_sites_dir: Optional[Path] = None
+    filtered_binding_sites_dir: Optional[Path] = None
+    clusters_dir: Optional[Path] = None
+    structure_motif_search_dir: Optional[Path] = None
+    dendrograms_dir: Optional[Path] = None
+    tanglegrams_dir: Optional[Path] = None
 
 
     @classmethod
