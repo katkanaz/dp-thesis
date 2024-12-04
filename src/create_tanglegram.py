@@ -1,3 +1,11 @@
+"""
+Script Name: create_tanglegram.py
+Description: Create tanglegram
+Authors: Daniela Repelová, Kateřina Nazarčuková
+Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
+"""
+
+
 from argparse import ArgumentParser
 
 import modified_tanglegram
