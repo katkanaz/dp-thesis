@@ -23,9 +23,9 @@ from filter_ligands import filter_ligands
 
 # TODO: Possibly add function that deletes sugar cif files from data/run/sugars?
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float,
-         max_rmsd: float, res: float, rscc: float, rmsd: float, make_graphs: bool = False):
+         max_rmsd: float, res: float, rscc: float, rmsd: float, make_graphs: bool = False, test_mode: bool = False):
 
-    download_files(config)
+    download_files(config, test_mode)
     categorize(config)
     extract_rscc_and_resolution(config)
     run_mv(config, is_unix)
@@ -70,6 +70,6 @@ if __name__ == "__main__":
 
     # TODO: Create object to pass arguments
     main(config, is_unix, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd,
-         args.res, args.rscc, args.rmsd, args.make_graphs)
+         args.res, args.rscc, args.rmsd, args.make_graphs, args.test_mode)
 
     Config.clear_current_run()
