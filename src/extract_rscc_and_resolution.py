@@ -21,6 +21,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
     :param config: Config object
     """
+
     # Tmp # FIXME:
     config.validation_dir.mkdir(exist_ok=True, parents=True)
 

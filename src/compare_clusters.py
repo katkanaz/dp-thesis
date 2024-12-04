@@ -13,7 +13,7 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-def compare_clusters(config: Config, perform_align: bool = False) -> None:
+def compare_clusters(config: Config, perform_align: bool) -> None:
     """
     How many clusters from align-data correspond to one cluster from super-data, and vice versa
 

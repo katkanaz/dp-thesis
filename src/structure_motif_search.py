@@ -4,6 +4,7 @@ Description: Extract input files, define residues for each input and perform str
 Author: Kateřina Nazarčuková
 """
 
+
 from argparse import ArgumentParser
 import json
 from pathlib import Path
@@ -56,7 +57,7 @@ def get_struc_name(path_to_file: Path) -> str:
     return (path_to_file.name).split("_")[1]
 
 
-def define_residues(path_to_file: Path, struc_name: str) -> list:
+def define_residues(path_to_file: Path, struc_name: str) -> list: # TODO: Add typehints
     # TODO: Add docs
     parser = PDBParser()
 
@@ -92,7 +93,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
     return residues
 
 
-def run_query(path_to_file: Path, residues: list):
+def run_query(path_to_file: Path, residues: list) -> None: # TODO: Add typehints
     # TODO: Add docs
     q1 = AttributeQuery(attribute="rcsb_comp_model_provenance.source_db", operator="exact_match",value="AlphaFoldDB", service="text", negation=False)
     q2 = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
@@ -103,7 +104,7 @@ def run_query(path_to_file: Path, residues: list):
     logger.info(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) # NOTE: Returns different scores of structures when "experimental" is and is not there
 
 
-def structure_motif_search(config: Config):
+def structure_motif_search(config: Config) -> None:
     logger.info("Structure motif search not automated yet")
     input_folder = config.structure_motif_search_dir / "input_representatives"
     input_folder.mkdir(exist_ok=True, parents=True)
@@ -124,8 +125,8 @@ def structure_motif_search(config: Config):
     # struc_name = get_struc_name(path_to_file)
     # run_query(path_to_file, define_residues(path_to_file, struc_name))
 
-
 # TODO: Check if original structure is returned
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()

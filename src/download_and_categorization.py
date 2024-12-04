@@ -21,9 +21,10 @@ from graph_analysis import graph_analysis
 from remove_o6 import get_ids_and_remove_o6
 from filter_ligands import filter_ligands
 
-# TODO: Possibly add function that deletes sugar cif files from data/run/sugars?
+
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float,
-         max_rmsd: float, res: float, rscc: float, rmsd: float, make_graphs: bool = False, test_mode: bool = False):
+         max_rmsd: float, res: float, rscc: float, rmsd: float, make_graphs: bool,
+         test_mode: bool) -> None:
 
     download_files(config, test_mode)
     categorize(config)
@@ -36,6 +37,7 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
         get_ids_and_remove_o6(config)
 
     filter_ligands(res, rscc, rmsd, config)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()

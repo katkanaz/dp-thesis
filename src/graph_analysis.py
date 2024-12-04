@@ -21,6 +21,7 @@ def get_average_rmsd_of_peaks(config: Config) -> None:
 
     :param config: Config object
     """
+
     df = pd.read_csv(config.validation_dir /  "merged_rscc_rmsd.csv")
     data = df[df["name"] == "BGC"]
     filtered_df1 = data[data["rmsd"] <= 0.4] # FIXME: Extract to variables
@@ -42,6 +43,7 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
     :param max_rmsd: Maximum RMSD used to define graph area
     :param config: Config object
     """
+
     # FIXME: Load merged_rscc_rmsd.csv to pandas, filter (delete data for which the if is not true), then save to graph_analysis file
     with open(config.graph_analysis_dir / f"graph_analysis_{min_rscc}_{max_rscc}_{min_rmsd}_{max_rmsd}.csv", "w", newline="") as f:
         writer = DictWriter(f, ["pdb", "resolution", "name", "num", "chain", "rscc", "type", "rmsd"])
@@ -59,7 +61,7 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
     logger.info(f"Types of sugars in the defined area of the graph: {sugars}")
 
 
-def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float):
+def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float) -> None:
     # Tmp # FIXME:
     config.graph_analysis_dir.mkdir(exist_ok=True, parents=True)
 

@@ -13,7 +13,7 @@ from logger import setup_logger
 
 from configuration import Config
 
-from run_pq import run_pq #TODO: should the main functions have documentation, in this way it wont be readable what it does
+from run_pq import run_pq
 from perform_alignment import perform_alignment
 from cluster_data import cluster_data
 from compare_clusters import compare_clusters
@@ -22,7 +22,7 @@ from structure_motif_search import structure_motif_search
 
 
 def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
-         color_threshold: Union[float, None] = None):
+         color_threshold: Union[float, None] = None) -> None:
     run_pq(sugar, config, is_unix)
     perform_alignment(sugar, perform_align, config)
     cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, color_threshold, perform_align)

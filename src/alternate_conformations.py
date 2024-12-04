@@ -4,6 +4,7 @@ Description: Create separate mmCIF files for alternate sugar conformations
 Author: Kateřina Nazarčuková
 """
 
+
 import gemmi
 from gemmi.cif import Block  # type: ignore
 from pathlib import Path
@@ -19,10 +20,10 @@ def load_mmcif(config: Config) -> List[Path]:
     
     return mmcifs
 
-def delete_alternate_conformations():
+def delete_alternate_conformations() -> None:
     pass
 
-def separate_alternate_conformations():
+def separate_alternate_conformations() -> None:
     pass
     
 

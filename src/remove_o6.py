@@ -51,7 +51,7 @@ def remove_o6(config: Config) -> None:
                 f.write(line)
 
 
-def get_ids_and_remove_o6(config: Config):
+def get_ids_and_remove_o6(config: Config) -> None:
     # Tmp # FIXME:
     (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
 

@@ -101,7 +101,7 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     return pdb_ids
 
 
-def download_structures_and_validation_files(config: Config, pdb_ids: set) -> None: # FIXME: Rewrite function to deal with timeout
+def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) -> None: # FIXME: Rewrite function to deal with timeout
     """
     Download mmCIF files of structures with sugars and their xml validation files
 
@@ -157,6 +157,7 @@ def download_structures_and_validation_files(config: Config, pdb_ids: set) -> No
 
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
     # TODO: Add docs
+
     missing_files = []
     # Load json with needed structures
     with open(json_file, "r", encoding="utf8") as f:
@@ -172,6 +173,7 @@ def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
 
 def download_missing_files(config: Config, missing_files: List[str]) -> None:
     # TODO: Add docs
+
     timeout = 2
     n = 0
     while len(missing_files) != 0: 
@@ -193,8 +195,10 @@ def download_missing_files(config: Config, missing_files: List[str]) -> None:
                 logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
                 sleep(timeout)
 
+
 def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files: Path) -> bool:
     # TODO: Add docs
+
     found_error = False
     with open(json_file, "r") as f:
         all_structures: set[str] = set(json.load(f))
@@ -211,7 +215,7 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
     return found_error
 
 
-def download_files(config: Config, test_mode: bool = False):
+def download_files(config: Config, test_mode: bool) -> None:
     # Tmp # FIXME:
     config.data_dir.mkdir(exist_ok=True, parents=True)
     config.results_dir.mkdir(exist_ok=True, parents=True)
@@ -240,6 +244,7 @@ def download_files(config: Config, test_mode: bool = False):
     check_downloaded_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
     missing_files = get_ids_missing_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
     download_missing_files(config, missing_files)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()

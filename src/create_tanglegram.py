@@ -9,7 +9,7 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: Config, perform_align: bool = False) -> None:
+def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: Config, perform_align: bool) -> None:
     """
     Call tanglegram function from an external script, which is modified to show the data as needed for this analysis
 

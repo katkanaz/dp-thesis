@@ -5,9 +5,10 @@ Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
 
+
 from argparse import ArgumentParser
 import json
-from typing import List
+from typing import List, Dict
 import os
 from pathlib import Path
 from platform import system
@@ -50,7 +51,7 @@ def download_pq(config: Config) -> None:
     # if not download again current mv and delete changelow
 
 
-def create_pq_config(config: Config, structure: str, residues: List[dict], sugar: str) -> list:
+def create_pq_config(config: Config, structure: str, residues: List[Dict[str, str]], sugar: str) -> List[str]:
     # FIXME: Reword docstring, residues type and description
     """
     Create config file for the given structure

@@ -7,9 +7,10 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 
 import json
+from typing import List, Dict
 
 import gemmi
-from gemmi.cif import Block  # type: ignore
+from gemmi.cif import Block, Table  # type: ignore
 from logger import logger, setup_logger
 
 from configuration import Config
@@ -60,14 +61,15 @@ AMINO_ACIDS = [
 
 SUGAR_NAMES = []
 
-# TODO: Add type hints
-def extract_sugars(table):
+
+def extract_sugars(table: Table) -> List[Dict[str, str]]:
     # TODO: Add docs
     """
     Gets a list of dictionaries, in which one dictionary represents single
     sugar residue present in the given table (either monosacharide or one
     residue form oligosaccharide).
     """
+
     extracted_sugars = []
     # there can be more conformers for some residues, and sometimes it
     # means there will be two residues with the same num and chain,
@@ -87,7 +89,7 @@ def extract_sugars(table):
     return extracted_sugars
 
 
-def remove_connections(block: Block, mono: list, oligo: list) -> list:
+def remove_connections(block: Block, mono: List[Dict[str, str]], oligo: List[Dict[str, str]]) -> List[Dict[str, str]]:
     """
     Remove glycosylated residues from mono and oligo (modify the lists in place)
     and return list of glycosylated residues (according to conn)
@@ -153,7 +155,7 @@ def remove_connections(block: Block, mono: list, oligo: list) -> list:
     return glycosylated_residues
 
 
-def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
+def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[Dict[str, str]]) -> List[Dict[str, str]]:
     """
     Close contacts category lists pairs of atoms from all residues, which are in so close proximity
     we cannot be sure whether there is or is not a bond. Sometimes the residues from which the pair is
@@ -198,8 +200,9 @@ def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
 
     return close_contact_residues
 
+
 #TODO: refactor global variable
-def categorize(config: Config):
+def categorize(config: Config) -> None:
     # Tmp # FIXME:
     config.categorization_dir.mkdir(exist_ok=True, parents=True)
 
@@ -341,8 +344,6 @@ def categorize(config: Config):
 
     logger.info(f"res_gycosyl_residue_not_1 list: {len(res_gycosyl_residue_not_1)}")
     logger.info(f"res_gycosyl_residue_not_1 set: {len(set(res_gycosyl_residue_not_1))}")
-
-
 
 
 if __name__ == "__main__":

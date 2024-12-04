@@ -13,7 +13,7 @@ from logger import setup_logger
 from configuration import Config
 
 
-def plot_corr_graphs(config: Config):
+def plot_corr_graphs(config: Config) -> None:
     """
     Create correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
     glycosylated residues and residues in close contacts. Also create these graphs separately for each
@@ -66,7 +66,7 @@ def plot_corr_graphs(config: Config):
         plt.close()
 
 
-def plot_histograms(config: Config):
+def plot_histograms(config: Config) -> None:
     """
     Make histograms for individual sugars
 
@@ -94,7 +94,7 @@ def plot_histograms(config: Config):
         plt.close()
 
 
-def plot_3D_graph(config: Config):
+def plot_3D_graph(config: Config) -> None:
     # FIXME: Add docstring
     """
     [TODO:description]
@@ -114,7 +114,7 @@ def plot_3D_graph(config: Config):
     plt.close()
 
 
-def plot_graphs(config: Config):
+def plot_graphs(config: Config) -> None:
     # Tmp # FIXME:
     (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
 

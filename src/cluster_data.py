@@ -21,9 +21,8 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-# FIXME: figure out the align, how to make it done
 def perform_data_clustering(sugar: str, n_clusters: int, cluster_method: str, 
-                 align_method: str, config: Config, make_dendrogram: bool = False,
+                 align_method: str, config: Config, make_dendrogram: bool,
                  color_threshold: Union[float, None] = None) -> None:
     """
     Perform hierarchical clustering, using the specified clustering 
@@ -133,8 +132,8 @@ def perform_data_clustering(sugar: str, n_clusters: int, cluster_method: str,
         json.dump(representatives, f, indent=4)
 
 
-def cluster_data(sugar: str, n_clusters: int, cluster_method: str, config: Config, make_dendrogram: bool = False,
-                 color_threshold: Union[float, None] = None, perform_align: bool = False) -> None:
+def cluster_data(sugar: str, n_clusters: int, cluster_method: str, config: Config, make_dendrogram: bool,
+                 color_threshold: Union[float, None] = None, perform_align: bool) -> None:
     perform_data_clustering(sugar, n_clusters, cluster_method, "super", config, make_dendrogram, color_threshold) 
     if perform_align:
         perform_data_clustering(sugar, n_clusters, cluster_method, "align", config, make_dendrogram, color_threshold) 
@@ -159,7 +158,6 @@ if __name__ == "__main__":
     config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
-
 
     # TODO: Make number of clusters optional
     cluster_data(args.sugar, args.n_clusters, args.cluster_method, config, args.make_dendrogram, args.color_threshold, args.perform_align)
