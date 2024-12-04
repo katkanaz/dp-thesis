@@ -50,7 +50,7 @@ def download_pq(config: Config) -> None:
     # if not download again current mv and delete changelow
 
 
-def create_pq_config(structure: str, residues: List[dict], sugar: str) -> list:
+def create_pq_config(config: Config, structure: str, residues: List[dict], sugar: str) -> list:
     # FIXME: Reword docstring, residues type and description
     """
     Create config file for the given structure
@@ -159,7 +159,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
 
     for structure, residues in ligands.items():
         structure = structure.lower()
-        query_names = create_pq_config(structure, residues, sugar)
+        query_names = create_pq_config(config, structure, residues, sugar)
         if not query_names:
             continue
         # Copy current structure to ./structures dir which is used as source by PQ.

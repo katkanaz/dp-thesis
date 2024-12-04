@@ -102,7 +102,7 @@ def run_query(path_to_file: Path, residues: list):
     logger.info(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) # NOTE: Returns different scores of structures when "experimental" is and is not there
 
 
-def structure_motif_search():
+def structure_motif_search(config: Config):
     input_folder = config.structure_motif_search_dir / "input_representatives"
     input_folder.mkdir(exist_ok=True, parents=True)
     # Files to test

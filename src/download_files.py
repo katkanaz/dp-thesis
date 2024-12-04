@@ -48,7 +48,7 @@ def get_components_file(config: Config) -> None:
         f.write(response.content)
 
 
-def get_sugars_from_ccd() -> List[str]:
+def get_sugars_from_ccd(config: Config) -> List[str]:
     """Get a list of all sugar abbreviations that appear in PDB database
 
     :return list: List of sugar abbreviations
@@ -67,7 +67,7 @@ def get_sugars_from_ccd() -> List[str]:
     return list(sugar_names)
 
 
-def get_pdb_ids_with_sugars(sugar_names: List[str]) -> Set[str]:
+def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     """Get a set of PDB IDs for all structures containing any of the sugars
 
     :param list sugar_names: List of sugar abbreviations
@@ -99,7 +99,7 @@ def get_pdb_ids_with_sugars(sugar_names: List[str]) -> Set[str]:
     return pdb_ids
 
 
-def download_structures_and_validation_files(pdb_ids: set) -> None: # FIXME: Rewrite function to deal with timeout
+def download_structures_and_validation_files(config: Config, pdb_ids: set) -> None: # FIXME: Rewrite function to deal with timeout
     """
     Download mmCIF files of structures with sugars and their xml validation files
 
@@ -168,7 +168,7 @@ def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
     return missing_files
 
 
-def download_missing_files(missing_files: List[str]) -> None:
+def download_missing_files(config: Config, missing_files: List[str]) -> None:
     # TODO: Add docs
     timeout = 2
     n = 0
@@ -218,11 +218,11 @@ def download_files(config: Config, test_mode: bool = False):
     config.components_dir.mkdir(exist_ok=True, parents=True)
 
     get_components_file(config)
-    sugar_names = get_sugars_from_ccd()
+    sugar_names = get_sugars_from_ccd(config)
 
     if not test_mode: 
         pdb_ids_pq_file = config.data_dir / "pdb_ids_pq.json"
-        pdb_ids_ccd = get_pdb_ids_with_sugars(sugar_names)
+        pdb_ids_ccd = get_pdb_ids_with_sugars(config, sugar_names)
         get_pdb_ids_from_pq(pdb_ids_pq_file, config)
 
         with (pdb_ids_pq_file).open() as f:
@@ -234,10 +234,10 @@ def download_files(config: Config, test_mode: bool = False):
     with (config.data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
-    download_structures_and_validation_files(pdb_ids)
+    download_structures_and_validation_files(config, pdb_ids)
     check_downloaded_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
     missing_files = get_ids_missing_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
-    download_missing_files(missing_files)
+    download_missing_files(config, missing_files)
 
 if __name__ == "__main__":
     parser = ArgumentParser()

@@ -28,7 +28,7 @@ def main(sugar: str, config: Config, is_unix: bool, align_method: str, perform_a
     cluster_data(sugar, n_clusters, cluster_method, align_method, config, make_dendrogram, color_threshold)
     compare_clusters(config)
     create_tanglegram(sugar, cluster_method, config)
-    structure_motif_search()
+    structure_motif_search(config)
 
 
 if __name__ == "__main__":
