@@ -223,7 +223,5 @@ if __name__ == "__main__":
 
     is_unix = system() != "Windows"
 
-    (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)
-    (config.pq_run_dir / "results").mkdir(exist_ok=True, parents=True)
 
     run_pq(args.sugar, config, is_unix)

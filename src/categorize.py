@@ -200,6 +200,9 @@ def remove_close_contacts(block: Block, mono: list, oligo: list) -> list:
 
 #TODO: refactor global variable
 def categorize(config: Config):
+    # Tmp # FIXME:
+    config.categorization_dir.mkdir(exist_ok=True, parents=True)
+
     global SUGAR_NAMES
     with (config.data_dir / "sugar_names.json").open() as f: 
         SUGAR_NAMES = json.load(f)
@@ -302,42 +305,42 @@ def categorize(config: Config):
 
     # TODO: Extract to function, print into file?
     # Print counts of everything
-    logger.info("Number of residues with multiple conformations: ", len(overall_conformers))
-    logger.info("PDB with unannotated glycosylation:", len(pdb_not_anotated_glycosylation))
-    logger.info(f"PDB with sugars in the wrong category: {len(pdb_sugars_in_wrong_category)}\n")
+    logger.info(f"Number of residues with multiple conformations: {len(overall_conformers)}")
+    logger.info(f"PDB with unannotated glycosylation: {len(pdb_not_anotated_glycosylation)}")
+    logger.info(f"PDB with sugars in the wrong category: {len(pdb_sugars_in_wrong_category)}")
 
     count = 0
     for residues in all_residues.values():
         count += len(residues)
-    logger.info(f"All structures: {len(all_residues)} , residues: {count}\n")
+    logger.info(f"All structures: {len(all_residues)}, residues: {count}")
 
     count = 0
     for residues in ligands.values():
         count += len(residues)
-    logger.info(f"Ligands: {len(ligands)} , residues: {count}\n")
+    logger.info(f"Ligands: {len(ligands)}, residues: {count}")
 
     count = 0
     for i in glycosylated.values():
         count += len(i)
-    logger.info(f"Glycosylations: {len(glycosylated)} , residues: {count}\n")
+    logger.info(f"Glycosylations: {len(glycosylated)}, residues: {count}")
 
     count = 0
     for i in close_contacts.values():
         count += len(i)
-    logger.info(f"Close contacts: {len(set(close_contacts))} , residues: {count}\n")
+    logger.info(f"Close contacts: {len(set(close_contacts))}, residues: {count}")
 
-    logger.info(f"PDB only ligands: {len(set(pdb_only_ligands))}\n")
-    logger.info(f"PDB only glycosylated: {len(set(pdb_only_glycosylated))}\n")
-    logger.info(f"PDB only close contacts: {len(set(pdb_only_close_contacts))}\n")
+    logger.info(f"PDB only ligands: {len(set(pdb_only_ligands))}")
+    logger.info(f"PDB only glycosylated: {len(set(pdb_only_glycosylated))}")
+    logger.info(f"PDB only close contacts: {len(set(pdb_only_close_contacts))}")
 
-    logger.info(f"PDB ligands and glycosylated: {len(set(pdb_ligand_glycosylated))}\n")
-    logger.info(f"PDB ligands and close contacts: {len(set(pdb_ligand_close_contacts))}\n")
-    logger.info(f"PDB glycosylated and close contacts: {len(set(pdb_glycosylated_close_contacts))}\n")
-    logger.info(f"PDB ligands, glycosylated and close contacts: {len(set(pdb_lig_glyc_close))}\n")
+    logger.info(f"PDB ligands and glycosylated: {len(set(pdb_ligand_glycosylated))}")
+    logger.info(f"PDB ligands and close contacts: {len(set(pdb_ligand_close_contacts))}")
+    logger.info(f"PDB glycosylated and close contacts: {len(set(pdb_glycosylated_close_contacts))}")
+    logger.info(f"PDB ligands, glycosylated and close contacts: {len(set(pdb_lig_glyc_close))}")
 
 
-    logger.info(f"res_gycosyl_residue_not_1 list: {len(res_gycosyl_residue_not_1)}\n")
-    logger.info(f"res_gycosyl_residue_not_1 set: {len(set(res_gycosyl_residue_not_1))}\n")
+    logger.info(f"res_gycosyl_residue_not_1 list: {len(res_gycosyl_residue_not_1)}")
+    logger.info(f"res_gycosyl_residue_not_1 set: {len(set(res_gycosyl_residue_not_1))}")
 
 
 
@@ -347,6 +350,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    config.categorization_dir.mkdir(exist_ok=True, parents=True)
+    # config.categorization_dir.mkdir(exist_ok=True, parents=True)
 
     categorize(config)

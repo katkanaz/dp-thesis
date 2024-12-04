@@ -18,6 +18,7 @@ def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
     :param config: Config object
     """
 
+    config.tanglegrams_dir.mkdir(exist_ok=True, parents=True)
     data_super = np.load(config.clusters_dir / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
     data_align = np.load(config.clusters_dir / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
 
@@ -49,6 +50,5 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    config.tanglegrams_dir.mkdir(exist_ok=True, parents=True)
 
     create_tanglegram(args.sugar, args.cluster_method, config=config)

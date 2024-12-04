@@ -38,6 +38,9 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     :param color_threshold: The color threshold for the dendrogram plot, defaults to None
     """
 
+    # FIXME:
+    config.dendrograms_dir.mkdir(exist_ok=True, parents=True)
+
     data = np.load(config.clusters_dir / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
 
     # Create densed form of the matrix
@@ -148,7 +151,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    config.dendrograms_dir.mkdir(exist_ok=True, parents=True)
 
     # TODO: Make number of clusters optional
     cluster_data(args.sugar, args.n_clusters, args.cluster_method, args.align_method, config, args.make_dendrogram, args.color_threshold)
