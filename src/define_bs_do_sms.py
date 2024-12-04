@@ -34,9 +34,7 @@ def main(sugar: str, config: Config, is_unix: bool, align_method: str, perform_a
 if __name__ == "__main__":
     parser = ArgumentParser()
 
-    parser.add_argument("-s", "--sugar", help="The sugar abbreviation", type="str", required=True)
-    # parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", choices=["super", "align"],
-    #                     type="str", required=True)
+    parser.add_argument("-s", "--sugar", help="The sugar abbreviation", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
     parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
     parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,

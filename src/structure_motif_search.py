@@ -18,32 +18,36 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-# def extract_representatives(sugar: str, align_method: str, num: int, method: str, config: Config, input_folder: Path) -> None:
-#     """
-#     Extract files for structure motif search
-#
-#     :param sugar: The sugar for which representative binding sites are being defined
-#     :param align_method: The PyMOL command that was used for alignment
-#     :param representatives_file: The file containing the representative binding sites ids
-#     :param config: Config object
-#     :param input_folder: Folder to extract representatives in
-#     """
-#
-#     path_to_file: Path = config.binding_sites / f"{sugar}_fixed_5"
-#
-#     with open(config.results_folder / "clusters" / sugar / align_method / f"{num}_{method}_cluster_representatives.json") as rep_file:
-#         representatives: dict = json.load(rep_file)
-#     with open(config.results_folder / "clusters" / sugar / f"{sugar}_structures_keys.json") as struct_keys_file:
-#         structure_keys: dicutil.copyfile((path_to_file / structure), (input_folder / structure))
+def extract_representatives(sugar: str, align_method: str, num: int, min_residues: int, method: str, config: Config, input_representatives: Path) -> None:
+    """
+    Extract files for structure motif search
+
+    :param sugar: The sugar for which representative binding sites are being defined
+    :param align_method: The PyMOL command that was used for alignment
+    :param representatives_file: The file containing the representative binding sites ids
+    :param config: Config object
+    :param input_folder: Folder to extract representatives in
+    """
+
+    filtered_binding_sites: Path = config.filtered_binding_sites_dir / f"min_{min_residues}_aa"
+
+    with open(config.clusters_dir / align_method / f"{num}_{method}_cluster_representatives.json") as rep_file:
+        representatives: dict = json.load(rep_file)
+    with open(config.clusters_dir / f"{sugar}_structures_keys.json") as struct_keys_file:
+        structure_keys: dict = json.load(struct_keys_file)
+
+    for num, file_key in representatives.items():
+        binding_site_file_name = structure_keys[str(file_key)]
+        shutil.copyfile((filtered_binding_sites / binding_site_file_name), (input_representatives / binding_site_file_name))
 
 
-# def load_representatives(config: Config) -> List[Path]:
+def load_representatives(config: Config) -> List[Path]:
     # TODO: Add docs
-    # representatives = []
-    # for file in sorted(Path("../results/structure_motif_search/input_representatives/FUC/").glob("*.pdb")):
-        # representatives.append(file)
+    representatives = []
+    for file in sorted(Path(config.structure_motif_search_dir / "input_representatives").glob("*.pdb")):
+        representatives.append(file)
 
-    # return representatives
+    return representatives
 
 
 def get_struc_name(path_to_file: Path) -> str:
@@ -88,7 +92,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> list:
 
 
 def run_query(path_to_file: Path, residues: list):
-    #TODO: Add docs
+    # TODO: Add docs
     q1 = AttributeQuery(attribute="rcsb_comp_model_provenance.source_db", operator="exact_match",value="AlphaFoldDB", service="text", negation=False)
     q2 = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
 
@@ -116,7 +120,7 @@ def structure_motif_search():
     run_query(path_to_file, define_residues(path_to_file, struc_name))
 
 
-#TODO: check if original structure is returned
+# TODO: Check if original structure is returned
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -133,7 +137,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    # extract_representatives(args.sugar, args.align_method, args.number, args.method, config, input_folder)
     structure_motif_search()
 
     config.clear_current_run()
