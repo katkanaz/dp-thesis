@@ -71,13 +71,13 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("--min_rscc", help="Minimum RSCC used to define graph area",
-                        type="float", default=0.85)
+                        type=float, default=0.85)
     parser.add_argument("--max_rscc", help="Maximum RSCC used to define graph area",
-                        type="float", default=1.0)
+                        type=float, default=1.0)
     parser.add_argument("--min_rmsd", help="Minimum RMSD used to define graph area",
-                        type="float", default=2.0)
+                        type=float, default=2.0)
     parser.add_argument("--max_rmsd", help="Maximum RMSD used to define graph area",
-                        type="float", default=3.0)
+                        type=float, default=3.0)
 
     args = parser.parse_args()
 

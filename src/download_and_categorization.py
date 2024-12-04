@@ -43,20 +43,20 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--test_mode", action="store_true",
                         help="Weather to run the whole process in a test mode")
     parser.add_argument("--min_rscc", help="Minimum RSCC used to define graph area",
-                        type="float", default=0.85)
+                        type=float, default=0.85)
     parser.add_argument("--max_rscc", help="Maximum RSCC used to define graph area",
-                        type="float", default=1.0)
+                        type=float, default=1.0)
     parser.add_argument("--min_rmsd", help="Minimum RMSD used to define graph area",
-                        type="float", default=2.0)
+                        type=float, default=2.0)
     parser.add_argument("--max_rmsd", help="Maximum RMSD used to define graph area",
-                        type="float", default=3.0)
+                        type=float, default=3.0)
     # FIXME: Should they have default? how to automate this, it originates in residue graphs?
     parser.add_argument("--res", help="Value of maximum overall resolution of structure",
-                        type="float", default=3.0)
+                        type=float, default=3.0)
     parser.add_argument("--rscc", help="Value of minimum RSCC of residue",
-                        type="float", default=0.8)
+                        type=float, default=0.8)
     parser.add_argument("--rmsd", help="Value of maximum RMSD of residue",
-                        type="float", default=2.0)
+                        type=float, default=2.0)
     parser.add_argument("-g", "--make_graphs", action="store_true",
                         help="Weather to plot and analyse graphs of residues")
 
