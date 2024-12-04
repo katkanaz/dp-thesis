@@ -24,6 +24,8 @@ def extract_rscc_and_resolution(config: Config) -> None:
     # Tmp # FIXME:
     config.validation_dir.mkdir(exist_ok=True, parents=True)
 
+    logger.info("Extracting RSCC and resolution")
+
     with open(config.categorization_dir / "all_residues.json", "r", encoding="utf8") as f:
         all_residues = json.load(f)
     with open(config.categorization_dir / "ligands.json", "r", encoding="utf8") as f:

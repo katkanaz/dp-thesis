@@ -42,6 +42,8 @@ def get_components_file(config: Config) -> None:
     :param config: Config object
     """
 
+    logger.info("Downloading components file")
+
     response = requests.get(f"https://files.wwpdb.org/pub/pdb/data/monomers/components.cif.gz")
 
     with open((config.components_dir / "components.cif.gz"), "wb") as f:

@@ -21,6 +21,7 @@ def compare_clusters(config: Config) -> None:
     :param config: Config object
     """
 
+    logger.info("Comparing clusters")
     with (config.clusters_dir / "super" / "20_centroid_all_clusters.json").open() as f:
         clusters_super = json.load(f)
 

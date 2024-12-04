@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
-from logger import setup_logger
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -38,6 +38,7 @@ def cluster_data(sugar: str, n_clusters: int, cluster_method: str,
     :param color_threshold: The color threshold for the dendrogram plot, defaults to None
     """
 
+    logger.info(f"Clustering data from {align_method}")
     # FIXME:
     config.dendrograms_dir.mkdir(exist_ok=True, parents=True)
 

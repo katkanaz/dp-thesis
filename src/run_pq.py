@@ -34,7 +34,7 @@ def download_pq(config: Config) -> None:
     :param config: Config object
     """
 
-    print("Downloading PatternQuery")
+    logger.info("Downloading PatternQuery")
 
     response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/PatternQuery/DownloadService")
     with open((config.pq_dir / "PatternQuery.zip"), "wb") as f:
@@ -118,7 +118,7 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
     :param query_names: List of query IDs
     """
 
-    print("Extractiong results")
+    logger.info("Extractiong results")
 
     with TemporaryDirectory() as temp_dir:
         with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:
@@ -222,6 +222,5 @@ if __name__ == "__main__":
     setup_logger(config.log_path)
 
     is_unix = system() != "Windows"
-
 
     run_pq(args.sugar, config, is_unix)

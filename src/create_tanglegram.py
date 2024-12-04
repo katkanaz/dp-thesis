@@ -4,7 +4,7 @@ import modified_tanglegram
 import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
-from logger import setup_logger
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -18,6 +18,7 @@ def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
     :param config: Config object
     """
 
+    logger.info("Creating tanglegram")
     config.tanglegrams_dir.mkdir(exist_ok=True, parents=True)
     data_super = np.load(config.clusters_dir / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
     data_align = np.load(config.clusters_dir / "align" / f"{sugar}_all_pairs_rmsd_align.npy")
