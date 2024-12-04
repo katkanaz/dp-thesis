@@ -81,7 +81,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
 
-    logger.info(f"Number of structures with less than {min_residues} AA: ", len(less_than_n_aa))
+    logger.info(f"Number of structures with less than {min_residues} AA: {len(less_than_n_aa)}")
 
     return filtered_binding_sites
 
@@ -100,6 +100,8 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
     :param method: The PyMOL command used to calculate RMSD
     :param config: Config object
     """
+
+    logger.info("Performing alignment")
 
     super_results_path = config.clusters_dir / "super"
     super_results_path.mkdir(parents=True, exist_ok=True)
@@ -179,7 +181,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
             except Exception as e:
                 # Save pairs with which something went wrong
                 something_wrong.append((structure1, structure2))
-                logger.error("Something went wrong!", e)
+                logger.error(f"Something went wrong: {e}")
 
     if align_file is not None and align_results_path is not None:
         align_file.close()

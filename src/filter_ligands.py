@@ -31,14 +31,14 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     with open(config.categorization_dir / "ligands.json", "r", encoding="utf8") as f:
         ligands = json.load(f)
 
-    logger.info("Number of structures before filtering: ", len(ligands.keys()))
+    logger.info(f"Number of structures before filtering: {len(ligands.keys())}")
 
     # TODO: Extract 3 lines below into function 
     count = 0
     for pdb, residues in ligands.items():
         count += len(residues)
 
-    logger.info("Number of residues before filtering: ", count)
+    logger.info(f"Number of residues before filtering: {count}")
 
     # Save the pdb id of structures with good resolution, because not all structures have resolution
     # Available and we want to continue just with those with resolution
@@ -74,14 +74,14 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     for key in delete_empty_structures:
         del ligands[key]
 
-    logger.info("Number of structures after filtering: ", len(ligands.keys()))
+    logger.info(f"Number of structures after filtering: {len(ligands.keys())}")
 
     # TODO: Extract 3 lines below into function 
     count = 0
     for pdb, residues in ligands.items():
         count += len(residues)
 
-    logger.info("Number of residues after filtering: ", count)
+    logger.info(f"Number of residues after filtering: {count}")
 
     with open(config.categorization_dir / "filtered_ligands.json", "w", encoding="utf8") as f:
         json.dump(ligands, f, indent=4)

@@ -205,9 +205,9 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
         (config.pq_run_dir / "structures" / f"{structure}.cif").unlink()
         shutil.rmtree(config.pq_run_dir / "results" / "result")
 
-    logger.error("More patterns for one id found:", more_than_one_pattern)
-    logger.error("PQ could not find these patterns:", pq_couldnt_find_pattern)
-    logger.error("Result folder not created:", result_folder_not_created)
+    logger.error(f"More patterns for one id found: {more_than_one_pattern}")
+    logger.error(f"PQ could not find these patterns: {pq_couldnt_find_pattern}")
+    logger.error(f"Result folder not created: {result_folder_not_created}")
 
 
 if __name__ == "__main__":
