@@ -9,7 +9,7 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
+def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: Config, perform_align: bool = False) -> None:
     """
     Call tanglegram function from an external script, which is modified to show the data as needed for this analysis
 
@@ -18,6 +18,9 @@ def create_tanglegram(sugar: str, cluster_method: str, config: Config) -> None:
     :param config: Config object
     """
 
+    if not perform_align:
+        logger.info("Align was not performed - cannot make tanglegram!")
+        return
     logger.info("Creating tanglegram")
     config.tanglegrams_dir.mkdir(exist_ok=True, parents=True)
     data_super = np.load(config.clusters_dir / "super" / f"{sugar}_all_pairs_rmsd_super.npy")
@@ -42,8 +45,10 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
+    parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
     parser.add_argument("-c", "--cluster_method", help = "Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"], required=True)
+    parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
 
     args = parser.parse_args()
 
@@ -52,4 +57,4 @@ if __name__ == "__main__":
     setup_logger(config.log_path)
 
 
-    create_tanglegram(args.sugar, args.cluster_method, config=config)
+    create_tanglegram(args.sugar, args.n_clusters, args.cluster_method, config, args.perform_align)

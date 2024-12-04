@@ -13,7 +13,7 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-def compare_clusters(config: Config) -> None:
+def compare_clusters(config: Config, perform_align: bool = False) -> None:
     """
     How many clusters from align-data correspond to one cluster from super-data, and vice versa
 
@@ -21,7 +21,12 @@ def compare_clusters(config: Config) -> None:
     :param config: Config object
     """
 
+    if not perform_align:
+        logger.info("Align was not performed - cannot compare align and super clusters!")
+        return
+
     logger.info("Comparing clusters")
+
     with (config.clusters_dir / "super" / "20_centroid_all_clusters.json").open() as f:
         clusters_super = json.load(f)
 
@@ -55,6 +60,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
+    parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
 
     args = parser.parse_args()
 
@@ -62,4 +68,4 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    compare_clusters(config)
+    compare_clusters(config, args.perform_align)

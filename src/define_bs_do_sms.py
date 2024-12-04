@@ -21,13 +21,13 @@ from create_tanglegram import create_tanglegram
 from structure_motif_search import structure_motif_search
 
 
-def main(sugar: str, config: Config, is_unix: bool, align_method: str, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
+def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
          color_threshold: Union[float, None] = None):
     run_pq(sugar, config, is_unix)
     perform_alignment(sugar, perform_align, config)
-    cluster_data(sugar, n_clusters, cluster_method, align_method, config, make_dendrogram, color_threshold)
-    compare_clusters(config)
-    create_tanglegram(sugar, cluster_method, config)
+    cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, color_threshold, perform_align)
+    compare_clusters(config, perform_align)
+    create_tanglegram(sugar, n_clusters, cluster_method, config, perform_align)
     structure_motif_search(config)
 
 
@@ -52,6 +52,6 @@ if __name__ == "__main__":
     is_unix = system() != "Windows"
 
     #TODO: Make the number of clusters optional
-    main(args.sugar, config, is_unix, args.align_method, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
+    main(args.sugar, config, is_unix, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()
