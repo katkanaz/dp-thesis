@@ -14,6 +14,7 @@ logger.addHandler(CrashHandler())
 
 
 def setup_logger(log_file: Path, log_level=logging.INFO):
+    # TODO: Add docs
     """
     Configure the global logger.
 
@@ -26,7 +27,6 @@ def setup_logger(log_file: Path, log_level=logging.INFO):
 
     logger.setLevel(log_level)
 
-    # formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(modules)s - %(funcName)s - %(message)s")
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s")
 
     log_file.parent.mkdir(exist_ok=True, parents=True)
@@ -40,6 +40,3 @@ def setup_logger(log_file: Path, log_level=logging.INFO):
 
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
-
-
-# __all__ = ["logger"]

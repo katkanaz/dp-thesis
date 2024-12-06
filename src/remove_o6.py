@@ -64,6 +64,4 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    # (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
-
     get_ids_and_remove_o6(config)

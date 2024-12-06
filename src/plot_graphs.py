@@ -128,6 +128,4 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    # (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
-
     plot_graphs(config)
