@@ -63,7 +63,7 @@ def get_sugars_from_ccd(config: Config) -> List[str]:
         if "saccharide" in comp_type.lower():
             sugar_names.add(block.name)
 
-    with (config.data_dir / "sugar_names.json").open("w") as f:
+    with (config.user_cfg.data_dir / "sugar_names.json").open("w") as f:
         json.dump(list(sugar_names), f, indent=4)
 
     return list(sugar_names)
@@ -88,14 +88,14 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
         pdb_ids.update(structures[sugar])
         counts_structures_with_sugar[sugar] = len(structures[sugar])
 
-    with (config.data_dir / "pdb_ids_ccd.json").open("w") as f:
+    with (config.user_cfg.data_dir / "pdb_ids_ccd.json").open("w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
     sorted_counts = dict(sorted(counts_structures_with_sugar.items(), key=lambda x: x[1], reverse=True))
-    with (config.results_dir / "counts_structures_with_sugar.json").open("w") as f:
+    with (config.user_cfg.results_dir / "counts_structures_with_sugar.json").open("w") as f:
         json.dump(sorted_counts, f, indent=4)
 
-    with (config.results_dir / "sugars_not_present_in_any_structure.json").open("w") as f:
+    with (config.user_cfg.results_dir / "sugars_not_present_in_any_structure.json").open("w") as f:
         json.dump(sugars_not_present_in_any_structure, f, indent=4)
 
     return pdb_ids
@@ -217,8 +217,8 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
 
 def download_files(config: Config, test_mode: bool) -> None:
     # Tmp # FIXME:
-    config.data_dir.mkdir(exist_ok=True, parents=True)
-    config.results_dir.mkdir(exist_ok=True, parents=True)
+    config.user_cfg.data_dir.mkdir(exist_ok=True, parents=True)
+    config.user_cfg.results_dir.mkdir(exist_ok=True, parents=True)
     config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
     config.validation_files_dir.mkdir(exist_ok=True, parents=True)
     config.components_dir.mkdir(exist_ok=True, parents=True)
@@ -227,7 +227,7 @@ def download_files(config: Config, test_mode: bool) -> None:
     sugar_names = get_sugars_from_ccd(config)
 
     if not test_mode: 
-        pdb_ids_pq_file = config.data_dir / "pdb_ids_pq.json"
+        pdb_ids_pq_file = config.user_cfg.data_dir / "pdb_ids_pq.json"
         pdb_ids_ccd = get_pdb_ids_with_sugars(config, sugar_names)
         get_pdb_ids_from_pq(pdb_ids_pq_file, config)
 
@@ -235,14 +235,14 @@ def download_files(config: Config, test_mode: bool) -> None:
             pdb_ids_pq = json.load(f)
         pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
     else:
-        pdb_ids = set(config.pdb_ids_list)
+        pdb_ids = set(config.user_cfg.pdb_ids_list)
 
-    with (config.data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
+    with (config.user_cfg.data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
         json.dump(list(pdb_ids), f, indent=4)
 
     download_structures_and_validation_files(config, pdb_ids)
-    check_downloaded_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
-    missing_files = get_ids_missing_files(config.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
+    check_downloaded_files(config.user_cfg.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
+    missing_files = get_ids_missing_files(config.user_cfg.data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
     download_missing_files(config, missing_files)
 
 

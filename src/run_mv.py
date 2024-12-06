@@ -52,11 +52,11 @@ def download_mv(config: Config) -> None:
     logger.info("Downloading MotiveValidator")
 
     response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadService")
-    with open((config.mv_dir / "MotiveValidator.zip"), "wb") as f:
+    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f:
         f.write(response.content)
 
-    with ZipFile(config.mv_dir / "MotiveValidator.zip", "r") as zip_ref:
-        zip_ref.extractall(config.mv_dir / "MotiveValidator")
+    with ZipFile(config.user_cfg.mv_dir / "MotiveValidator.zip", "r") as zip_ref:
+        zip_ref.extractall(config.user_cfg.mv_dir / "MotiveValidator")
 
 
 # TODO: finish function
@@ -131,14 +131,14 @@ def run_mv(config: Config, is_unix: bool) -> None:
 
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
-    dir_path = config.mv_dir / "MotiveValidator"
+    dir_path = config.user_cfg.mv_dir / "MotiveValidator"
     if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
         download_mv(config)
     # update_mv(config) # TODO: If just downloaded do not update
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"
-           f"{config.mv_dir}/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
+           f"{config.user_cfg.mv_dir}/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
            f"{config.mv_run_dir}/results "
            f"{config.mv_run_dir}/mv_config.json"]
 
@@ -163,8 +163,6 @@ if __name__ == "__main__":
     config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
-
-    # (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
 
     is_unix = system() != "Windows"
 

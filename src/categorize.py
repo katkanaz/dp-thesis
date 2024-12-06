@@ -207,10 +207,10 @@ def categorize(config: Config) -> None:
     config.categorization_dir.mkdir(exist_ok=True, parents=True)
 
     global SUGAR_NAMES
-    with (config.data_dir / "sugar_names.json").open() as f: 
+    with (config.user_cfg.data_dir / "sugar_names.json").open() as f: 
         SUGAR_NAMES = json.load(f)
 
-    with (config.data_dir / "pdb_ids_intersection_pq_ccd.json").open() as f:
+    with (config.user_cfg.data_dir / "pdb_ids_intersection_pq_ccd.json").open() as f:
         pdb_files = json.load(f)
 
     for pdb in pdb_files:

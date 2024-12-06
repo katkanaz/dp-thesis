@@ -38,11 +38,11 @@ def download_pq(config: Config) -> None:
     logger.info("Downloading PatternQuery")
 
     response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/PatternQuery/DownloadService")
-    with open((config.pq_dir / "PatternQuery.zip"), "wb") as f:
+    with open((config.user_cfg.pq_dir / "PatternQuery.zip"), "wb") as f:
         f.write(response.content)
 
-    with zipfile.ZipFile(config.pq_dir / "PatternQuery.zip", "r") as zip_ref:
-        zip_ref.extractall(config.pq_dir / "PatternQuery")
+    with zipfile.ZipFile(config.user_cfg.pq_dir / "PatternQuery.zip", "r") as zip_ref:
+        zip_ref.extractall(config.user_cfg.pq_dir / "PatternQuery")
 
 
 # def update_mv(config: Config) -> None: # TODO: finish function
@@ -172,7 +172,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
 
         # Run PQ
         cmd = [f"{'mono ' if is_unix is True else ''}"
-               f"{config.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
+               f"{config.user_cfg.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
                f"{config.pq_run_dir}/results "
                f"{config.pq_run_dir}/pq_config.json"]
 
