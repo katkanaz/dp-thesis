@@ -91,7 +91,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     # by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
     # but without actually moving, so the rms_cur is eventually calculated from their position as is
     # towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
-def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: str, config: Config) -> None:
+def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: Path, config: Config) -> None:
     """
     [TODO:description]
 
@@ -131,7 +131,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
                 cmd.load(f"{structures_folder}/{structure1}")
                 cmd.load(f"{structures_folder}/{structure2}")
 
-                cmd.fetch(sugar, path=save_path)
+                cmd.fetch(sugar, path=str(save_path))
 
                 filename1 = Path(structure1).stem
                 filename2 = Path(structure2).stem

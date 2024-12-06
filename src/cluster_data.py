@@ -132,8 +132,8 @@ def perform_data_clustering(sugar: str, n_clusters: int, cluster_method: str,
         json.dump(representatives, f, indent=4)
 
 
-def cluster_data(sugar: str, n_clusters: int, cluster_method: str, config: Config, make_dendrogram: bool,
-                 color_threshold: Union[float, None] = None, perform_align: bool) -> None:
+def cluster_data(sugar: str, n_clusters: int, cluster_method: str, config: Config, make_dendrogram: bool, perform_align: bool,
+                 color_threshold: Union[float, None] = None) -> None:
     perform_data_clustering(sugar, n_clusters, cluster_method, "super", config, make_dendrogram, color_threshold) 
     if perform_align:
         perform_data_clustering(sugar, n_clusters, cluster_method, "align", config, make_dendrogram, color_threshold) 
@@ -150,8 +150,8 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
                         choices=["super", "align"], required=True)
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
-    parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
+    parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
 
     args = parser.parse_args()
 
@@ -160,4 +160,4 @@ if __name__ == "__main__":
     setup_logger(config.log_path)
 
     # TODO: Make number of clusters optional
-    cluster_data(args.sugar, args.n_clusters, args.cluster_method, config, args.make_dendrogram, args.color_threshold, args.perform_align)
+    cluster_data(args.sugar, args.n_clusters, args.cluster_method, config, args.make_dendrogram, args.perform_align, args.color_threshold)

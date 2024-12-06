@@ -25,7 +25,7 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clust
          color_threshold: Union[float, None] = None) -> None:
     run_pq(sugar, config, is_unix)
     perform_alignment(sugar, perform_align, config)
-    cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, color_threshold, perform_align)
+    cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, perform_align, color_threshold)
     compare_clusters(config, perform_align)
     create_tanglegram(sugar, n_clusters, cluster_method, config, perform_align)
     structure_motif_search(config)
