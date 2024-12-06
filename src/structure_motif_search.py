@@ -143,6 +143,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    structure_motif_search()
+    structure_motif_search(config)
 
     config.clear_current_run()
