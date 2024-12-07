@@ -144,7 +144,10 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
 
 
 def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
-    # download_pq(config)
+    (config.user_cfg.pq_dir).mkdir(exist_ok=True, parents=True)
+    dir_path = config.user_cfg.pq_dir / "PatternQuery"
+    if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
+        download_pq(config)
     # Tmp # FIXME:
     (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)
     (config.pq_run_dir / "results").mkdir(exist_ok=True, parents=True)
