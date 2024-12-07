@@ -128,6 +128,7 @@ def get_rmsd_and_merge(config: Config) -> None:
 def run_mv(config: Config, is_unix: bool) -> None:
     # Tmp # FIXME:
     (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
+    (config.user_cfg.mv_dir).mkdir(exist_ok=True, parents=True)
 
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
