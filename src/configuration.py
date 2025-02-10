@@ -30,6 +30,8 @@ class UserConfig(BaseModel):
 class Config():
     user_cfg: UserConfig
 
+    run_data_dir: Path
+
     log_path: Path
     sugar_binding_patterns_dir: Path
     components_dir: Path
@@ -66,12 +68,15 @@ class Config():
         if data_run is None:
             data_run = current_run
 
+        self.run_data_dir = self.user_cfg.data_dir / data_run
+
         path_to_logfile = f"ligand_sort/{data_run}/{data_run}.log"
         self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
         self.components_dir = self.user_cfg.data_dir / f"{data_run}/components"
         self.mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/mmcif_files"
         self.no_o6_mmcif_dir = self.user_cfg.data_dir / f"{data_run}/no_o6_mmcif"
         self.validation_files_dir = self.user_cfg.data_dir / f"{data_run}/validation_files"
+
         self.categorization_dir = self.user_cfg.results_dir / f"ligand_sort/{data_run}/categorization"
         self.validation_dir = self.user_cfg.results_dir / f"ligand_sort/{data_run}/validation"
         self.mv_run_dir = self.user_cfg.results_dir / f"ligand_sort/{data_run}/mv_run"
@@ -120,7 +125,7 @@ class Config():
 
         if os.path.isfile(file_path) and not force_new:
             with open(file_path, "r", encoding="utf8") as f:
-                current_datetime = f.read()
+                current_datetime = f.read().strip()
 
             return current_datetime
         else:
