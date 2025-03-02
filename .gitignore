@@ -13,4 +13,5 @@ __pycache__/
 tmp/
 venv/
 *.cif
-
+.worktrees/
+.current_run
