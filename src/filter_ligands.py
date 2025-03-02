@@ -33,7 +33,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
 
     logger.info(f"Number of structures before filtering: {len(ligands.keys())}")
 
-    # TODO: Extract 3 lines below into function 
+    # TODO: Extract 3 lines below into function
     count = 0
     for pdb, residues in ligands.items():
         count += len(residues)
@@ -76,7 +76,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
 
     logger.info(f"Number of structures after filtering: {len(ligands.keys())}")
 
-    # TODO: Extract 3 lines below into function 
+    # TODO: Extract 3 lines below into function
     count = 0
     for pdb, residues in ligands.items():
         count += len(residues)

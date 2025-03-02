@@ -30,9 +30,9 @@ def remove_nonsugar_residues(config: Config) -> None:
     logger.info("Creating model file")
 
     doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
-    for i in range(len(doc) - 1, -1, -1): 
+    for i in range(len(doc) - 1, -1, -1):
         comp_type = doc[i].find_value('_chem_comp.type')
-        if "saccharide" not in comp_type.lower(): 
+        if "saccharide" not in comp_type.lower():
             del doc[i]
 
     options = gemmi.cif.WriteOptions()
@@ -51,8 +51,8 @@ def download_mv(config: Config) -> None:
 
     logger.info("Downloading MotiveValidator")
 
-    response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadService")
-    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f:
+    response = requests.get("https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadService")
+    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f: #FIXME: Keep version number
         f.write(response.content)
 
     with ZipFile(config.user_cfg.mv_dir / "MotiveValidator.zip", "r") as zip_ref:
@@ -87,7 +87,7 @@ def create_mv_config(config: Config) -> None:
         "MaxDegreeOfParallelism": 8
     }
 
-    with open(config.mv_run_dir / "mv_config.json", "w") as f:
+    with open(config.mv_run_dir / "mv_config.json", "w", encoding="utf8") as f:
         json.dump(mv_config, f, indent=4)
 
 
@@ -103,9 +103,9 @@ def get_rmsd_and_merge(config: Config) -> None:
     with ZipFile(config.mv_run_dir / "results/result/result.zip", "r") as zip_ref:
         zip_ref.extractall(config.mv_run_dir / "results/result/result")
 
-    with open(config.mv_run_dir / "results/result/result/result.json") as f:
+    with open(config.mv_run_dir / "results/result/result/result.json", encoding="utf8") as f:
         data = json.load(f)
-    with open(config.validation_dir / "all_rmsd.csv", "w", newline="") as f:
+    with open(config.validation_dir / "all_rmsd.csv", "w", newline="", encoding="utf8") as f:
         writer = csv.writer(f)
         writer.writerow(["pdb", "name", "num", "chain", "rmsd"])
         for model in data["Models"]:
@@ -144,10 +144,10 @@ def run_mv(config: Config, is_unix: bool) -> None:
            f"{config.mv_run_dir}/mv_config.json"]
 
     with Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, text=True) as mv_proc:
-        assert mv_proc.stdout is not None, "stdout is set to PIPE in Popen" 
+        assert mv_proc.stdout is not None, "stdout is set to PIPE in Popen"
         for line in mv_proc.stdout:
             logger.info(f"STDOUT: {line.strip()}")
-        assert mv_proc.stderr is not None, "stderr is set to PIPE in Popen" 
+        assert mv_proc.stderr is not None, "stderr is set to PIPE in Popen"
         for line in mv_proc.stderr:
             logger.error(f"STDERR: {line.strip()}")
 

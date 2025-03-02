@@ -35,7 +35,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     raw_binding_sites = config.raw_binding_sites_dir
 
-    filtered_binding_sites = config.filtered_binding_sites_dir / f"min_{min_residues}_aa"
+    filtered_binding_sites = config.filtered_binding_sites_dir / f"min_{min_residues}_aa" #TODO: Rename this folder
     filtered_binding_sites.mkdir(exist_ok=True, parents=True)
 
     less_than_n_aa = []  # How many structures were excluded
