@@ -21,6 +21,7 @@ from configuration import Config
 from pymol import cmd
 
 # TODO: To log pymol - turn of stdout log output before, let pymol write to stdout, then read it and write it to log, then turn on stdout log output again
+#FIXME: docs
 def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
@@ -55,7 +56,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         if count < min_residues:
             less_than_n_aa.append(filename)
             continue
-
+        #TODO: from here to function
         try:
             _, res, num, chain = filename.split("_")
         except ValueError:
@@ -66,15 +67,17 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             chain = chain[0]
 
         current_sugar = f"/{filename}//{chain}/{res}`{num}"
+        #TODO: to here
 
         cmd.select("wanted_residues", f"{current_sugar} or polymer") # select wanted_residues, /1ax1_GAL_2_C//C/GAL`2 or polymer
         cmd.select("junk_residues", f"not wanted_residues") #select junk_residues, not wanted_residues
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
+        #TODO: if max
 
         cmd.save(f"{filtered_binding_sites}/{i}_{filename}.pdb") # save path_to_file
         structures_keys[i] = f"{i}_{filename}.pdb"
-        i += 1 # Raise the index
+        i += 1 # Raise the index #FIXME: Why?
         cmd.delete("all")
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
