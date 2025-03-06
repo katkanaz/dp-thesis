@@ -84,6 +84,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
 
+    #FIXME: wording
     logger.info(f"Number of structures with less than {min_residues} AA: {len(less_than_n_aa)}")
 
     return filtered_binding_sites
