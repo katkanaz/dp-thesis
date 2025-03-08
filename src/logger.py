@@ -40,3 +40,5 @@ def setup_logger(log_file: Path, log_level=logging.INFO):
 
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
+    
+    logger.propagate = False
