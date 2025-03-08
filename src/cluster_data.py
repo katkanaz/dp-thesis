@@ -147,8 +147,6 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
                         required=True)
-    parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
-                        choices=["super", "align"], required=True)
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
     parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
