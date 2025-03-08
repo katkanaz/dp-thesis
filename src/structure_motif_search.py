@@ -21,6 +21,7 @@ from configuration import Config
 
 
 def extract_representatives(sugar: str, align_method: str, num: int, min_residues: int, method: str, config: Config, input_representatives: Path) -> None:
+    #FIXME: fix the docs
     """
     Extract files for structure motif search
 
@@ -57,7 +58,7 @@ def get_struc_name(path_to_file: Path) -> str:
     return (path_to_file.name).split("_")[1]
 
 
-def define_residues(path_to_file: Path, struc_name: str) -> list: # TODO: Add typehints
+def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifResidue]:
     # TODO: Add docs
     parser = PDBParser()
 
@@ -93,15 +94,18 @@ def define_residues(path_to_file: Path, struc_name: str) -> list: # TODO: Add ty
     return residues
 
 
-def run_query(path_to_file: Path, residues: list) -> None: # TODO: Add typehints
+def run_query(path_to_file: Path, residues: List[StructureMotifResidue]) -> None:
     # TODO: Add docs
     q1 = AttributeQuery(attribute="rcsb_comp_model_provenance.source_db", operator="exact_match",value="AlphaFoldDB", service="text", negation=False)
     q2 = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
 
     query = q1 & q2
 
-    # print(query.to_json())
-    logger.info(list(query(return_type="assembly", return_content_type=["computational", "experimental"]))) # NOTE: Returns different scores of structures when "experimental" is and is not there
+    output = list(query(return_type="assembly", return_content_type=["computational", "experimental"]))# NOTE: Returns different scores of structures when "experimental" is and is not there
+
+    #TODO: how to handle multiple surroundings, each a file
+    with open(config.structure_motif_search_dir / "search_result.json", "w", encoding="utf8") as f:
+        json.dump(output, f, indent=4)
 
 
 def structure_motif_search(config: Config) -> None:
@@ -111,17 +115,12 @@ def structure_motif_search(config: Config) -> None:
 
 
     # Files to test
-    # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/140_3lei_FUC_1186_A.pdb")
-    # path_to_file = Path("../results/structure_motif_search/input_representatives/FUC/511_7c38_FUC_404_B.pdb")
-    # path_to_file = Path("../results/structure_motif_search/input_representatives/GAL/1695_8axi_GAL_602_A.pdb")
-    # path_to_file = Path("../results/structure_motif_search/input_representatives/GAL/290_2bzd_GAL_1649_B.pdb")
-
     # path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
-    # path_to_file = Path("../debug/sms_query_test/426_2nzy_FUC_4002_B.pdb")
-    # path_to_file = Path("../debug/sms_query_test/523_1qot_FUC_2_H.pdb")
 
-    # min_residues = 5 # TODO: figure out how to handle this
-    # extract_representatives(args.sugar, args.align_method, args.number, min_residues args.method, config, input_folder)
+    #FIXME: won't be needed
+    # min_residues = 5
+
+    # extract_representatives(args.sugar, args.align_method, args.number, min_residues, args.method, config, input_folder)
     # struc_name = get_struc_name(path_to_file)
     # run_query(path_to_file, define_residues(path_to_file, struc_name))
 
