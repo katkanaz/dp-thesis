@@ -58,6 +58,30 @@ def separate_alternate_conformations(input_file: Path) -> None:
                             if atom.altloc == "B":
                                 atom_altloc_b.append(atom_idx)
 
+                    if not atom_altloc_a and not atom_altloc_b:
+                        # Both lists are empty, residue has no alternate conformations
+                        continue
+                    
+                    common_values = {
+                        "model_idx": model_idx,
+                        "chain_idx": chain_idx,
+                        "residue_idx": residue_idx,
+                        "residue_name": residue.name
+                    }
+
+                    if atom_altloc_a and atom_altloc_b:
+                        if len(atom_altloc_a) != len(atom_altloc_b):
+                            print("Not the same number of atoms in each conformation")
+                        altloc_case = AltlocCase.SINGLE_RES
+                        res_a = {**common_values, "altloc_case": altloc_case, "atom_altloc": atom_altloc_a}
+                        altloc_a.append(res_a)
+                        res_b = {**common_values, "altloc_case": altloc_case, "atom_altloc": atom_altloc_b}
+                        altloc_b.append(res_b)
+                    elif atom_altloc_a or atom_altloc_b:
+                        altloc_case = AltlocCase.DOUBLE_RES
+                        res = {**common_values, "altloc_case": altloc_case}
+                        list_to_append_to = altloc_a if atom_altloc_a else altloc_b
+                        list_to_append_to.append(res)
                         # del residue
                         # del chain[i]
                     # for atom in residue:
