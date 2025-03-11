@@ -5,6 +5,7 @@ Author: Kateřina Nazarčuková
 """
 
 
+from enum import Enum
 import json
 import copy
 import gemmi
@@ -14,6 +15,12 @@ from typing import List, Dict
 
 from logger import logger, setup_logger
 from configuration import Config
+
+
+class AltlocCase(Enum):
+    SINGLE_RES = 1
+    DOUBLE_RES = 2
+
 
 # NOTE: Only with files that have ligands
 # TODO: Change to main
