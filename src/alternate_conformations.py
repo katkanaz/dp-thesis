@@ -29,21 +29,27 @@ def separate_alternate_conformations(input_file: Path) -> None:
     with open("../tmp/alter_conform/sugar_names.json") as f: 
         sugar_names = set(json.load(f)) # Set for optimalization
 
-    structure_a = gemmi.read_structure(str(input_file))
-    structure_b = gemmi.read_structure(str(input_file))
+    structure_a = gemmi.read_structure(str(input_file)) # TODO: Load mmcif file from data directory
 
+    altloc_a: List[Dict] = []
+    altloc_b: List[Dict] = []
 
-    to_remove_a = set()
-    to_remove_b = set()
-
-    for model in structure_a:
-        for chain in model:
-            # chain.residues = [res for res in chain if res.name != "GAL"]
-            for i, residue in reversed(list(enumerate(chain))):
+    models_count = 0
+    for model_idx, model in enumerate(structure_a):
+        models_count += 1
+        for chain_idx, chain in enumerate(model):
+            for residue_idx, residue in enumerate(chain):
+                is_altloc = False # TODO: use to log or delete
                 if residue.name in sugar_names:
-                    print(f"{residue.name} {residue.seqid.num}")
-                    if residue.name == "FUC":
-                        pass
+                    atom_altloc_a = []
+                    atom_altloc_b = []
+
+                    # NOTE: Can one be sure, one atom won't have a altloc missing
+                    # if residue[0].altloc == "\0":
+                    #     continue
+
+                    # print(residue.name)
+
                         # del residue
                         # del chain[i]
                     # for atom in residue:
