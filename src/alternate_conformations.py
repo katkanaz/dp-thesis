@@ -82,6 +82,41 @@ def separate_alternate_conformations(input_file: Path) -> None:
                         res = {**common_values, "altloc_case": altloc_case}
                         list_to_append_to = altloc_a if atom_altloc_a else altloc_b
                         list_to_append_to.append(res)
+    # TODO: Extract to function
+
+    # File with only B conformers
+    structure_b = gemmi.read_structure(str(input_file))
+    for residue in reversed(altloc_a):
+        model_idx = residue["model_idx"]
+        chain_idx = residue["chain_idx"] 
+        residue_idx = residue["residue_idx"]
+        if residue["altloc_case"] == AltlocCase.DOUBLE_RES:
+            del structure_b[model_idx][chain_idx][residue_idx]
+        elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
+            for atom_idx in reversed(residue["atom_altloc"]):
+                del structure_b[model_idx][chain_idx][residue_idx][atom_idx]
+
+    # TODO: Save to file
+    new_path = input_file.parent / f"B_{input_file.name}"
+    structure_b.make_mmcif_document().write_file(str(new_path))
+
+    # File with only A conformers
+    for residue in reversed(altloc_b):
+        model_idx = residue["model_idx"]
+        chain_idx = residue["chain_idx"] 
+        residue_idx = residue["residue_idx"]
+        if residue["altloc_case"] == AltlocCase.DOUBLE_RES:
+            del structure_a[model_idx][chain_idx][residue_idx]
+        elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
+            for atom_idx in reversed(residue["atom_altloc"]):
+                del structure_a[model_idx][chain_idx][residue_idx][atom_idx]
+
+    # TODO: Save to file
+    new_path_a = input_file.parent / f"A_{input_file.name}"
+    structure_a.make_mmcif_document().write_file(str(new_path_a))
+                    # print(f"{residue.name} {residue.seqid.num}")
+                    # if residue.name == "FUC":
+                    #     pass
                         # del residue
                         # del chain[i]
                     # for atom in residue:
@@ -105,6 +140,7 @@ def separate_alternate_conformations(input_file: Path) -> None:
                 # if len(res_alter_conforms) > 1:
                 #     res_id = f"{residue.name} {residue.seqid.num}"
                 #
+            # chain.residues = [res for res in chain if res.name != "GAL"]
 
     # structure_a.make_mmcif_document().write_file('../tmp/alter_conform/new_4d6d.cif')
     # del residue while looping through conformers set
@@ -113,13 +149,13 @@ def separate_alternate_conformations(input_file: Path) -> None:
     # print(to_remove_a, to_remove_b)
     
     
-
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
     #
     # setup_logger(config.log_path)
     
     files = [Path("../tmp/alter_conform/4d6d.cif"), Path("../tmp/alter_conform/7b7c.cif"), Path("../tmp/alter_conform/7c38.cif")]
+    # files = [Path("../tmp/alter_conform/new_4d6d.cif")]
     for file in files:
         separate_alternate_conformations(file)
-        print(f"{file.name} done")
+        # print(f"{file.name} done")
