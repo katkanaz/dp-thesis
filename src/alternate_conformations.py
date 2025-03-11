@@ -49,6 +49,14 @@ def separate_alternate_conformations(input_file: Path) -> None:
                     #     continue
 
                     # print(residue.name)
+                    for atom_idx, atom in enumerate(residue):
+                        # print(atom.name, atom.altloc)
+                        if atom.altloc != "\0":
+                            is_altloc = True
+                            if atom.altloc == "A":
+                                atom_altloc_a.append(atom_idx)
+                            if atom.altloc == "B":
+                                atom_altloc_b.append(atom_idx)
 
                         # del residue
                         # del chain[i]
