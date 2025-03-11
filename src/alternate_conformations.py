@@ -10,11 +10,13 @@ import copy
 import gemmi
 from gemmi.cif import Block  # type: ignore
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 from logger import logger, setup_logger
 from configuration import Config
 
+# NOTE: Only with files that have ligands
+# TODO: Change to main
 def load_mmcif(config: Config) -> List[Path]:
     mmcifs = []
     for file in sorted(Path("").glob("*.cif")):
@@ -25,6 +27,7 @@ def load_mmcif(config: Config) -> List[Path]:
 def delete_alternate_conformations() -> None:
     pass
 
+# TODO: Add docs
 def separate_alternate_conformations(input_file: Path) -> None:
     with open("../tmp/alter_conform/sugar_names.json") as f: 
         sugar_names = set(json.load(f)) # Set for optimalization
@@ -82,6 +85,8 @@ def separate_alternate_conformations(input_file: Path) -> None:
                         res = {**common_values, "altloc_case": altloc_case}
                         list_to_append_to = altloc_a if atom_altloc_a else altloc_b
                         list_to_append_to.append(res)
+
+
     # TODO: Extract to function
 
     # File with only B conformers
@@ -114,6 +119,9 @@ def separate_alternate_conformations(input_file: Path) -> None:
     # TODO: Save to file
     new_path_a = input_file.parent / f"A_{input_file.name}"
     structure_a.make_mmcif_document().write_file(str(new_path_a))
+
+    print(f"Number of models in file {input_file.name}: {models_count}")
+
                     # print(f"{residue.name} {residue.seqid.num}")
                     # if residue.name == "FUC":
                     #     pass
