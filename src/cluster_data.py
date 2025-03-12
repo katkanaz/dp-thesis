@@ -62,7 +62,7 @@ def perform_data_clustering(sugar: str, n_clusters: int, cluster_method: str,
         plt.xlabel("Binding sites", fontsize=20)
         plt.ylabel("RMSD", fontsize=20)
         if color_threshold is None:
-            print(f"Color threshold is: {0.7*max(Z1[:,2])}")
+            logger.info(f"Color threshold is: {0.7*max(Z1[:,2])}")
 
         # Save the figure to the sugar folder
         if color_threshold is None:
