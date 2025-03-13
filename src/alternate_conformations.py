@@ -22,14 +22,7 @@ class AltlocCase(Enum):
     DOUBLE_RES = 2
 
 
-# NOTE: Only with files that have ligands
-# TODO: Change to main
-def load_mmcif(config: Config) -> List[Path]:
-    mmcifs = []
-    for file in sorted(Path("").glob("*.cif")):
-        mmcifs.append(file)
-    
-    return mmcifs
+files_with_altlocs = 0
 
 def delete_alternate_conformations() -> None:
     pass
@@ -38,6 +31,8 @@ def delete_alternate_conformations() -> None:
 def separate_alternate_conformations(input_file: Path) -> None:
     with open("../tmp/alter_conform/sugar_names.json") as f: 
         sugar_names = set(json.load(f)) # Set for optimalization
+
+    global files_with_altlocs
 
     structure_a = gemmi.read_structure(str(input_file)) # TODO: Load mmcif file from data directory
 
@@ -72,6 +67,7 @@ def separate_alternate_conformations(input_file: Path) -> None:
                         # Both lists are empty, residue has no alternate conformations
                         continue
                     
+
                     common_values = {
                         "model_idx": model_idx,
                         "chain_idx": chain_idx,
@@ -81,7 +77,7 @@ def separate_alternate_conformations(input_file: Path) -> None:
 
                     if atom_altloc_a and atom_altloc_b:
                         if len(atom_altloc_a) != len(atom_altloc_b):
-                            print("Not the same number of atoms in each conformation")
+                            print(f"Not the same number of atoms in each conformation: {input_file.name}")
                         altloc_case = AltlocCase.SINGLE_RES
                         res_a = {**common_values, "altloc_case": altloc_case, "atom_altloc": atom_altloc_a}
                         altloc_a.append(res_a)
@@ -94,6 +90,8 @@ def separate_alternate_conformations(input_file: Path) -> None:
                         list_to_append_to.append(res)
 
 
+    if altloc_a:
+        files_with_altlocs += 1
     # TODO: Extract to function
 
     # File with only B conformers
@@ -109,7 +107,7 @@ def separate_alternate_conformations(input_file: Path) -> None:
                 del structure_b[model_idx][chain_idx][residue_idx][atom_idx]
 
     # TODO: Save to file
-    new_path = input_file.parent / f"B_{input_file.name}"
+    new_path = Path("../tmp/alter_conform/test_with_july_24_data/") / f"B_{input_file.name}"
     structure_b.make_mmcif_document().write_file(str(new_path))
 
     # File with only A conformers
@@ -124,10 +122,11 @@ def separate_alternate_conformations(input_file: Path) -> None:
                 del structure_a[model_idx][chain_idx][residue_idx][atom_idx]
 
     # TODO: Save to file
-    new_path_a = input_file.parent / f"A_{input_file.name}"
+    new_path_a = Path("../tmp/alter_conform/test_with_july_24_data/")/ f"A_{input_file.name}"
     structure_a.make_mmcif_document().write_file(str(new_path_a))
 
-    print(f"Number of models in file {input_file.name}: {models_count}")
+    if models_count > 1:
+        print(f"More than one model in: {input_file.name}")
 
                     # print(f"{residue.name} {residue.seqid.num}")
                     # if residue.name == "FUC":
@@ -162,15 +161,29 @@ def separate_alternate_conformations(input_file: Path) -> None:
     # will delete it from structure - try duplicate of will have to load twice
     # deep copy python?
     # print(to_remove_a, to_remove_b)
-    
+
+
+# NOTE: Only with files that have ligands
+# TODO: Change to main
+def create_separate_mmcifs() -> None:
+    with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f:
+        only_ligands: Dict = json.load(f)
+
+    ids = [id.lower() for id in only_ligands.keys()]
+    for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")):
+        if file.stem in ids:
+            separate_alternate_conformations(file)
+    print(f"Number of files with altlocs: {files_with_altlocs}")
     
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
     #
     # setup_logger(config.log_path)
     
-    files = [Path("../tmp/alter_conform/4d6d.cif"), Path("../tmp/alter_conform/7b7c.cif"), Path("../tmp/alter_conform/7c38.cif")]
+    # files = [Path("../tmp/alter_conform/4d6d.cif"), Path("../tmp/alter_conform/7b7c.cif"), Path("../tmp/alter_conform/7c38.cif")]
     # files = [Path("../tmp/alter_conform/new_4d6d.cif")]
-    for file in files:
-        separate_alternate_conformations(file)
+    # for file in files:
+        # separate_alternate_conformations(file)
         # print(f"{file.name} done")
+    create_separate_mmcifs()
+
