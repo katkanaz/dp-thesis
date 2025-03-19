@@ -106,9 +106,15 @@ def separate_alternate_conformations(input_file: Path) -> None:
             for atom_idx in reversed(residue["atom_altloc"]):
                 del structure_b[model_idx][chain_idx][residue_idx][atom_idx]
 
+
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+
     # TODO: Save to file
     new_path = Path("../tmp/alter_conform/test_with_july_24_data/") / f"B_{input_file.name}"
-    structure_b.make_mmcif_document().write_file(str(new_path))
+    structure_b.make_mmcif_document().write_file(str(new_path), options)
 
     # File with only A conformers
     for residue in reversed(altloc_b):
