@@ -7,9 +7,7 @@ Author: Kateřina Nazarčuková
 
 from enum import Enum
 import json
-import copy
 import gemmi
-from gemmi.cif import Block  # type: ignore
 from pathlib import Path
 from typing import List, Dict
 
