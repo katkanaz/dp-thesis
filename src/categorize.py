@@ -213,6 +213,10 @@ def save_category(category: Union[Dict, List, Set], filename: str) -> None:
     with open((config.categorization_dir / f"{filename}.json"), "w", encoding="utf8") as f:
         json.dump(category, f, indent=4)
 
+def count_num_residues(res_in_whole_struct: Dict):
+    return sum([len(residues) for residues in res_in_whole_struct.values()])
+
+
 #TODO: refactor global variable
 def categorize(config: Config) -> None:
     # Tmp # FIXME:
@@ -307,25 +311,13 @@ def categorize(config: Config) -> None:
     logger.info(f"PDB with unannotated glycosylation: {len(pdb_not_anotated_glycosylation)}")
     logger.info(f"PDB with sugars in the wrong category: {len(pdb_sugars_in_wrong_category)}")
 
-    count = 0
-    for residues in all_residues.values():
-        count += len(residues)
-    logger.info(f"All structures: {len(all_residues)}, residues: {count}")
+    logger.info(f"All structures: {len(all_residues)}, residues: {count_num_residues(all_residues)}")
 
-    count = 0
-    for residues in ligands.values():
-        count += len(residues)
-    logger.info(f"Ligands: {len(ligands)}, residues: {count}")
+    logger.info(f"Ligands: {len(ligands)}, residues: {count_num_residues(ligands)}")
 
-    count = 0
-    for i in glycosylated.values():
-        count += len(i)
-    logger.info(f"Glycosylations: {len(glycosylated)}, residues: {count}")
+    logger.info(f"Glycosylations: {len(glycosylated)}, residues: {count_num_residues(glycosylated)}")
 
-    count = 0
-    for i in close_contacts.values():
-        count += len(i)
-    logger.info(f"Close contacts: {len(set(close_contacts))}, residues: {count}")
+    logger.info(f"Close contacts: {len(set(close_contacts))}, residues: {count_num_residues(close_contacts)}")
 
     logger.info(f"PDB only ligands: {len(set(pdb_only_ligands))}")
     logger.info(f"PDB only glycosylated: {len(set(pdb_only_glycosylated))}")
