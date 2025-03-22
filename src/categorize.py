@@ -7,7 +7,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 
 import json
-from typing import List, Dict
+from typing import List, Dict, Set, Union
 
 import gemmi
 from gemmi.cif import Block, Table  # type: ignore
@@ -63,11 +63,13 @@ SUGAR_NAMES = []
 
 
 def extract_sugars(table: Table) -> List[Dict[str, str]]:
-    # TODO: Add docs
     """
     Gets a list of dictionaries, in which one dictionary represents single
     sugar residue present in the given table (either monosacharide or one
     residue form oligosaccharide).
+
+    :param table: Monosaccharide or oligosaccharide table to extract sugars from
+    :return: List of sugars extracted from monosaccharide or oligosaccharide table
     """
 
     extracted_sugars = []
