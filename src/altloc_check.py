@@ -1,6 +1,6 @@
 """
-Script Name: alternate_conformations.py
-Description: Create separate mmCIF files for alternate sugar conformations
+Script Name: altloc_check.py
+Description: Check if alternative conformations of sugars are present
 Author: Kateřina Nazarčuková
 """
 
