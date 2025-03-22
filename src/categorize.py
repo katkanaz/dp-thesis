@@ -203,6 +203,16 @@ def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[
     return close_contact_residues
 
 
+def save_category(category: Union[Dict, List, Set], filename: str) -> None:
+    """
+    Save sugars after categorization into JSON files
+
+    :param category: Sugar category to be saved
+    :param filename: Name of the JSON file
+    """
+    with open((config.categorization_dir / f"{filename}.json"), "w", encoding="utf8") as f:
+        json.dump(category, f, indent=4)
+
 #TODO: refactor global variable
 def categorize(config: Config) -> None:
     # Tmp # FIXME:
@@ -276,38 +286,20 @@ def categorize(config: Config) -> None:
         if current_ligands and current_glycosylated and current_close_contacts:
             pdb_lig_glyc_close.append(block.name)
 
-    # TODO: Extract to function
     # Save everything
-    with open((config.categorization_dir / "ligands.json"), "w", encoding="utf8") as f:
-        json.dump(ligands, f, indent=4)
-    with open((config.categorization_dir / "glycosylated.json"), "w", encoding="utf8") as f:
-        json.dump(glycosylated, f, indent=4)
-    with open((config.categorization_dir / "close_contacts.json"), "w", encoding="utf8") as f:
-        json.dump(close_contacts, f, indent=4)
-
-    with open((config.categorization_dir / "all_residues.json"), "w", encoding="utf8") as f:
-        json.dump(all_residues, f, indent=4)
-
-    with open((config.categorization_dir / "pdb_only_ligands.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_only_ligands, f, indent=4)
-    with open((config.categorization_dir / "pdb_only_glycosylated.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_only_glycosylated, f, indent=4)
-    with open((config.categorization_dir / "pdb_only_close_contacts.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_only_close_contacts, f, indent=4)
-
-    with open((config.categorization_dir / "pdb_ligand_glycosylated.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_ligand_glycosylated, f, indent=4)
-    with open((config.categorization_dir / "pdb_ligand_close_contacts.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_ligand_close_contacts, f, indent=4)
-    with open((config.categorization_dir / "pdb_glycosylated_close_contacts.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_glycosylated_close_contacts, f, indent=4)
-    with open((config.categorization_dir / "pdb_lig_glyc_close.json"), "w", encoding="utf8") as f:
-        json.dump(pdb_lig_glyc_close, f, indent=4)
-
-    with open((config.categorization_dir / "pdb_sugars_wrong_category.json"), "w", encoding="utf8") as f:
-        json.dump(list(pdb_sugars_in_wrong_category), f, indent=4)
-    with open((config.categorization_dir / "pdb_glycosylation_not_anotated.json"), "w", encoding="utf8") as f:
-        json.dump(list(pdb_not_anotated_glycosylation), f, indent=4)
+    save_category(ligands, "ligands")
+    save_category(glycosylated, "glycosylated")
+    save_category(close_contacts, "close_contacts")
+    save_category(all_residues, "all_residues")
+    save_category(pdb_only_ligands, "pdb_only_ligands")
+    save_category(pdb_only_glycosylated, "pdb_only_glycosylated")
+    save_category(pdb_only_close_contacts, "pdb_only_close_contacts")
+    save_category(pdb_ligand_glycosylated, "pdb_ligand_glycosylated")
+    save_category(pdb_ligand_close_contacts, "pdb_ligand_close_contacts")
+    save_category(pdb_glycosylated_close_contacts, "pdb_glycosylated_close_contacts")
+    save_category(pdb_lig_glyc_close, "pdb_lig_glyc_close")
+    save_category(pdb_sugars_in_wrong_category, "pdb_sugars_in_wrong_category")
+    save_category(pdb_not_anotated_glycosylation, "pdb_not_anotated_glycosylation")
 
     # TODO: Extract to function, print into file?
     # Print counts of everything
