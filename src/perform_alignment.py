@@ -22,6 +22,7 @@ from pymol import cmd
 
 # TODO: To log pymol - turn of stdout log output before, let pymol write to stdout, then read it and write it to log, then turn on stdout log output again
 #FIXME: docs
+#TODO: refactor function
 def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
@@ -57,6 +58,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             less_than_n_aa.append(filename)
             continue
         #TODO: from here to function
+        #TODO: fix filenames acording to new names because of altlocs
         try:
             _, res, num, chain = filename.split("_")
         except ValueError:
@@ -95,6 +97,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     # by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
     # but without actually moving, so the rms_cur is eventually calculated from their position as is
     # towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
+#TODO: refactor function
 def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: Path, config: Config) -> None:
     """
     [TODO:description]
@@ -220,6 +223,5 @@ if __name__ == "__main__":
     config = Config.load("config.json", args.sugar, True)
 
     setup_logger(config.log_path)
-    # pm_cmd = Pymol(gui=True)
 
     perform_alignment(args.sugar, args.perform_align, config)

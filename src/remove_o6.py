@@ -40,7 +40,7 @@ def remove_o6(config: Config) -> None:
     with open(config.validation_dir / "pdbs_with_rscc_and_resolution.json", "r", encoding="utf8") as f:
         pdb_ids_of_interest = json.load(f)
     for pdb in pdb_ids_of_interest:
-        with (config.mmcif_files_dir / f"{pdb.lower()}.cif").open() as f:
+        with (config.mmcif_files_dir / f"{pdb.lower()}.cif").open() as f: #TODO: Load modified mmcif
             file = f.readlines()
         with (config.no_o6_mmcif_dir / f"{pdb.lower()}.cif").open("w") as f:
             for line in file:

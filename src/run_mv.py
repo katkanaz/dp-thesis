@@ -77,7 +77,7 @@ def create_mv_config(config: Config) -> None:
 
     mv_config = {
         "ValidationType": "Sugars",
-        "InputFolder":  str(config.mmcif_files_dir),
+        "InputFolder":  str(config.mmcif_files_dir), #TODO: Load modifed mmcifs
         "ModelsSource": str(config.components_dir / "components_sugars_only.cif"),
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,

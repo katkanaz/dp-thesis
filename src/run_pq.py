@@ -167,7 +167,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
         if not query_names:
             continue
         # Copy current structure to ./structures dir which is used as source by PQ.
-        src = config.mmcif_files_dir / f"{structure}.cif"
+        src = config.mmcif_files_dir / f"{structure}.cif" #TODO: From modified mmcif
         dst = config.pq_run_dir / "structures" / f"{structure}.cif"
         shutil.copyfile(src, dst)
 
