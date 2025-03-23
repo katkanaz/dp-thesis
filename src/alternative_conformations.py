@@ -1,6 +1,6 @@
 """
-Script Name: alternate_conformations.py
-Description: Create separate mmCIF files for alternate sugar conformations
+Script Name: alternative_conformations.py
+Description: Create separate mmCIF files for alternative sugar conformations
 Author: Kateřina Nazarčuková
 """
 
@@ -19,8 +19,9 @@ class AltlocCase(Enum):
     SINGLE_RES = 1
     DOUBLE_RES = 2
 
-
+#TODO: Refactor global varible
 files_with_altlocs = 0
+
 
 def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict]) -> None:
     """
@@ -50,24 +51,26 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
 
 # TODO: Add docs
 def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: str) -> None:
+    #FIXME: Options don't work for atom and hetatm lines
     options = gemmi.cif.WriteOptions()
     options.misuse_hash = True
     options.align_pairs = 48
     options.align_loops = 20
 
-    new_path = Path("../tmp/alter_conform/test_july_data_5/") / f"{conformation_type}_{input_file.name}"
+    new_path = Path("../tmp/alter_conform/debug/") / f"{conformation_type}_{input_file.name}" #TODO: fix using config, save to modified mmcifs
     structure.make_mmcif_document().write_file(str(new_path), options)
 
 
 # TODO: Add docs
-def separate_alternative_conformations(input_file: Path) -> None:
-    with open("../tmp/alter_conform/sugar_names.json") as f: 
+def separate_alternative_conformations(input_file: Path) -> bool:
+    with open("../tmp/alter_conform/sugar_names.json") as f: #TODO: fix using config 
         sugar_names = set(json.load(f)) # Set for optimalization
 
     global files_with_altlocs
 
-    structure_a = gemmi.read_structure(str(input_file)) # TODO: Load mmcif file from data directory
+    structure_a = gemmi.read_structure(str(input_file))
 
+    # Lists of alternative conformations
     altloc_a: List[Dict] = []
     altloc_b: List[Dict] = []
 
@@ -80,6 +83,7 @@ def separate_alternative_conformations(input_file: Path) -> None:
                     atom_altloc_a = []
                     atom_altloc_b = []
 
+                    #FIXME:
                     # NOTE: Can one be sure, one atom won't have a altloc missing
                     # if residue[0].altloc == "\0":
                     #     continue
@@ -89,10 +93,14 @@ def separate_alternative_conformations(input_file: Path) -> None:
 
                     for atom_idx, atom in enumerate(residue):
                         if atom.altloc != "\0":
+                            #TODO: add check for more than 3 keys
                             if first_altloc_key is None:
                                 first_altloc_key = atom.altloc
                             elif atom.altloc != first_altloc_key and second_altloc_key is None:
                                 second_altloc_key = atom.altloc
+                                #TODO: write new exception class and give filename
+                                #FIXME: print just per file
+                                #TODO: function here ends, file is removed, ask Pepa
 
                             if atom.altloc == first_altloc_key:
                                 atom_altloc_a.append(atom_idx)
@@ -141,7 +149,6 @@ def separate_alternative_conformations(input_file: Path) -> None:
         print(f"More than one model in: {input_file.name}")
 
 
-# NOTE: Only with files that have ligands
 # TODO: Change to main
 def create_separate_mmcifs() -> None:
     with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f:
@@ -152,6 +159,7 @@ def create_separate_mmcifs() -> None:
         if file.stem in ids:
             separate_alternative_conformations(file)
     print(f"Number of files with altlocs: {files_with_altlocs}")
+    #TODO: Add modified mmcif folder creation here plus to config
     
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
@@ -160,3 +168,4 @@ if __name__ == "__main__":
     
     create_separate_mmcifs()
 
+#TODO: setup config and logger
