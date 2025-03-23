@@ -22,11 +22,45 @@ class AltlocCase(Enum):
 
 files_with_altlocs = 0
 
-def delete_alternate_conformations() -> None:
-    pass
+def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict]) -> None:
+    """
+    Delete unwanted alternative conformations of a structure and set the ones that should be kept to "\0"
+
+    :param structure: Structure in question
+    :param residues_to_keep: List of residues whose altlocs should be set to "\0"
+    :param residues_to_delete: List of residues to delete in the given structure
+    """
+    for residue in residues_to_keep:
+        model_idx = residue["model_idx"]
+        chain_idx = residue["chain_idx"] 
+        residue_idx = residue["residue_idx"]
+        for atom in structure[model_idx][chain_idx][residue_idx]:
+            atom.altloc = "\0"
+
+    for residue in reversed(residues_to_delete):
+        model_idx = residue["model_idx"]
+        chain_idx = residue["chain_idx"] 
+        residue_idx = residue["residue_idx"]
+        if residue["altloc_case"] == AltlocCase.DOUBLE_RES:
+            del structure[model_idx][chain_idx][residue_idx]
+        elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
+            for atom_idx in reversed(residue["atom_altloc_del"]):
+                del structure[model_idx][chain_idx][residue_idx][atom_idx]
+
 
 # TODO: Add docs
-def separate_alternate_conformations(input_file: Path) -> None:
+def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: str) -> None:
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+
+    new_path = Path("../tmp/alter_conform/test_july_data_5/") / f"{conformation_type}_{input_file.name}"
+    structure.make_mmcif_document().write_file(str(new_path), options)
+
+
+# TODO: Add docs
+def separate_alternative_conformations(input_file: Path) -> None:
     with open("../tmp/alter_conform/sugar_names.json") as f: 
         sugar_names = set(json.load(f)) # Set for optimalization
 
@@ -80,9 +114,9 @@ def separate_alternate_conformations(input_file: Path) -> None:
                         if len(atom_altloc_a) != len(atom_altloc_b):
                             print(f"Not the same number of atoms in each conformation: {input_file.name}")
                         altloc_case = AltlocCase.SINGLE_RES
-                        res_a = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_a, "atom_altloc_keep": atom_altloc_b}
+                        res_a = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_a}
                         altloc_a.append(res_a)
-                        res_b = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_b, "atom_altloc_keep": atom_altloc_a}
+                        res_b = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_b}
                         altloc_b.append(res_b)
                     elif atom_altloc_a or atom_altloc_b:
                         altloc_case = AltlocCase.DOUBLE_RES
@@ -93,63 +127,15 @@ def separate_alternate_conformations(input_file: Path) -> None:
 
     if altloc_a:
         files_with_altlocs += 1
-    # TODO: Extract to function
 
-    # for atom_idx in residue["atom_altloc_keep"]:
-    #     structure_b[model_idx][chain_idx][residue_idx][atom_idx].altloc = "\0"
     # File with only B conformers
     structure_b = gemmi.read_structure(str(input_file))
-
-    for residue in altloc_b:
-        model_idx = residue["model_idx"]
-        chain_idx = residue["chain_idx"] 
-        residue_idx = residue["residue_idx"]
-        for atom in structure_b[model_idx][chain_idx][residue_idx]:
-            atom.altloc = "\0"
-
-    for residue in reversed(altloc_a):
-        model_idx = residue["model_idx"]
-        chain_idx = residue["chain_idx"] 
-        residue_idx = residue["residue_idx"]
-        if residue["altloc_case"] == AltlocCase.DOUBLE_RES:
-            del structure_b[model_idx][chain_idx][residue_idx]
-        elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
-            for atom_idx in reversed(residue["atom_altloc_del"]):
-                del structure_b[model_idx][chain_idx][residue_idx][atom_idx]
-
-    options = gemmi.cif.WriteOptions()
-    options.misuse_hash = True
-    options.align_pairs = 48
-    options.align_loops = 20
-
-    # TODO: Save to file
-    new_path = Path("../tmp/alter_conform/test_july_data_5/") / f"B_{input_file.name}"
-    structure_b.make_mmcif_document().write_file(str(new_path), options)
+    delete_alternative_conformations(structure_b, altloc_b, altloc_a)
+    save_files(structure_b, input_file, "B")
 
     # File with only A conformers
-    # for atom_idx in residue["atom_altloc_keep"]:
-    #     structure_a[model_idx][chain_idx][residue_idx][atom_idx].altloc = "\0"
-
-    for residue in altloc_a:
-        model_idx = residue["model_idx"]
-        chain_idx = residue["chain_idx"] 
-        residue_idx = residue["residue_idx"]
-        for atom in structure_a[model_idx][chain_idx][residue_idx]:
-            atom.altloc = "\0"
-
-    for residue in reversed(altloc_b):
-        model_idx = residue["model_idx"]
-        chain_idx = residue["chain_idx"] 
-        residue_idx = residue["residue_idx"]
-        if residue["altloc_case"] == AltlocCase.DOUBLE_RES:
-            del structure_a[model_idx][chain_idx][residue_idx]
-        elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
-            for atom_idx in reversed(residue["atom_altloc_del"]):
-                del structure_a[model_idx][chain_idx][residue_idx][atom_idx]
-
-    # TODO: Save to file
-    new_path_a = Path("../tmp/alter_conform/test_july_data_5/")/ f"A_{input_file.name}"
-    structure_a.make_mmcif_document().write_file(str(new_path_a), options)
+    delete_alternative_conformations(structure_a, altloc_a, altloc_b)
+    save_files(structure_a, input_file, "A")
 
     if models_count > 1:
         print(f"More than one model in: {input_file.name}")
@@ -164,7 +150,7 @@ def create_separate_mmcifs() -> None:
     ids = [id.lower() for id in only_ligands.keys()]
     for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")):
         if file.stem in ids:
-            separate_alternate_conformations(file)
+            separate_alternative_conformations(file)
     print(f"Number of files with altlocs: {files_with_altlocs}")
     
 if __name__ == "__main__":
