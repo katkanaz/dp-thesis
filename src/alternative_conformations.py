@@ -74,12 +74,15 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     altloc_a: List[Dict] = []
     altloc_b: List[Dict] = []
 
+    residues = {}
+
     models_count = 0
     for model_idx, model in enumerate(structure_a):
         models_count += 1
         for chain_idx, chain in enumerate(model):
             for residue_idx, residue in enumerate(chain):
                 if residue.name in sugar_names:
+                    # print(f"res {residue.name}, num {residue.seqid}, altloc {residue[0].altloc}")
                     atom_altloc_a = []
                     atom_altloc_b = []
 
@@ -96,16 +99,25 @@ def separate_alternative_conformations(input_file: Path) -> bool:
                             #TODO: add check for more than 3 keys
                             if first_altloc_key is None:
                                 first_altloc_key = atom.altloc
+                                print(f"first key is {first_altloc_key}")
                             elif atom.altloc != first_altloc_key and second_altloc_key is None:
                                 second_altloc_key = atom.altloc
+                                print(f"second key is {second_altloc_key}")
+                            elif atom.altloc != first_altloc_key and atom.altloc != second_altloc_key:
                                 #TODO: write new exception class and give filename
                                 #FIXME: print just per file
                                 #TODO: function here ends, file is removed, ask Pepa
+                                print(f"File {input_file.name} has more than 2 tpyes of altlocs!")
+
 
                             if atom.altloc == first_altloc_key:
                                 atom_altloc_a.append(atom_idx)
+                                # print(f"A is {atom_altloc_a}")
+                                # print(first_altloc_key)
                             elif atom.altloc == second_altloc_key:
                                 atom_altloc_b.append(atom_idx)
+                                # print(f"B is {atom_altloc_b}")
+                                # print(second_altloc_key)
 
                     if not atom_altloc_a and not atom_altloc_b:
                         # Both lists are empty, residue has no alternate conformations
@@ -123,9 +135,11 @@ def separate_alternative_conformations(input_file: Path) -> bool:
                             print(f"Not the same number of atoms in each conformation: {input_file.name}")
                         altloc_case = AltlocCase.SINGLE_RES
                         res_a = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_a}
+                        # print(res_a)
                         altloc_a.append(res_a)
                         res_b = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_b}
                         altloc_b.append(res_b)
+                        # print(res_b)
                     elif atom_altloc_a or atom_altloc_b:
                         altloc_case = AltlocCase.DOUBLE_RES
                         res = {**common_values, "altloc_case": altloc_case}
@@ -133,33 +147,43 @@ def separate_alternative_conformations(input_file: Path) -> bool:
                         list_to_append_to.append(res)
 
 
-    if altloc_a:
-        files_with_altlocs += 1
+    # if models_count > 1:
+    #     print(f"More than one model in: {input_file.name}") #NOTE: Learn if normal
 
+    if not altloc_a and not altloc_b:
+        return False
+
+    # if bool(altloc_a) != bool(altloc_b):
+    #     print(f"{input_file.name}")
+
+    # if altloc_a:
+    # File with only A conformers
+    # print(altloc_a)
+    delete_alternative_conformations(structure_a, altloc_a, altloc_b)
+    save_files(structure_a, input_file, "A")
+
+    # if altloc_b:
     # File with only B conformers
+    # print(altloc_b)
     structure_b = gemmi.read_structure(str(input_file))
     delete_alternative_conformations(structure_b, altloc_b, altloc_a)
     save_files(structure_b, input_file, "B")
 
-    # File with only A conformers
-    delete_alternative_conformations(structure_a, altloc_a, altloc_b)
-    save_files(structure_a, input_file, "A")
-
-    if models_count > 1:
-        print(f"More than one model in: {input_file.name}")
-
+    files_with_altlocs += 1
+    return True
 
 # TODO: Change to main
 def create_separate_mmcifs() -> None:
-    with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f:
-        only_ligands: Dict = json.load(f)
-
-    ids = [id.lower() for id in only_ligands.keys()]
-    for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")):
-        if file.stem in ids:
-            separate_alternative_conformations(file)
-    print(f"Number of files with altlocs: {files_with_altlocs}")
     #TODO: Add modified mmcif folder creation here plus to config
+    # with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f: #TODO: change using config
+    #     only_ligands: Dict = json.load(f)
+    #
+    # ids = [id.lower() for id in only_ligands.keys()]
+    # for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")): #TODO: Add config, load mmcif files, return true for altloc or false, if flase copy to modifiedmmcif
+    #     if file.stem in ids:
+    #         separate_alternative_conformations(file)
+    # print(f"Number of files with altlocs: {files_with_altlocs}")
+    separate_alternative_conformations(Path("../data/july_2024/mmcif_files/1agm.cif"))
     
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
@@ -167,5 +191,4 @@ if __name__ == "__main__":
     # setup_logger(config.log_path)
     
     create_separate_mmcifs()
-
 #TODO: setup config and logger
