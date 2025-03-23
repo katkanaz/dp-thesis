@@ -213,7 +213,8 @@ def save_category(category: Union[Dict, List, Set], filename: str) -> None:
     with open((config.categorization_dir / f"{filename}.json"), "w", encoding="utf8") as f:
         json.dump(category, f, indent=4)
 
-def count_num_residues(res_in_whole_struct: Dict):
+#TODO: Add docs
+def count_num_residues(res_in_whole_struct: Dict) -> int:
     return sum([len(residues) for residues in res_in_whole_struct.values()])
 
 
