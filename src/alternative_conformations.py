@@ -19,6 +19,16 @@ class AltlocCase(Enum):
     SINGLE_RES = 1
     DOUBLE_RES = 2
 
+class AltlocError(Exception):
+    def __init__(self, filename, message="Too many types of altlocs") -> None:
+        self.filename = filename
+        self.message = message
+        super().__init__(f"{message} in file {filename}")
+
+    def __str__(self) -> str:
+        return f"{self.message} in file: {self.filename}"
+
+
 #TODO: Refactor global varible
 files_with_altlocs = 0
 
@@ -110,6 +120,7 @@ def separate_alternative_conformations(input_file: Path) -> bool:
                                 
                             elif atom.altloc != first_altloc_key and atom.altloc != second_altloc_key:
                                 #TODO: function here ends, file is removed, ask Pepa
+                                raise AltlocError(input_file.name)
                                 print(f"File {input_file.name} has more than 2 tpyes of altlocs!")
 
 
@@ -180,11 +191,19 @@ def create_separate_mmcifs() -> None:
     #TODO: Add modified mmcif folder creation here plus to config
     # with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f: #TODO: change using config
     #     only_ligands: Dict = json.load(f)
+
     # ids = [id.lower() for id in only_ligands.keys()]
     # for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")): #TODO: Add config, load mmcif files, return true for altloc or false, if flase copy to modifiedmmcif
     #     if file.stem in ids:
+    #         try:
+    #             separate_alternative_conformations(file)
+    #         except AltlocError as e:
+    #             print(f"Exception caught: {e}")
     # print(f"Number of files with altlocs: {files_with_altlocs}")
-    separate_alternative_conformations(Path("../data/july_2024/mmcif_files/1agm.cif"))
+    try:
+        separate_alternative_conformations(Path("../data/july_2024/mmcif_files/2y9g.cif"))
+    except AltlocError as e:
+        print(f"Exception caught: {e}")
     
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
