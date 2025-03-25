@@ -193,6 +193,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
         else:
             logger.info("PQ process completed successfully")
 
+        #TODO: Does this delete the results?, make that optional
         zip_result_folder = config.pq_run_dir / "results" / "result/result.zip"
         if not zip_result_folder.exists():
             result_folder_not_created.append(structure)
