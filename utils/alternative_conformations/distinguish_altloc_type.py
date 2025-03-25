@@ -1,6 +1,6 @@
 """
-Script Name: altloc_check.py
-Description: Check if alternative conformations of sugars are present
+Script Name: distinguish_altloc_type.py
+Description: How many files have altlocs different than A or B or null Byte and what kind
 Author: Kateřina Nazarčuková
 """
 
@@ -11,28 +11,33 @@ import gemmi
 from pathlib import Path
 
 
-def detect_altloc(input_file: Path) -> None:
-    with open("../tmp/alter_conform/sugar_names.json") as f: 
+def detect_altloc(input_file: Path) -> bool:
+    with open("./sugar_names.json") as f: 
         sugar_names = set(json.load(f)) # Set for optimalization
 
     structure = gemmi.read_structure(str(input_file))
 
-    is_altloc = False
+    different_altloc = False
     for model in structure:
         for chain in model:
             for residue in chain:
                 if residue.name in sugar_names:
                     for atom in residue:
-                        if atom.altloc != "\0":
-                            is_altloc = True
-
-    if is_altloc:
-        print(f"{input_file.name} has alternative conformations")
+                        if atom.altloc != "\0" and atom.altloc != "A" and atom.altloc != "B":
+                            print(type(atom.altloc), atom.altloc, input_file.name)
+                            different_altloc = True
+                            
+    return different_altloc
 
 
 def detect_altloc_dir(input_file: Path) -> None:
+    count = 0
     for file in sorted(input_file.glob("*.cif")):
-        detect_altloc(file)
+        different_altloc = detect_altloc(file)
+        if different_altloc:
+            count += 1
+
+    print(f"Number of structures with different altloc types: {count}")
 
 
 if __name__ == "__main__":
@@ -46,4 +51,3 @@ if __name__ == "__main__":
         detect_altloc_dir(args.input_file)
     else:
         detect_altloc(args.input_file)
-
