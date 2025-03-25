@@ -9,7 +9,7 @@ from enum import Enum
 import json
 import gemmi
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 from logger import logger, setup_logger
 from configuration import Config
@@ -32,6 +32,7 @@ class AltlocError(Exception):
 #TODO: Refactor global varible
 files_support_altloc = 0
 files_unsupport_altloc = 0
+files_single_conform_only = 0
 
 
 def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict]) -> None:
@@ -68,17 +69,18 @@ def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: 
     options.align_pairs = 48
     options.align_loops = 20
 
-    new_path = Path("../tmp/alter_conform/test_not_all_2_files/") / f"{conformation_type}_{input_file.name}" #TODO: fix using config, save to modified mmcifs
+    new_path = Path("../tmp/alter_conform/catch_just_1_conform/") / f"{conformation_type}_{input_file.name}" #TODO: fix using config, save to modified mmcifs
     structure.make_mmcif_document().write_file(str(new_path), options)
 
 
 # TODO: Add docs
 def separate_alternative_conformations(input_file: Path) -> bool:
-    with open("../tmp/alter_conform/sugar_names.json") as f: #TODO: fix using config 
+    with open("../utils/alternative_conformations/sugar_names.json") as f: #TODO: fix using config 
         sugar_names = set(json.load(f)) # Set for optimalization
 
     global files_support_altloc
     global files_unsupport_altloc
+    global files_single_conform_only
 
     structure_a = gemmi.read_structure(str(input_file))
 
@@ -149,13 +151,14 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     if not altloc_a and not altloc_b:
         return False
 
-    # if bool(altloc_a) != bool(altloc_b):
-    #     print(f"{input_file.name}")
+    if bool(altloc_a) != bool(altloc_b):
+        files_single_conform_only += 1
+        print(f"Just one conformation in: {input_file.name}")
 
     if altloc_a:
     # File with only A conformers
     # print(altloc_a)
-        print(f"Creating file A for {input_file}")
+        # print(f"Creating file A for {input_file}")
         delete_alternative_conformations(structure_a, altloc_a, altloc_b)
         save_files(structure_a, input_file, "A")
 
@@ -163,7 +166,7 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     # File with only B conformers
     # print(altloc_b)
         structure_b = gemmi.read_structure(str(input_file))
-        print(f"Creating file B for {input_file}")
+        # print(f"Creating file B for {input_file}")
         delete_alternative_conformations(structure_b, altloc_b, altloc_a)
         save_files(structure_b, input_file, "B")
 
@@ -188,8 +191,9 @@ def create_separate_mmcifs() -> None:
     # except AltlocError as e:
     #     print(f"Exception caught: {e}")
 
-    # print(f"Number of files with supported altlocs: {files_support_altloc}")
-    # print(f"Number of files with unsupported altlocs: {files_unsupport_altloc}")
+    print(f"Number of files with supported altlocs: {files_support_altloc}")
+    print(f"Number of files with unsupported altlocs: {files_unsupport_altloc}")
+    print(f"Number of files with just single altloc type: {files_single_conform_only}")
     
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
