@@ -3,11 +3,12 @@ data/
 debug/
 docs/
 img/
-mv/
-pq/
+/mv/
+/pq/
 results/
 tmp/
 __pycache__/
 venv/
 .worktrees/
 .current_run
+*.log
