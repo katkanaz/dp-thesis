@@ -20,7 +20,7 @@ class AltlocCase(Enum):
     DOUBLE_RES = 2
 
 class AltlocError(Exception):
-    def __init__(self, filename, message="Too many types of altlocs") -> None:
+    def __init__(self, filename, message="Not supported altloc type!") -> None:
         self.filename = filename
         self.message = message
         super().__init__(f"{message} in file {filename}")
@@ -30,7 +30,8 @@ class AltlocError(Exception):
 
 
 #TODO: Refactor global varible
-files_with_altlocs = 0
+files_support_altloc = 0
+files_unsupport_altloc = 0
 
 
 def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict]) -> None:
@@ -67,7 +68,7 @@ def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: 
     options.align_pairs = 48
     options.align_loops = 20
 
-    new_path = Path("../tmp/alter_conform/test_july_data_after_dictsol/") / f"{conformation_type}_{input_file.name}" #TODO: fix using config, save to modified mmcifs
+    new_path = Path("../tmp/alter_conform/test_not_all_2_files/") / f"{conformation_type}_{input_file.name}" #TODO: fix using config, save to modified mmcifs
     structure.make_mmcif_document().write_file(str(new_path), options)
 
 
@@ -76,7 +77,8 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     with open("../tmp/alter_conform/sugar_names.json") as f: #TODO: fix using config 
         sugar_names = set(json.load(f)) # Set for optimalization
 
-    global files_with_altlocs
+    global files_support_altloc
+    global files_unsupport_altloc
 
     structure_a = gemmi.read_structure(str(input_file))
 
@@ -84,16 +86,13 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     altloc_a: List[Dict] = []
     altloc_b: List[Dict] = []
 
-    # Remember seen residues
-    residues: Dict[Tuple[str, gemmi.SeqId, str], Tuple[str, str]] = {}
-
     models_count = 0
     for model_idx, model in enumerate(structure_a):
         models_count += 1
         for chain_idx, chain in enumerate(model):
             for residue_idx, residue in enumerate(chain):
                 if residue.name in sugar_names:
-                    print(f"res {residue.name}, num {residue.seqid}, altloc {type(residue[0].altloc)}, chain {chain.name}")
+                    # print(f"res {residue.name}, num {residue.seqid}, altloc {type(residue[0].altloc)}, chain {chain.name}")
                     atom_altloc_a = []
                     atom_altloc_b = []
 
@@ -102,36 +101,18 @@ def separate_alternative_conformations(input_file: Path) -> bool:
                     # if residue[0].altloc == "\0":
                     #     continue
 
-                    first_altloc_key = None
-                    second_altloc_key = None
-
                     for atom_idx, atom in enumerate(residue):
                         if atom.altloc != "\0":
-                            key = (residue.name, residue.seqid, atom.altloc)
-                            if first_altloc_key is None and key not in residues:
-                                first_altloc_key = atom.altloc
-                                residues[key] = (first_altloc_key, chain.name)
-                                # print(f"first key is {first_altloc_key}")
-                            elif atom.altloc != first_altloc_key and second_altloc_key is None:
-                                if key in residues and residues[key] == atom.altloc:
-                                    raise AltlocError(input_file.name, "Previously seen residue has same altloc!") 
-                                second_altloc_key = atom.altloc
-                                # print(f"second key is {second_altloc_key}")
-                                
-                            elif atom.altloc != first_altloc_key and atom.altloc != second_altloc_key:
-                                #TODO: function here ends, file is removed, ask Pepa
-                                raise AltlocError(input_file.name)
-                                print(f"File {input_file.name} has more than 2 tpyes of altlocs!")
-
-
-                            if atom.altloc == first_altloc_key:
+                            # print(atom.altloc)
+                            if atom.altloc == "A":
                                 atom_altloc_a.append(atom_idx)
                                 # print(f"A is {atom_altloc_a}")
-                                # print(first_altloc_key)
-                            elif atom.altloc == second_altloc_key:
+                            elif atom.altloc == "B":
                                 atom_altloc_b.append(atom_idx)
                                 # print(f"B is {atom_altloc_b}")
-                                # print(second_altloc_key)
+                            else:
+                                files_unsupport_altloc += 1
+                                raise AltlocError(input_file.name)
 
                     if not atom_altloc_a and not atom_altloc_b:
                         # Both lists are empty, residue has no alternate conformations
@@ -161,9 +142,10 @@ def separate_alternative_conformations(input_file: Path) -> bool:
                         list_to_append_to.append(res)
 
 
-    if models_count > 1:
-        print(f"More than one model in: {input_file.name}") #NOTE: Learn if normal
+    # if models_count > 1:
+        # print(f"More than one model in: {input_file.name}") #NOTE: Learn if normal
 
+    #FIXME: if only one altloc type then end and jsut return false to move file, still detect it as altloc?
     if not altloc_a and not altloc_b:
         return False
 
@@ -173,6 +155,7 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     if altloc_a:
     # File with only A conformers
     # print(altloc_a)
+        print(f"Creating file A for {input_file}")
         delete_alternative_conformations(structure_a, altloc_a, altloc_b)
         save_files(structure_a, input_file, "A")
 
@@ -180,30 +163,33 @@ def separate_alternative_conformations(input_file: Path) -> bool:
     # File with only B conformers
     # print(altloc_b)
         structure_b = gemmi.read_structure(str(input_file))
+        print(f"Creating file B for {input_file}")
         delete_alternative_conformations(structure_b, altloc_b, altloc_a)
         save_files(structure_b, input_file, "B")
 
-    files_with_altlocs += 1
+    files_support_altloc += 1
     return True
 
 # TODO: Change to main
 def create_separate_mmcifs() -> None:
     #TODO: Add modified mmcif folder creation here plus to config
-    # with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f: #TODO: change using config
-    #     only_ligands: Dict = json.load(f)
+    with open("../results/ligand_sort/july_2024/categorization/ligands.json", "r") as f: #TODO: change using config
+        only_ligands: Dict = json.load(f)
 
-    # ids = [id.lower() for id in only_ligands.keys()]
-    # for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")): #TODO: Add config, load mmcif files, return true for altloc or false, if flase copy to modifiedmmcif
-    #     if file.stem in ids:
-    #         try:
-    #             separate_alternative_conformations(file)
-    #         except AltlocError as e:
-    #             print(f"Exception caught: {e}")
-    # print(f"Number of files with altlocs: {files_with_altlocs}")
-    try:
-        separate_alternative_conformations(Path("../data/july_2024/mmcif_files/2y9g.cif"))
-    except AltlocError as e:
-        print(f"Exception caught: {e}")
+    ids = [id.lower() for id in only_ligands.keys()]
+    for file in sorted(Path("../data/july_2024/mmcif_files").glob("*.cif")): #TODO: Add config, load mmcif files, return true for altloc or false, if flase copy to modifiedmmcif
+        if file.stem in ids:
+            try:
+                separate_alternative_conformations(file)
+            except AltlocError as e:
+                print(f"Exception caught: {e}")
+    # try:
+    #     separate_alternative_conformations(Path("../data/july_2024/mmcif_files/7kfw.cif"))
+    # except AltlocError as e:
+    #     print(f"Exception caught: {e}")
+
+    # print(f"Number of files with supported altlocs: {files_support_altloc}")
+    # print(f"Number of files with unsupported altlocs: {files_unsupport_altloc}")
     
 if __name__ == "__main__":
     # config = Config.load("config.json", None, False)
