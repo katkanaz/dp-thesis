@@ -13,12 +13,12 @@ from logger import setup_logger
 
 from configuration import Config
 
-from run_pq import run_pq
-from perform_alignment import perform_alignment
-from cluster_data import cluster_data
-from compare_clusters import compare_clusters
-from create_tanglegram import create_tanglegram
-from structure_motif_search import structure_motif_search
+from modules.run_pq import run_pq
+from modules.perform_alignment import perform_alignment
+from modules.cluster_data import cluster_data
+from modules.compare_clusters import compare_clusters
+from modules.create_tanglegram import create_tanglegram
+from modules.structure_motif_search import structure_motif_search
 
 
 def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,

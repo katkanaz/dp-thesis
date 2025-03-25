@@ -12,15 +12,15 @@ from logger import setup_logger
 
 from configuration import Config
 
-from download_files import download_files
-from categorize import categorize
+from modules.download_files import download_files
+from modules.categorize import categorize
 #TODO: Import altloc handler
-from extract_rscc_and_resolution import extract_rscc_and_resolution
-from run_mv import run_mv
-from plot_graphs import plot_graphs
-from graph_analysis import graph_analysis
-from remove_o6 import get_ids_and_remove_o6
-from filter_ligands import filter_ligands
+from modules.extract_rscc_and_resolution import extract_rscc_and_resolution
+from modules.run_mv import run_mv
+from modules.plot_graphs import plot_graphs
+from modules.graph_analysis import graph_analysis
+from modules.remove_o6 import get_ids_and_remove_o6
+from modules.filter_ligands import filter_ligands
 
 
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float,
