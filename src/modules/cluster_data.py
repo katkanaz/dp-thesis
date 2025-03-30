@@ -16,9 +16,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as ssd
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def perform_data_clustering(sugar: str, n_clusters: int, cluster_method: str, 

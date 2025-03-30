@@ -12,9 +12,9 @@ import modified_tanglegram
 import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: Config, perform_align: bool) -> None:

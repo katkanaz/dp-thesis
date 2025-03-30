@@ -10,9 +10,10 @@ from argparse import ArgumentParser
 from collections import defaultdict
 from csv import DictReader
 import json
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
+from typing import Dict
 
-from configuration import Config
+from ..configuration import Config
 
 
 def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:

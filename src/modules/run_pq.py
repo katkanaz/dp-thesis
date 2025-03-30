@@ -18,9 +18,9 @@ from tempfile import TemporaryDirectory
 import zipfile
 
 import requests
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 more_than_one_pattern = []          # just to check no more than one pattern for specific ResidueID was found

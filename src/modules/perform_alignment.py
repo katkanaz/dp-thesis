@@ -14,10 +14,10 @@ import os
 from pathlib import Path
 
 import numpy as np
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
-# from pymol_api import Pymol
+from ..configuration import Config
+
 from pymol import cmd
 
 # TODO: To log pymol - turn of stdout log output before, let pymol write to stdout, then read it and write it to log, then turn on stdout log output again

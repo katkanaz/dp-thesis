@@ -15,9 +15,9 @@ from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue, Attrib
 import shutil
 
 from Bio.PDB.PDBParser import PDBParser
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def extract_representatives(sugar: str, align_method: str, num: int, min_residues: int, method: str, config: Config, input_representatives: Path) -> None:

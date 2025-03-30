@@ -15,9 +15,9 @@ from zipfile import ZipFile
 import gemmi
 import pandas as pd
 import requests
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def remove_nonsugar_residues(config: Config) -> None:

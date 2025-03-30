@@ -9,9 +9,9 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from csv import DictReader
 import json
-from logger import setup_logger
+from ..logger import setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def get_pdb_ids_with_rscc(config: Config) -> None:

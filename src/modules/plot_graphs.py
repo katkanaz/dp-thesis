@@ -8,9 +8,9 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from logger import setup_logger
+from ..logger import setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def plot_corr_graphs(config: Config) -> None:

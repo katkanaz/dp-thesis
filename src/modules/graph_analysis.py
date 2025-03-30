@@ -10,9 +10,9 @@ from argparse import ArgumentParser
 from csv import DictReader, DictWriter
 
 import pandas as pd
-from logger import logger, setup_logger
+from ..logger import logger, setup_logger
 
-from configuration import Config
+from ..configuration import Config
 
 
 def get_average_rmsd_of_peaks(config: Config) -> None:
