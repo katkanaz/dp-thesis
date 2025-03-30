@@ -14,7 +14,7 @@ from configuration import Config
 
 from modules.download_files import download_files
 from modules.categorize import categorize
-#TODO: Import altloc handler
+from modules.alternative_conformations import create_separate_mmcifs
 from modules.extract_rscc_and_resolution import extract_rscc_and_resolution
 from modules.run_mv import run_mv
 from modules.plot_graphs import plot_graphs
@@ -29,7 +29,7 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
 
     download_files(config, test_mode)
     categorize(config)
-    #TODO: Call altloc handler
+    create_separate_mmcifs()
     extract_rscc_and_resolution(config)
     run_mv(config, is_unix)
 
