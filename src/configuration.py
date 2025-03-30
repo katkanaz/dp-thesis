@@ -74,6 +74,7 @@ class Config():
         self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
         self.components_dir = self.user_cfg.data_dir / f"{data_run}/components"
         self.mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/mmcif_files"
+        self.modified_mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/modified_mmcif_files"
         self.no_o6_mmcif_dir = self.user_cfg.data_dir / f"{data_run}/no_o6_mmcif"
         self.validation_files_dir = self.user_cfg.data_dir / f"{data_run}/validation_files"
 
