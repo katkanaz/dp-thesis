@@ -213,8 +213,14 @@ def save_category(category: Union[Dict, List, Set], filename: str) -> None:
     with open((config.categorization_dir / f"{filename}.json"), "w", encoding="utf8") as f:
         json.dump(category, f, indent=4)
 
-#TODO: Add docs
+
 def count_num_residues(res_in_whole_struct: Dict) -> int:
+    """
+    Count number of residues for all structures total
+
+    :param res_in_whole_struct: Where the residues should be counted
+    :return: Number of residues
+    """
     return sum([len(residues) for residues in res_in_whole_struct.values()])
 
 
@@ -306,7 +312,6 @@ def categorize(config: Config) -> None:
     save_category(pdb_sugars_in_wrong_category, "pdb_sugars_in_wrong_category")
     save_category(pdb_not_anotated_glycosylation, "pdb_not_anotated_glycosylation")
 
-    # TODO: Extract to function, print into file?
     # Print counts of everything
     logger.info(f"Number of residues with multiple conformations: {len(overall_conformers)}")
     logger.info(f"PDB with unannotated glycosylation: {len(pdb_not_anotated_glycosylation)}")
@@ -338,7 +343,5 @@ if __name__ == "__main__":
     config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
-
-    # config.categorization_dir.mkdir(exist_ok=True, parents=True)
 
     categorize(config)

@@ -87,6 +87,4 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    # config.graph_analysis_dir.mkdir(exist_ok=True, parents=True)
-
     graph_analysis(config, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd)

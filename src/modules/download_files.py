@@ -197,7 +197,14 @@ def download_missing_files(config: Config, missing_files: List[str]) -> None:
 
 
 def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files: Path) -> bool:
-    # TODO: Add docs
+    """
+    Check if all required structure files were downloaded or not
+
+    :param json_file: IDs of files that should have been downloaded
+    :param validation_files: Path to validation files
+    :param mmcif_files: Path to mmCIF structure files
+    :return: True if all required files were downloaded; False otherwise 
+    """
 
     found_error = False
     with open(json_file, "r") as f:
@@ -256,10 +263,5 @@ if __name__ == "__main__":
     config = Config.load("config.json", None, False)
 
     setup_logger(config.log_path)
-
-    # config.data_dir.mkdir(exist_ok=True, parents=True)
-    # config.results_dir.mkdir(exist_ok=True, parents=True)
-    # config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
-    # config.validation_files_dir.mkdir(exist_ok=True, parents=True)
 
     download_files(config, args.test_mode)

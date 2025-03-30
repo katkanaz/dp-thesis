@@ -96,6 +96,4 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    # config.validation_dir.mkdir(exist_ok=True, parents=True)
-
     extract_rscc_and_resolution(config)

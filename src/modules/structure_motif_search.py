@@ -117,14 +117,9 @@ def structure_motif_search(config: Config) -> None:
     # Files to test
     # path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
 
-    #FIXME: won't be needed
-    # min_residues = 5
-
     # extract_representatives(args.sugar, args.align_method, args.number, min_residues, args.method, config, input_folder)
     # struc_name = get_struc_name(path_to_file)
     # run_query(path_to_file, define_residues(path_to_file, struc_name))
-
-# TODO: Check if original structure is returned
 
 
 if __name__ == "__main__":

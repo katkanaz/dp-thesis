@@ -95,9 +95,8 @@ def plot_histograms(config: Config) -> None:
 
 
 def plot_3D_graph(config: Config) -> None:
-    # FIXME: Add docstring
     """
-    [TODO:description]
+    Plot 3D graph of RMSD, Resolution and RSCC
 
     :param config: Config objects
     :param graphs: Path to save the results
