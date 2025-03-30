@@ -14,9 +14,9 @@ import os
 from pathlib import Path
 
 import numpy as np
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 from pymol import cmd
 
@@ -37,7 +37,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     raw_binding_sites = config.raw_binding_sites_dir
 
-    filtered_binding_sites = config.filtered_binding_sites_dir / f"min_{min_residues}_aa" #TODO: Rename this folder
+    filtered_binding_sites = config.filtered_binding_sites_dir
     filtered_binding_sites.mkdir(exist_ok=True, parents=True)
 
     less_than_n_aa = []  # How many structures were excluded
@@ -58,11 +58,10 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             less_than_n_aa.append(filename)
             continue
         #TODO: from here to function
-        #TODO: fix filenames acording to new names because of altlocs
         try:
-            _, res, num, chain = filename.split("_")
+            _, _, res, num, chain = filename.split("_")
         except ValueError:
-            _, res, num, chain, _ = filename.split("_")
+            _, _, res, num, chain, _ = filename.split("_")
         # For some reason, some structures have chains named eg. AaA but when loaded to PyMol
         # the the chain is reffered to just as A.
         if len(chain) > 1:

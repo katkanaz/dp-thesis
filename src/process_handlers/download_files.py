@@ -15,9 +15,9 @@ from typing import List, Set
 
 import gemmi
 import requests
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:

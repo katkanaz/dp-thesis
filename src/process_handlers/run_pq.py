@@ -18,9 +18,9 @@ from tempfile import TemporaryDirectory
 import zipfile
 
 import requests
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 more_than_one_pattern = []          # just to check no more than one pattern for specific ResidueID was found
@@ -167,7 +167,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
         if not query_names:
             continue
         # Copy current structure to ./structures dir which is used as source by PQ.
-        src = config.mmcif_files_dir / f"{structure}.cif" #TODO: From modified mmcif
+        src = config.modified_mmcif_files_dir / f"{structure}.cif"
         dst = config.pq_run_dir / "structures" / f"{structure}.cif"
         shutil.copyfile(src, dst)
 
@@ -202,9 +202,6 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
             continue
 
         extract_results(target_dir, zip_result_folder, query_names)
-
-        #if END_FLAG:
-            #break
 
         # Delete the result folder and also the current structure from ./structures so the new one can be copied there
         (config.pq_run_dir / "structures" / f"{structure}.cif").unlink()

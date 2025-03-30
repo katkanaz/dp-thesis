@@ -10,9 +10,9 @@ import csv
 import json
 
 from bs4 import BeautifulSoup, NavigableString
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 def extract_rscc_and_resolution(config: Config) -> None:

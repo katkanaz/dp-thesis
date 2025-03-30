@@ -15,9 +15,9 @@ from zipfile import ZipFile
 import gemmi
 import pandas as pd
 import requests
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 def remove_nonsugar_residues(config: Config) -> None:
@@ -77,7 +77,7 @@ def create_mv_config(config: Config) -> None:
 
     mv_config = {
         "ValidationType": "Sugars",
-        "InputFolder":  str(config.mmcif_files_dir), #TODO: Load modifed mmcifs
+        "InputFolder":  str(config.modified_mmcif_files_dir),
         "ModelsSource": str(config.components_dir / "components_sugars_only.cif"),
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,
@@ -110,7 +110,7 @@ def get_rmsd_and_merge(config: Config) -> None:
         writer.writerow(["pdb", "name", "num", "chain", "rmsd"])
         for model in data["Models"]:
             for entry in model["Entries"]:
-                pdb = entry["Id"].split("_")[0]
+                pdb = entry["Id"].split("_")[1]
                 res = str(entry["MainResidue"]).split()
                 try:
                     row = [pdb.upper(), res[0], res[1], res[2], str(entry["ModelRmsd"])]

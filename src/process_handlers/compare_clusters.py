@@ -8,9 +8,9 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from argparse import ArgumentParser
 import json
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 def compare_clusters(config: Config, perform_align: bool) -> None:

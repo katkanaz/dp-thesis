@@ -11,9 +11,9 @@ from typing import List, Dict, Set, Union
 
 import gemmi
 from gemmi.cif import Block, Table  # type: ignore
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 ligands = {}  # all ligands from all structures
 glycosylated = {}  # all glycosylated residues according to conn category from all structures
@@ -203,7 +203,7 @@ def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[
     return close_contact_residues
 
 
-def save_category(category: Union[Dict, List, Set], filename: str) -> None:
+def save_category(category: Union[Dict, List, Set], filename: str, config: Config) -> None:
     """
     Save sugars after categorization into JSON files
 
@@ -211,7 +211,11 @@ def save_category(category: Union[Dict, List, Set], filename: str) -> None:
     :param filename: Name of the JSON file
     """
     with open((config.categorization_dir / f"{filename}.json"), "w", encoding="utf8") as f:
-        json.dump(category, f, indent=4)
+        if isinstance(category, set):
+            json.dump(list(category), f, indent=4)
+        else:
+            json.dump(category, f, indent=4)
+
 
 
 def count_num_residues(res_in_whole_struct: Dict) -> int:
@@ -298,19 +302,19 @@ def categorize(config: Config) -> None:
             pdb_lig_glyc_close.append(block.name)
 
     # Save everything
-    save_category(ligands, "ligands")
-    save_category(glycosylated, "glycosylated")
-    save_category(close_contacts, "close_contacts")
-    save_category(all_residues, "all_residues")
-    save_category(pdb_only_ligands, "pdb_only_ligands")
-    save_category(pdb_only_glycosylated, "pdb_only_glycosylated")
-    save_category(pdb_only_close_contacts, "pdb_only_close_contacts")
-    save_category(pdb_ligand_glycosylated, "pdb_ligand_glycosylated")
-    save_category(pdb_ligand_close_contacts, "pdb_ligand_close_contacts")
-    save_category(pdb_glycosylated_close_contacts, "pdb_glycosylated_close_contacts")
-    save_category(pdb_lig_glyc_close, "pdb_lig_glyc_close")
-    save_category(pdb_sugars_in_wrong_category, "pdb_sugars_in_wrong_category")
-    save_category(pdb_not_anotated_glycosylation, "pdb_not_anotated_glycosylation")
+    save_category(ligands, "ligands", config)
+    save_category(glycosylated, "glycosylated", config)
+    save_category(close_contacts, "close_contacts", config)
+    save_category(all_residues, "all_residues", config)
+    save_category(pdb_only_ligands, "pdb_only_ligands", config)
+    save_category(pdb_only_glycosylated, "pdb_only_glycosylated", config)
+    save_category(pdb_only_close_contacts, "pdb_only_close_contacts", config)
+    save_category(pdb_ligand_glycosylated, "pdb_ligand_glycosylated", config)
+    save_category(pdb_ligand_close_contacts, "pdb_ligand_close_contacts", config)
+    save_category(pdb_glycosylated_close_contacts, "pdb_glycosylated_close_contacts", config)
+    save_category(pdb_lig_glyc_close, "pdb_lig_glyc_close", config)
+    save_category(pdb_sugars_in_wrong_category, "pdb_sugars_in_wrong_category", config)
+    save_category(pdb_not_anotated_glycosylation, "pdb_not_anotated_glycosylation", config)
 
     # Print counts of everything
     logger.info(f"Number of residues with multiple conformations: {len(overall_conformers)}")

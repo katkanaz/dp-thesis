@@ -9,9 +9,9 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from csv import DictReader
 import json
-from ..logger import setup_logger
+from logger import setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 def get_pdb_ids_with_rscc(config: Config) -> None:
@@ -40,7 +40,7 @@ def remove_o6(config: Config) -> None:
     with open(config.validation_dir / "pdbs_with_rscc_and_resolution.json", "r", encoding="utf8") as f:
         pdb_ids_of_interest = json.load(f)
     for pdb in pdb_ids_of_interest:
-        with (config.mmcif_files_dir / f"{pdb.lower()}.cif").open() as f: #TODO: Load modified mmcif
+        with (config.modified_mmcif_files_dir / f"{pdb.lower()}.cif").open() as f:
             file = f.readlines()
         with (config.no_o6_mmcif_dir / f"{pdb.lower()}.cif").open("w") as f:
             for line in file:
@@ -52,6 +52,7 @@ def remove_o6(config: Config) -> None:
 
 
 def get_ids_and_remove_o6(config: Config) -> None:
+    return #FIXME: iterate folder in remove_o6
     # Tmp # FIXME:
     (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
 

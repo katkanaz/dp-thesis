@@ -8,13 +8,13 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 from argparse import ArgumentParser
 
-import modified_tanglegram
+import modules.modified_tanglegram
 import numpy as np
 import scipy.cluster.hierarchy as sph
 import scipy.spatial.distance as spd
-from ..logger import logger, setup_logger
+from logger import logger, setup_logger
 
-from ..configuration import Config
+from configuration import Config
 
 
 def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: Config, perform_align: bool) -> None:
@@ -48,7 +48,7 @@ def create_tanglegram(sugar: str, n_clusters: int, cluster_method: str, config: 
     n_data = Z_super.shape[0] + 1
 
     path_to_file = config.clusters_dir / "super" / f"{n_clusters}_{cluster_method}_all_clusters.json" # FIXME:
-    fig = modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=path_to_file)
+    fig = modules.modified_tanglegram.tanglegram(Z_super, Z_align, n_data, sort="step1side", color_by_diff=True, results_folder=path_to_file)
     fig.savefig(config.tanglegrams_dir / f"tanglegram_{sugar}.svg")
     
 
