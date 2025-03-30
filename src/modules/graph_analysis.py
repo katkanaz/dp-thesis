@@ -22,15 +22,19 @@ def get_average_rmsd_of_peaks(config: Config) -> None:
     :param config: Config object
     """
 
+    # Graph based variables
+    lower_threshold = 0.4
+    upper_threshold = 0.7
+
     df = pd.read_csv(config.validation_dir /  "merged_rscc_rmsd.csv")
     data = df[df["name"] == "BGC"]
-    filtered_df1 = data[data["rmsd"] <= 0.4] # FIXME: Extract to variables
-    filtered_df2 = data[(data["rmsd"] > 0.4) & (data["rmsd"] < 0.7)] # FIXME: Extract to variables
+    filtered_df1 = data[data["rmsd"] <= lower_threshold]
+    filtered_df2 = data[(data["rmsd"] > lower_threshold) & (data["rmsd"] < upper_threshold)]
     average1 = filtered_df1["rmsd"].mean()
     average2 = filtered_df2["rmsd"].mean()
 
-    logger.info(f"Average RMSD of peaks for RMSD <= 0.4: {average1}")
-    logger.info(f"Average RMSD of peaks for RMSD > 0.4 and < 0.7: {average2}")
+    logger.info(f"Average RMSD of peaks for RMSD <= {lower_threshold}: {average1}")
+    logger.info(f"Average RMSD of peaks for RMSD > {lower_threshold} and < {upper_threshold}: {average2}")
 
 
 def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float, config: Config) -> None:
