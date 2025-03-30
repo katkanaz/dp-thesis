@@ -29,7 +29,7 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
 
     download_files(config, test_mode)
     categorize(config)
-    create_separate_mmcifs()
+    create_separate_mmcifs(config)
     extract_rscc_and_resolution(config)
     run_mv(config, is_unix)
 
