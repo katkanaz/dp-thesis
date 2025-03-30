@@ -107,7 +107,7 @@ def perform_data_clustering(sugar: str, n_clusters: int, cluster_method: str,
                     lowest_rmsd_sum = sum
                     representative_structure = i
             length = len(structures)
-            assert representative_structure is not None, "For every cluster there should be a representative binding site"
+            assert representative_structure is not None, "For every cluster there should be a representative surrounding"
             representatives[cluster] = representative_structure
             average_rmsds[cluster] = [lowest_rmsd_sum / length]
 
