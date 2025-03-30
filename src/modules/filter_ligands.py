@@ -16,6 +16,11 @@ from typing import Dict
 from ..configuration import Config
 
 
+#TODO: Add docs
+def count_num_residues(res_in_whole_struct: Dict) -> int:
+    return sum([len(residues) for residues in res_in_whole_struct.values()])
+
+
 def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:
     # TODO: Explain default values origin
     """
@@ -33,13 +38,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
         ligands = json.load(f)
 
     logger.info(f"Number of structures before filtering: {len(ligands.keys())}")
-
-    # TODO: Extract 3 lines below into function
-    count = 0
-    for pdb, residues in ligands.items():
-        count += len(residues)
-
-    logger.info(f"Number of residues before filtering: {count}")
+    logger.info(f"Number of residues before filtering: {count_num_residues(ligands)}")
 
     # Save the pdb id of structures with good resolution, because not all structures have resolution
     # Available and we want to continue just with those with resolution
@@ -76,13 +75,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
         del ligands[key]
 
     logger.info(f"Number of structures after filtering: {len(ligands.keys())}")
-
-    # TODO: Extract 3 lines below into function
-    count = 0
-    for pdb, residues in ligands.items():
-        count += len(residues)
-
-    logger.info(f"Number of residues after filtering: {count}")
+    logger.info(f"Number of residues after filtering: {count_num_residues(ligands)}")
 
     with open(config.categorization_dir / "filtered_ligands.json", "w", encoding="utf8") as f:
         json.dump(ligands, f, indent=4)
