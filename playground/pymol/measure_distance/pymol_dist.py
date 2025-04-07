@@ -52,7 +52,7 @@ def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str], float]]) -> 
         cmd.remove(f"resi {resi}")
         
 
-def foo(max_res: int, path_to_file: Path):
+def modify_pdb(max_res: int, path_to_file: Path):
     cmd.delete("all")
     cmd.load(path_to_file)
     count = cmd.count_atoms("n. CA and polymer")
@@ -85,4 +85,4 @@ def test(path_to_file: Path):
 
 if __name__ == "__main__":
     # test(Path("/home/kaci/dp/tmp/pymol_test/max_10_res/19_1gzt_FUC_201_A.pdb"))
-    foo(10, Path("/home/kaci/dp/tmp/pymol_test/63_3zzv_FUC_3_E.pdb"))
+    modify_pdb(10, Path("/home/kaci/dp/tmp/pymol_test/63_3zzv_FUC_3_E.pdb"))
