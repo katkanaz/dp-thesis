@@ -20,9 +20,9 @@ from configuration import Config
 
 from pymol import cmd
 
-# TODO: To log pymol - turn of stdout log output before, let pymol write to stdout, then read it and write it to log, then turn on stdout log output again
-#FIXME: docs
-#TODO: refactor function
+
+# TODO: Refactor function
+# FIXME: Function description
 def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
@@ -40,45 +40,38 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     filtered_binding_sites = config.filtered_binding_sites_dir
     filtered_binding_sites.mkdir(exist_ok=True, parents=True)
 
-    less_than_n_aa = []  # How many structures were excluded
+    less_than_n_aa = []
     more_than_max_aa = []
-    i = 0  # Index
+    i = 0
     structures_keys = {} # To map index with structure
     for path_to_file in raw_binding_sites.iterdir():
         filename = Path(path_to_file).stem
-        cmd.delete("all") # delete all
-        # pm_cmd("delete all")
-        cmd.load(path_to_file) # load path_to_file
-        # pm_cmd(f"load {path_to_file}")
-        count = cmd.count_atoms("n. CA and polymer") # count_atoms n. CA and polymer
-        # count = int(pm_cmd('print(cmd.count_atoms("n. CA and polymer"))')[-1])
-        # pm_cmd('res = cmd.count_atoms("n. CA and polymer")')[-1]
-        # count = int(pm_cmd('print(res)')[-1])
+        cmd.delete("all")
+        cmd.load(path_to_file)
+        count = cmd.count_atoms("n. CA and polymer")
         if count < min_residues:
             less_than_n_aa.append(filename)
             continue
-        #TODO: from here to function
+
         try:
             _, _, res, num, chain = filename.split("_")
         except ValueError:
             _, _, res, num, chain, _ = filename.split("_")
-        # For some reason, some structures have chains named eg. AaA but when loaded to PyMol
+        # Some structures have chains named eg. AaA but when loaded to PyMol
         # the the chain is reffered to just as A.
         if len(chain) > 1:
             chain = chain[0]
 
         current_sugar = f"/{filename}//{chain}/{res}`{num}"
-        #TODO: to here
 
-        cmd.select("wanted_residues", f"{current_sugar} or polymer") # select wanted_residues, /1ax1_GAL_2_C//C/GAL`2 or polymer
-        cmd.select("junk_residues", f"not wanted_residues") #select junk_residues, not wanted_residues
+        cmd.select("wanted_residues", f"{current_sugar} or polymer")
+        cmd.select("junk_residues", f"not wanted_residues")
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
-        #TODO: if max
 
-        cmd.save(f"{filtered_binding_sites}/{i}_{filename}.pdb") # save path_to_file
+        cmd.save(f"{filtered_binding_sites}/{i}_{filename}.pdb")
         structures_keys[i] = f"{i}_{filename}.pdb"
-        i += 1 # Raise the index #FIXME: Why?
+        i += 1
         cmd.delete("all")
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
@@ -89,13 +82,13 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     return filtered_binding_sites
 
-# FIXME: refactor all_against_all_alignment function - create object, that represents all manipulation with data (csv, numpy), object has atribute writer, save (numpy), check everywhere if one of the objects is None
-# FIXME: function description
+
     # Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
     # by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
     # but without actually moving, so the rms_cur is eventually calculated from their position as is
     # towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
-#TODO: refactor function
+# TODO: Refactor function
+# FIXME: Function description
 def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: Path, config: Config) -> None:
     """
     [TODO:description]
@@ -149,7 +142,7 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
                     id2, _, res2, num2, chain2 = filename2.split("_")
                 except ValueError:
                     id2, _, res2, num2, chain2, _ = filename2.split("_")
-                # For some reason, some structures have chains named eg. AaA but when loaded to PyMol
+                # Some structures have chains named eg. AaA but when loaded to PyMol
                 # the the chain is reffered to just as A.
                 if len(chain1) > 1:
                     chain1 = chain1[0]
