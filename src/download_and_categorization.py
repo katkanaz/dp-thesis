@@ -12,15 +12,15 @@ from logger import setup_logger
 
 from configuration import Config
 
-from modules.download_files import download_files
-from modules.categorize import categorize
-from modules.alternative_conformations import create_separate_mmcifs
-from modules.extract_rscc_and_resolution import extract_rscc_and_resolution
-from modules.run_mv import run_mv
-from modules.plot_graphs import plot_graphs
-from modules.graph_analysis import graph_analysis
-from modules.remove_o6 import get_ids_and_remove_o6
-from modules.filter_ligands import filter_ligands
+from process_handlers.download_files import download_files
+from process_handlers.categorize import categorize
+from process_handlers.alternative_conformations import create_separate_mmcifs
+from process_handlers.extract_rscc_and_resolution import extract_rscc_and_resolution
+from process_handlers.run_mv import run_mv
+from process_handlers.plot_graphs import plot_graphs
+from process_handlers.graph_analysis import graph_analysis
+from process_handlers.remove_o6 import get_ids_and_remove_o6
+from process_handlers.filter_ligands import filter_ligands
 
 
 def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rmsd: float,
