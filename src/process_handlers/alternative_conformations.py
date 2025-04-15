@@ -193,17 +193,19 @@ def create_separate_mmcifs(config: Config) -> None:
     config.modified_mmcif_files_dir.mkdir(exist_ok=True, parents=True)
 
     with open(config.categorization_dir / "ligands.json", "r") as f:
-        only_ligands: Dict = json.load(f)
+        ligands: Dict[str, List[Dict]] = json.load(f)
 
     unsupported_altloc = 0
     supported_altloc = 0
     one_altloc_kind = 0
 
-    ids = [id.lower() for id in only_ligands.keys()]
     for file in sorted(config.mmcif_files_dir.glob("*.cif")):
+    ids = [id.lower() for id in ligands.keys()]
+    modified_ligands: Dict[str, List[Dict]] = {}
         if file.stem in ids:
             try:
-                altloc_kind = separate_alternative_conformations(file, config)
+                altloc_kind, new_ligands = separate_alternative_conformations(file, (file.stem.upper(), ligands[file.stem.upper()]), config)
+                modified_ligands.update(new_ligands)
                 if altloc_kind == AltlocKind.NO_ALTLOC:
                     copy2(file, config.modified_mmcif_files_dir / f"0_{file.name}")
                 elif altloc_kind == AltlocKind.NORMAL_ALTLOC:
@@ -214,7 +216,11 @@ def create_separate_mmcifs(config: Config) -> None:
                 
             except AltlocError as e:
                 unsupported_altloc += 1
-                print(f"Exception caught: {e}")
+                logger.error(f"Exception caught: {e}")
+
+    # with open(config.categorization_dir / "modified_ligands.json", "w", encoding="utf8") as f:
+    with open("/home/kaci/dp/tmp/alter_conform/test_modifiend_ligands.json", "w", encoding="utf8") as f:
+        json.dump(modified_ligands, f, indent=4)
 
     logger.info(f"Number of files with supported altlocs: {supported_altloc}")
     logger.info(f"Number of files with unsupported altlocs: {unsupported_altloc}")
