@@ -9,7 +9,7 @@ from enum import Enum
 import json
 import gemmi
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Set, Tuple
 from shutil import copy2
 
 from logger import logger, setup_logger
