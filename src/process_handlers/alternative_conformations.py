@@ -94,8 +94,8 @@ def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: 
 
 
 # TODO: Add docs
-def separate_alternative_conformations(input_file: Path, config: Config) -> AltlocKind:
-    with open(config.run_data_dir / "sugar_names.json") as f:
+def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, List[Dict]], config: Config) -> Tuple[AltlocKind, Dict[str, List[Dict]]]:
+    logger.debug(f"Processing {input_file.name}")
         sugar_names = set(json.load(f)) # Set for optimalization
 
     global files_support_altloc
@@ -138,12 +138,15 @@ def separate_alternative_conformations(input_file: Path, config: Config) -> Altl
                         "model_idx": model_idx,
                         "chain_idx": chain_idx,
                         "residue_idx": residue_idx,
-                        "residue_name": residue.name
+                        "residue_name": residue.name,
+                        "residue_num": str(residue.seqid.num),
+                        "residue_chain": chain.name
                     }
 
                     if atom_altloc_a and atom_altloc_b:
+                        # logger.info(input_file.name)
                         if len(atom_altloc_a) != len(atom_altloc_b):
-                            print(f"Not the same number of atoms in each conformation: {input_file.name}")
+                            logger.info(f"Not the same number of atoms in each conformation: {input_file.name}")
                         altloc_case = AltlocCase.SINGLE_RES
                         res_a = {**common_values, "altloc_case": altloc_case, "atom_altloc_del": atom_altloc_a}
                         altloc_a.append(res_a)
@@ -159,23 +162,30 @@ def separate_alternative_conformations(input_file: Path, config: Config) -> Altl
     # if models_count > 1:
         # print(f"More than one model in: {input_file.name}") #NOTE: Learn if normal
 
+    new_dict = {}
+    old_key = ligands[0]
+
     if not altloc_a and not altloc_b:
-        return AltlocKind.NO_ALTLOC
+        return AltlocKind.NO_ALTLOC, {f"0_{old_key}": ligands[1]}
 
     single_altloc_kind = bool(altloc_a) != bool(altloc_b)
 
+    ligand_values: List[Tuple[str, str, str]] = [(residue["name"], residue["num"], residue["chain"]) for residue in ligands[1]] 
+
     if altloc_a:
         # File with only A conformers
-        delete_alternative_conformations(structure_a, altloc_a, altloc_b)
+        new_values = delete_alternative_conformations(structure_a, altloc_a, altloc_b, ligand_values)
+        new_dict[f"A_{old_key}"] = new_values
         save_files(structure_a, input_file, "A", config)
 
     if altloc_b:
         # File with only B conformers
         structure_b = gemmi.read_structure(str(input_file))
-        delete_alternative_conformations(structure_b, altloc_b, altloc_a)
+        new_values = delete_alternative_conformations(structure_b, altloc_b, altloc_a, ligand_values)
+        new_dict[f"B_{old_key}"] = new_values
         save_files(structure_b, input_file, "B", config)
 
-    return AltlocKind.NORMAL_ALTLOC if not single_altloc_kind else AltlocKind.SINGLE_KIND_ALTLOC     
+    return AltlocKind.NORMAL_ALTLOC if not single_altloc_kind else AltlocKind.SINGLE_KIND_ALTLOC, new_dict     
 
 
 # TODO: Change to main
