@@ -21,13 +21,14 @@ class AltlocCase(Enum):
     DOUBLE_RES = 2
 
 class AltlocError(Exception):
-    def __init__(self, filename, message="Not supported altloc type!") -> None:
+    def __init__(self, filename, altloc, message="Not supported altloc type") -> None:
         self.filename = filename
+        self.altloc = altloc
         self.message = message
-        super().__init__(f"{message} in file {filename}")
+        super().__init__(f"{message} {altloc} in file {filename}")
 
     def __str__(self) -> str:
-        return f"{self.message} in file: {self.filename}"
+        return f"{self.message} of {self.altloc} in file: {self.filename}"
 
 class AltlocKind(Enum):
     NO_ALTLOC = 1 # Files with no alternative conformations
@@ -114,7 +115,7 @@ def separate_alternative_conformations(input_file: Path, config: Config) -> Altl
                             elif atom.altloc == "B":
                                 atom_altloc_b.append(atom_idx)
                             else:
-                                raise AltlocError(input_file.name)
+                                raise AltlocError(input_file.name, atom.altloc)
 
                     if not atom_altloc_a and not atom_altloc_b:
                         # Both lists are empty, residue has no alternate conformations
