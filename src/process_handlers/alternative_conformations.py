@@ -36,7 +36,7 @@ class AltlocKind(Enum):
     SINGLE_KIND_ALTLOC = 3 # Files with only A or B altlocs
 
 
-def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict]) -> None:
+def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict], ligand_values: List[Tuple[str, str, str]]) -> List[Dict]:
     """
     Delete unwanted alternative conformations of a structure and set the ones that should be kept to "\0"
 
@@ -44,6 +44,7 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
     :param residues_to_keep: List of residues whose altlocs should be set to "\0"
     :param residues_to_delete: List of residues to delete in the given structure
     """
+
     for residue in residues_to_keep:
         model_idx = residue["model_idx"]
         chain_idx = residue["chain_idx"] 
@@ -51,15 +52,27 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
         for atom in structure[model_idx][chain_idx][residue_idx]:
             atom.altloc = "\0"
 
+
+    new_values: Set[Tuple[str, str, str]] = set(ligand_values)
+    if len(new_values) != len(ligand_values):
+        logger.warning(f"Ligand values contains duplicates {new_values=} {ligand_values=}")
     for residue in reversed(residues_to_delete):
         model_idx = residue["model_idx"]
         chain_idx = residue["chain_idx"] 
         residue_idx = residue["residue_idx"]
         if residue["altloc_case"] == AltlocCase.DOUBLE_RES:
             del structure[model_idx][chain_idx][residue_idx]
+            res_tuple = (residue["residue_name"], residue["residue_num"], residue["residue_chain"])
+            if res_tuple in new_values:
+                new_values.remove(res_tuple)
+            else:
+                logger.warning(f"res_str {res_tuple} not in new_values")
         elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
             for atom_idx in reversed(residue["atom_altloc_del"]):
                 del structure[model_idx][chain_idx][residue_idx][atom_idx]
+
+
+    return [{"name": t[0], "num": t[1], "chain": t[2]} for t in new_values]
 
 
 def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: str, config: Config) -> None:
