@@ -133,7 +133,7 @@ def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) 
             sleep(timeout)
 
     logger.info("Finished all iterations - first loop.")
-    logger.info(failed_to_download)
+    logger.info(f"Failed to download: {failed_to_download}")
 
     # To download files that raised an error in the first loop
     timeout = 2
@@ -166,8 +166,8 @@ def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
     file_names: list[str] = [f.split(".")[0] for f in listdir(validation_files)]
     # Intersect to get a list a files needed to download
     missing_files = [f for f in all_structures if f not in file_names]
-    logger.info(missing_files)
-    logger.info(len(missing_files))
+    logger.info(f"The following files are missing {missing_files}")
+    logger.info(f"Number of missing files {len(missing_files)}")
     return missing_files
 
 
