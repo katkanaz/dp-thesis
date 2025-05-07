@@ -1,2 +1,3 @@
 biopython==1.83
 rcsbsearchapi==1.6.0
+gemmi==0.7.1
