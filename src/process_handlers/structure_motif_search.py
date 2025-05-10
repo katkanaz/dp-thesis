@@ -10,18 +10,26 @@ import json
 from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
-from typing import List
+from typing import List, Dict, Tuple
 from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue, AttributeQuery
+import requests
 import shutil
 
 from Bio.PDB.PDBParser import PDBParser
 from logger import logger, setup_logger
 
 from configuration import Config
+from utils.modify_struct_search_id import modify_id
 
+GRAPHQL_ENDPOINT = "https://data.rcsb.org/graphql"
+
+# NOTE: Works just by itself for now
+
+# FIXME:
+# search_results = {}
 
 def extract_representatives(sugar: str, align_method: str, num: int, min_residues: int, method: str, config: Config, input_representatives: Path) -> None:
-    #FIXME: fix the docs
+    # FIXME: Rewrite the docs
     """
     Extract files for structure motif search
 
@@ -94,32 +102,112 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
     return residues
 
 
+def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
+    # TODO: Finish docs
+    """
+    Fetch desired structure metadata using RCSB GraphQL API.
+
+    :param ids: IDs of structures
+    """
+
+    query = """
+    query getMetadata($ids: [String!]!) {
+        entries(entry_ids: $ids) {
+            rcsb_id
+            struct {
+                title
+            }
+            struct_keywords {
+                pdbx_keywords
+            }
+        }
+    }
+    """
+    variables = {"ids": ids}
+    response = requests.post(
+        GRAPHQL_ENDPOINT,
+        headers={"Content-Type": "application/json"},
+        json={"query": query, "variables": variables}
+    )
+
+    if response.status_code != 200:
+        raise Exception(f"GraphQL query failed with status {response.status_code}")
+
+    data = response.json()
+    entries = data.get("data", {}).get("entries", [])
+    computed_models = {}
+    for entry in entries:
+        rcsd_id = entry.get("rcsb_id", "UNKNOWN_ID")
+        title = entry.get("struct", {}).get("title", "N/A")
+        keywords_data = entry.get("struct_keywords")
+
+        if keywords_data and isinstance(keywords_data, dict):
+            keywords = keywords_data.get("pdbx_keywords", "No keywords")
+        else:
+            keywords = "No keywords"
+
+        computed_models[rcsd_id] = (title, keywords)
+
+    return computed_models
+
+
 def run_query(path_to_file: Path, residues: List[StructureMotifResidue]) -> None:
     # TODO: Add docs
-    q1 = AttributeQuery(attribute="rcsb_comp_model_provenance.source_db", operator="exact_match",value="AlphaFoldDB", service="text", negation=False)
-    q2 = StructMotifQuery(structure_search_type="file_upload", file_path=str(path_to_file), file_extension="pdb", residue_ids=residues, rmsd_cutoff=3, atom_pairing_scheme="ALL")
+    q1 = AttributeQuery(
+        attribute="rcsb_comp_model_provenance.source_db",
+        operator="exact_match",
+        value="AlphaFoldDB",
+        service="text",
+        negation=False
+    )
+
+    q2 = StructMotifQuery(
+        structure_search_type="file_upload",
+        file_path=str(path_to_file),
+        file_extension="pdb",
+        residue_ids=residues,
+        rmsd_cutoff=3,
+        atom_pairing_scheme="ALL"
+    )
 
     query = q1 & q2
 
-    output = list(query(return_type="assembly", return_content_type=["computational", "experimental"]))# NOTE: Returns different scores of structures when "experimental" is and is not there
+    output: List[str] = list(query(results_verbosity="compact", return_type="assembly", return_content_type=["computational", "experimental"]))# NOTE: Returns different scores of structures when "experimental" is and is not there
+    # print(output)
 
-    #TODO: how to handle multiple surroundings, each a file
-    with open(config.structure_motif_search_dir / "search_result.json", "w", encoding="utf8") as f:
-        json.dump(output, f, indent=4)
+    ids = [modify_id(id) for id in output]
+    structures = fetch_metadata(ids)
+
+    print(json.dumps(structures, indent=4))
+
+
+    # FIXME:
+    # search_results[path_to_file.stem] = output
+    # with open(config.structure_motif_search_dir / "search_result.json", "w", encoding="utf8") as f:
+    #     json.dump(output, f, indent=4)
 
 
 def structure_motif_search(config: Config) -> None:
+    # FIXME: make runable
     logger.info("Structure motif search not automated yet")
     input_folder = config.structure_motif_search_dir / "input_representatives"
     input_folder.mkdir(exist_ok=True, parents=True)
 
 
     # Files to test
-    # path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
+    path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
+    # min_residues = 10
 
+    # FIXME: where does one get them
     # extract_representatives(args.sugar, args.align_method, args.number, min_residues, args.method, config, input_folder)
-    # struc_name = get_struc_name(path_to_file)
-    # run_query(path_to_file, define_residues(path_to_file, struc_name))
+    struc_name = get_struc_name(path_to_file)
+    run_query(path_to_file, define_residues(path_to_file, struc_name))
+
+
+
+    # FIXME: 
+    # with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
+    #     json.dump(search_results, f, indent=4)
 
 
 if __name__ == "__main__":
