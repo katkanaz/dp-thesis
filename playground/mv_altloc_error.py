@@ -343,8 +343,105 @@ def create_separate_mmcifs() -> None:
     print(f"Number of files with just one altloc kind: {one_altloc_kind}")
     
 
+import gemmi
+from pathlib import Path
+
+def write_structure(input_structure: Path, output_path: Path) -> None:
+    structure = gemmi.read_structure(str(input_structure))
+    structure.setup_entities()
+
+    to_remove = []
+    
+    for model_idx, model in enumerate(structure):
+        for chain_idx, chain in enumerate(model):
+            for residue_idx, residue in enumerate(chain):
+                # simplified example of removing residues/atoms
+                # in my code I filter by altloc value on the level of atoms
+                if residue.name == "GLC":
+                    to_remove.append([model_idx,chain_idx,residue_idx])
+
+    for rm in reversed(to_remove):
+        del structure[rm[0]][rm[1]][rm[2]]
+
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+
+    structure.make_mmcif_document(gemmi.MmcifOutputGroups(True, chem_comp=False, entity=False)).write_file(str(output_path), options)
+
+
+# NOTE: Works best so far
+def write_doc(input_structure: Path, output_path: Path) -> None:
+    structure = gemmi.read_structure(str(input_structure))
+    structure.setup_entities()
+
+    to_remove = []
+
+    for model_idx, model in enumerate(structure):
+        for chain_idx, chain in enumerate(model):
+            for residue_idx, residue in enumerate(chain):
+                # simplified example of removing residues/atoms
+                # in my code I filter by altloc value on the level of atoms
+                if residue.name == "GLC":
+                    to_remove.append([model_idx,chain_idx,residue_idx])
+
+    for rm in reversed(to_remove):
+        del structure[rm[0]][rm[1]][rm[2]]
+
+
+    groups = gemmi.MmcifOutputGroups(True, chem_comp=False, entity=False, auth_all=True)
+    groups.atoms = True
+
+    doc = gemmi.cif.read(str(input_structure))
+
+    # block = doc.find_block(structure.info["_entry.id"])
+    block = doc.sole_block()
+    structure.update_mmcif_block(block, groups)
+
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+
+    doc.write_file(str(output_path), options)
+
+
+def read_write_doc(input_path: Path, output_path: Path) -> None:
+    doc = gemmi.cif.read_file(str(input_path))
+
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+
+    doc.write_file(str(output_path), options)
+
+
+def del_atloc_from_doc(input_file: Path, output_file: Path) -> None:
+    doc = gemmi.cif.read_file(str(input_file))
+    block = doc.sole_block()
+    atom_site = block.find_loop("_atom_site")
+    print(atom_site)
+
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+
+    doc.write_file(str(output_file), options)
+
+
 if __name__ == "__main__":
     gemmi_test(Path("/home/kaci/dp/debug/mv_altlocs/2y9g.cif"))
     # test(Path("/home/kaci/dp/debug/mv_altlocs/2y9g.cif"))
     # create_separate_mmcifs()
     
+    # write_structure(Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g.cif"),
+    #                 Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g_struc_1.cif"))
+    write_doc(Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g.cif"),
+              Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g_doc_2.cif"))
+    # read_write_doc(Path("/home/kaci/dp/debug/mv_altlocs/read_write_test/2y9g.cif"),
+    #                 Path("/home/kaci/dp/debug/mv_altlocs/read_write_test/2y9g_just_write_1.cif"))
+    # del_atloc_from_doc(Path("/home/kaci/dp/debug/mv_altlocs/del_altloc_from_doc/2y9g.cif"),
+    #                 Path("/home/kaci/dp/debug/mv_altlocs/del_altloc_from_doc/2y9g_test_2.cif"))
