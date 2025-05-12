@@ -135,13 +135,13 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
                 filename2 = Path(structure2).stem
 
                 try:
-                    id1, _, res1, num1, chain1 = filename1.split("_")
+                    id1, _, _, res1, num1, chain1 = filename1.split("_")
                 except ValueError:
-                    id1, _, res1, num1, chain1, _ = filename1.split("_")
+                    id1, _, _, res1, num1, chain1, _ = filename1.split("_")
                 try:
-                    id2, _, res2, num2, chain2 = filename2.split("_")
+                    id2, _, _, res2, num2, chain2 = filename2.split("_")
                 except ValueError:
-                    id2, _, res2, num2, chain2, _ = filename2.split("_")
+                    id2, _, _, res2, num2, chain2, _ = filename2.split("_")
                 # Some structures have chains named eg. AaA but when loaded to PyMol
                 # the the chain is reffered to just as A.
                 if len(chain1) > 1:
