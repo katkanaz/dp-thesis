@@ -12,9 +12,13 @@ from pathlib import Path
 from typing import List, Dict, Set, Tuple
 from shutil import copy2
 
+import logging
 from logger import logger, setup_logger
 from configuration import Config
 
+
+# FIXME: delete
+# NEW_PATH = "/home/kaci/dp/data/july_2024/"
 
 class AltlocCase(Enum):
     SINGLE_RES = 1
@@ -66,7 +70,7 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
             if res_tuple in new_values:
                 new_values.remove(res_tuple)
             else:
-                logger.warning(f"res_str {res_tuple} not in new_values")
+                logger.warning(f"res_str {res_tuple} not in new_values") # FIXME:
         elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
             for atom_idx in reversed(residue["atom_altloc_del"]):
                 del structure[model_idx][chain_idx][residue_idx][atom_idx]
@@ -83,19 +87,31 @@ def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: 
     :param input_file: Path to the original file
     :param conformation_type: Type of conformation A or B
     """
-    #FIXME: Options don't work for atom and hetatm lines
+
+    groups = gemmi.MmcifOutputGroups(True, chem_comp=False, entity=False, auth_all=True)
+    groups.atoms = True
+
+    doc = gemmi.cif.read(str(input_file))
+
+    block = doc.sole_block()
+    structure.update_mmcif_block(block, groups)
+
     options = gemmi.cif.WriteOptions()
     options.misuse_hash = True
     options.align_pairs = 48
     options.align_loops = 20
 
+    # new_path = Path("/home/kaci/dp/debug/mv_altlocs/final_test/sep_altlocs_july/") / f"{conformation_type}_{input_file.name}" # FIXME: Delete
     new_path = config.modified_mmcif_files_dir / f"{conformation_type}_{input_file.name}"
-    structure.make_mmcif_document().write_file(str(new_path), options)
+    # structure.make_mmcif_document().write_file(str(new_path), options)
+    doc.write_file(str(new_path), options)
 
 
 # TODO: Add docs
 def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, List[Dict]], config: Config) -> Tuple[AltlocKind, Dict[str, List[Dict]]]:
     logger.debug(f"Processing {input_file.name}")
+    with open(config.run_data_dir / "sugar_names.json") as f:
+    # with open("/home/kaci/dp/scripts/alternative_conformations/" + "sugar_names.json") as f: #FIXME: Delete
         sugar_names = set(json.load(f)) # Set for optimalization
 
     global files_support_altloc
@@ -103,6 +119,7 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
     global files_single_conform_only
 
     structure_a = gemmi.read_structure(str(input_file))
+    structure_a.setup_entities()
 
     # Lists of alternative conformations
     altloc_a: List[Dict] = []
@@ -117,6 +134,7 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
                     atom_altloc_a = []
                     atom_altloc_b = []
 
+                    # TODO: decide if keep
                     # NOTE: Can one be sure, one atom won't have a altloc missing
                     # if residue[0].altloc == "\0":
                     #     continue
@@ -181,6 +199,7 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
     if altloc_b:
         # File with only B conformers
         structure_b = gemmi.read_structure(str(input_file))
+        structure_b.setup_entities()
         new_values = delete_alternative_conformations(structure_b, altloc_b, altloc_a, ligand_values)
         new_dict[f"B_{old_key}"] = new_values
         save_files(structure_b, input_file, "B", config)
@@ -188,22 +207,24 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
     return AltlocKind.NORMAL_ALTLOC if not single_altloc_kind else AltlocKind.SINGLE_KIND_ALTLOC, new_dict     
 
 
-# TODO: Change to main
 def create_separate_mmcifs(config: Config) -> None:
     config.modified_mmcif_files_dir.mkdir(exist_ok=True, parents=True)
 
     with open(config.categorization_dir / "ligands.json", "r") as f:
+    # with open("/home/kaci/dp/results/ligand_sort/july_2024/" + "categorization/ligands.json", "r") as f: # FIXME: Delete
         ligands: Dict[str, List[Dict]] = json.load(f)
 
     unsupported_altloc = 0
     supported_altloc = 0
     one_altloc_kind = 0
 
-    for file in sorted(config.mmcif_files_dir.glob("*.cif")):
     ids = [id.lower() for id in ligands.keys()]
     modified_ligands: Dict[str, List[Dict]] = {}
+    for file in sorted(config.mmcif_files_dir.glob("*.cif")):
+    # for file in sorted(Path(NEW_PATH + "mmcif_files").glob("*.cif")): # FIXME: Delete
         if file.stem in ids:
             try:
+                # NOTE: Might need deepcopy, value is object reference
                 altloc_kind, new_ligands = separate_alternative_conformations(file, (file.stem.upper(), ligands[file.stem.upper()]), config)
                 modified_ligands.update(new_ligands)
                 if altloc_kind == AltlocKind.NO_ALTLOC:
@@ -218,8 +239,8 @@ def create_separate_mmcifs(config: Config) -> None:
                 unsupported_altloc += 1
                 logger.error(f"Exception caught: {e}")
 
-    # with open(config.categorization_dir / "modified_ligands.json", "w", encoding="utf8") as f:
-    with open("/home/kaci/dp/tmp/alter_conform/test_modifiend_ligands.json", "w", encoding="utf8") as f:
+    with open(config.categorization_dir / "modified_ligands.json", "w", encoding="utf8") as f:
+    # with open("/home/kaci/dp/debug/mv_altlocs/final_test/test_modifiend_ligands.json", "w", encoding="utf8") as f: # FIXME: Delete
         json.dump(modified_ligands, f, indent=4)
 
     logger.info(f"Number of files with supported altlocs: {supported_altloc}")
