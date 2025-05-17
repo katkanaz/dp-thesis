@@ -52,7 +52,7 @@ def download_mv(config: Config) -> None:
     logger.info("Downloading MotiveValidator")
 
     response = requests.get("https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadService")
-    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f: #FIXME: Keep version number
+    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f: # FIXME: Keep version number
         f.write(response.content)
 
     with ZipFile(config.user_cfg.mv_dir / "MotiveValidator.zip", "r") as zip_ref:
@@ -118,7 +118,7 @@ def get_rmsd_and_merge(config: Config) -> None:
                     continue
                 writer.writerow(row)
 
-    rscc = pd.read_csv(config.validation_dir / "all_rscc_and_resolution.csv")
+    rscc = pd.read_csv(config.validation_dir / "all_rscc_and_resolution.csv") # FIXME: will it have different pdb ids????
     rmsd = pd.read_csv(config.validation_dir / "all_rmsd.csv")
 
     merged = rscc.merge(rmsd, on=["pdb", "name", "num", "chain"])

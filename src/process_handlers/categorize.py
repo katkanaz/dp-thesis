@@ -178,6 +178,7 @@ def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[
         [
             "auth_comp_id_1",
             "auth_asym_id_2",
+
             "auth_comp_id_2",
             "auth_seq_id_2",
         ]
@@ -264,7 +265,7 @@ def categorize(config: Config) -> None:
             pdb_sugars_in_wrong_category.add(block.name)
             continue
 
-        all_residues[block.name] = current_all_residues
+        all_residues[block.name] = current_all_residues # FIXME: Reword variables
 
 
         # Remove glycosylations and close contacts from mono and oligosaccharides.
@@ -278,8 +279,9 @@ def categorize(config: Config) -> None:
 
         # TODO: Extract to function
         # Store residues from the current structure to the appropirate groups
+        # FIXME: Make block.name lower
         if current_ligands:
-            ligands[block.name] = current_ligands
+            ligands[block.name] = current_ligands # FIXME: Reword variables
         if current_glycosylated:
             glycosylated[block.name] = current_glycosylated
         if current_close_contacts:
@@ -302,7 +304,7 @@ def categorize(config: Config) -> None:
             pdb_lig_glyc_close.append(block.name)
 
     # Save everything
-    save_category(ligands, "ligands", config)
+    save_category(ligands, "ligands", config) # FIXME: Make into object as well
     save_category(glycosylated, "glycosylated", config)
     save_category(close_contacts, "close_contacts", config)
     save_category(all_residues, "all_residues", config)
@@ -344,7 +346,7 @@ def categorize(config: Config) -> None:
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json", None, False)
+    config = Config.load("config.json", None, True)
 
     setup_logger(config.log_path)
 
