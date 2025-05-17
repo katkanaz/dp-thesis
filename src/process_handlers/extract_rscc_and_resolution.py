@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup, NavigableString
 from logger import logger, setup_logger
 
 from configuration import Config
+from utils.hide_altloc import find_residue_any_altloc, remove_altloc_from_id
 
 
 def extract_rscc_and_resolution(config: Config) -> None:
@@ -29,8 +30,8 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
     with open(config.categorization_dir / "all_residues.json", "r", encoding="utf8") as f:
         all_residues = json.load(f)
-    with open(config.categorization_dir / "ligands.json", "r", encoding="utf8") as f:
-        ligands = json.load(f)
+    with open(config.categorization_dir / "modified_ligands.json", "r", encoding="utf8") as f:
+        modified_ligands = json.load(f)
     with open(config.categorization_dir / "glycosylated.json", "r", encoding="utf8") as f:
         glycosylated = json.load(f)
     with open(config.categorization_dir / "close_contacts.json", "r", encoding="utf8") as f:
@@ -43,6 +44,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
         no_residue_info = set()
         no_rscc = set()
 
+        modified_ids_no_altloc = [remove_altloc_from_id(pdb_id) for pdb_id in modified_ligands]
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
         for structure, residues in all_residues.items():
             file = f"{structure.lower()}.xml"
@@ -70,13 +72,19 @@ def extract_rscc_and_resolution(config: Config) -> None:
                     continue
 
                 res_type = None
-                if structure in ligands and residue in ligands[structure]:
+                # print(structure)
+                # print(modified_ids_no_altloc)
+                if structure in modified_ids_no_altloc and find_residue_any_altloc(modified_ligands, structure, residue):
                         res_type = "ligand"
                 if structure in glycosylated and residue in glycosylated[structure]:
                         res_type = "glycosylated"
                 if structure in close_contacts and residue in close_contacts[structure]:
                         res_type = "close"
-                assert res_type is not None, "Residue should be one of the following type: ligand, glycosylated, close contact" 
+                # assert res_type is not None, "Residue should be one of the following type: ligand, glycosylated, close contact" 
+
+                # Structure can have unsupported altloc, therefore is not in any category
+                if res_type is None:
+                    continue # FIXME: Refactor with this issue
                 row = [str(structure), str(resolution), str(residue["name"]), residue["num"], residue["chain"], str(rscc), res_type]
                 all_rscc.writerow(row)
 

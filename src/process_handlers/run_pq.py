@@ -137,6 +137,7 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
                     #return
                     more_than_one_pattern.append(query_name)
                     continue
+                # FIXME: check if correct
                 for file in results_path.iterdir():
                     Path(file).rename(results_path / f"{query_name}.pdb")  # Rename the pattern so it is distinguishable
                 src = results_path / f"{query_name}.pdb"
@@ -153,7 +154,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     (config.pq_run_dir / "results").mkdir(exist_ok=True, parents=True)
 
 
-    with open(config.categorization_dir / "filtered_ligands.json", "r") as f:
+    with open(config.categorization_dir / "filtered_modified_ligands.json", "r") as f:
         ligands: dict = json.load(f)
 
     target_dir = config.raw_binding_sites_dir
@@ -161,55 +162,68 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
 
     logger.info("Creating PatternQuerry configs")
 
+
     for structure, residues in ligands.items():
-        structure = structure.lower()
+        prefix, pdb_id = structure.split("_", 1)
+        structure = f"{prefix}_{pdb_id.lower()}" # FIXME: Why does it need to be all caps in the first place?
         query_names = create_pq_config(config, structure, residues, sugar)
         if not query_names:
             continue
-        # Copy current structure to ./structures dir which is used as source by PQ.
-        src = config.modified_mmcif_files_dir / f"{structure}.cif"
-        dst = config.pq_run_dir / "structures" / f"{structure}.cif"
-        shutil.copyfile(src, dst)
-
-        # TODO: Extract to function
-
-        # Run PQ
-        cmd = [f"{'mono ' if is_unix is True else ''}"
-               f"{config.user_cfg.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
-               f"{config.pq_run_dir}/results "
-               f"{config.pq_run_dir}/pq_config.json"]
+        for file in sorted(config.modified_mmcif_files_dir.glob("*.cif")):
+            # Copy current structure to ./structures dir which is used as source by PQ.
+            if structure in file.name:
 
 
-        with Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, text=True) as pq_proc:
-            assert pq_proc.stdout is not None, "stdout is set to PIPE in Popen" 
-            for line in pq_proc.stdout:
-                logger.info(f"STDOUT: {line.strip()}")
-            assert pq_proc.stderr is not None, "stderr is set to PIPE in Popen" 
-            for line in pq_proc.stderr:
-                logger.error(f"STDERR: {line.strip()}")
+                src = file
+                dst = config.pq_run_dir / "structures" / file.name
+                shutil.copyfile(src, dst)
 
-        if pq_proc.returncode != 0:
-            logger.error(f"PQ process exited with code {pq_proc.returncode}")
-        else:
-            logger.info("PQ process completed successfully")
 
-        #TODO: Does this delete the results?, make that optional
-        zip_result_folder = config.pq_run_dir / "results" / "result/result.zip"
-        if not zip_result_folder.exists():
-            result_folder_not_created.append(structure)
-            # Delete the current structure from ./structures directory and continue to the next structure
-            Path(config.pq_run_dir / "structures" / f"{structure}.cif").unlink()
-            continue
+                # TODO: Extract to function
+                # Run PQ
+                cmd = [f"{'mono ' if is_unix is True else ''}"
+                       f"{config.user_cfg.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
+                       f"{config.pq_run_dir}/results "
+                       f"{config.pq_run_dir}/pq_config.json"]
 
-        extract_results(target_dir, zip_result_folder, query_names)
 
-        # Delete the result folder and also the current structure from ./structures so the new one can be copied there
-        (config.pq_run_dir / "structures" / f"{structure}.cif").unlink()
-        shutil.rmtree(config.pq_run_dir / "results" / "result")
+                with Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, text=True) as pq_proc:
+                    assert pq_proc.stdout is not None, "stdout is set to PIPE in Popen" 
+                    for line in pq_proc.stdout:
+                        logger.info(f"STDOUT: {line.strip()}")
+                    assert pq_proc.stderr is not None, "stderr is set to PIPE in Popen" 
+                    for line in pq_proc.stderr:
+                        logger.error(f"STDERR: {line.strip()}")
 
-    logger.error(f"More patterns for one id found: {more_than_one_pattern}")
-    logger.error(f"PQ could not find these patterns: {pq_couldnt_find_pattern}")
-    logger.error(f"Result folder not created: {result_folder_not_created}")
+                if pq_proc.returncode != 0:
+                    logger.error(f"PQ process exited with code {pq_proc.returncode}")
+                else:
+                    logger.info("PQ process completed successfully")
+
+                # TODO: Does this delete the results?, make that optional
+                zip_result_folder = config.pq_run_dir / "results" / "result/result.zip"
+                if not zip_result_folder.exists():
+                    result_folder_not_created.append(structure)
+                    # Delete the current structure from ./structures directory and continue to the next structure
+                    Path(config.pq_run_dir / "structures" / file.name).unlink()
+                    continue
+
+                extract_results(target_dir, zip_result_folder, query_names)
+
+                # Delete the result folder and also the current structure from ./structures so the new one can be copied there
+                (config.pq_run_dir / "structures" / f"{structure}.cif").unlink()
+                shutil.rmtree(config.pq_run_dir / "results" / "result")
+
+
+    # TODO: Extract to helper function
+    if more_than_one_pattern:
+        logger.error(f"More patterns for one id found: {more_than_one_pattern}")
+    
+    if pq_couldnt_find_pattern:
+        logger.error(f"PQ could not find these patterns: {pq_couldnt_find_pattern}")
+
+    if result_folder_not_created:
+        logger.error(f"Result folder not created: {result_folder_not_created}")
 
 
 if __name__ == "__main__":

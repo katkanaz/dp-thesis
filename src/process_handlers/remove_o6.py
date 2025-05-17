@@ -12,6 +12,7 @@ import json
 from logger import setup_logger
 
 from configuration import Config
+from utils.hide_altloc import get_possible_altloc_file_names
 
 
 def get_pdb_ids_with_rscc(config: Config) -> None:
@@ -40,19 +41,25 @@ def remove_o6(config: Config) -> None:
     with open(config.validation_dir / "pdbs_with_rscc_and_resolution.json", "r", encoding="utf8") as f:
         pdb_ids_of_interest = json.load(f)
     for pdb in pdb_ids_of_interest:
-        with (config.modified_mmcif_files_dir / f"{pdb.lower()}.cif").open() as f:
-            file = f.readlines()
-        with (config.no_o6_mmcif_dir / f"{pdb.lower()}.cif").open("w") as f:
-            for line in file:
-                if (line.startswith("HETATM") and
-                    ("MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line) and
-                    "O6" in line):
-                    continue
-                f.write(line)
+        for file_name in get_possible_altloc_file_names(pdb.lower()):
+            try:
+                with (config.modified_mmcif_files_dir / f"{file_name}.cif").open() as f:
+                    file = f.readlines()
+                with (config.no_o6_mmcif_dir / f"{file_name}.cif").open("w") as f:
+                    for line in file:
+                        if (line.startswith("HETATM") and
+                            ("MAN" in line or "NAG" in line or "GAL" in line or "GLC" in line or "BGC" in line) and
+                            "O6" in line):
+                            continue
+                        f.write(line)
+                if file_name.startswith("0_"):
+                    break
+            except:
+                pass
+
 
 
 def get_ids_and_remove_o6(config: Config) -> None:
-    return #FIXME: iterate folder in remove_o6
     # Tmp # FIXME:
     (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
 
