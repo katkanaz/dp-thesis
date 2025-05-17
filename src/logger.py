@@ -1,4 +1,5 @@
 import logging
+from tqdm import tqdm
 from pathlib import Path
 
 
@@ -9,18 +10,29 @@ class CrashHandler(logging.Handler):
         raise RuntimeError(self.format(record))
 
 
+class TqdmLoggingHandler(logging.Handler):
+    def __init__(self, level=logging.NOTSET):
+        super().__init__(level)
+
+    def emit(self, record):
+        try:
+            message = self.format(record)
+            tqdm.write(message)
+            self.flush()
+        except Exception:
+            self.handleError(record)
+
+
 logger = logging.getLogger("logger")
 logger.addHandler(CrashHandler())
 
 
 def setup_logger(log_file: Path, log_level=logging.INFO):
-    # TODO: Add docs
     """
     Configure the global logger.
 
-    :param log_file:
-    :param log_level:
-    :param log_format:
+    :param log_file: Path to log file
+    :param log_level: Logging level; default logging.INFO
     """
 
     logger.handlers.clear()
@@ -34,7 +46,7 @@ def setup_logger(log_file: Path, log_level=logging.INFO):
     file_handler.setLevel(log_level)
     file_handler.setFormatter(formatter)
 
-    console_handler = logging.StreamHandler()
+    console_handler = TqdmLoggingHandler()
     console_handler.setLevel(log_level)
     console_handler.setFormatter(formatter)
 
