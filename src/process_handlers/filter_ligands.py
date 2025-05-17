@@ -1,6 +1,6 @@
 """
 Script Name: filter_ligands.py
-Description: Filter ligands.json based on given criteria of quality.
+Description: Filter modified_ligands.json based on given criteria of quality.
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
@@ -14,6 +14,7 @@ from logger import logger, setup_logger
 from typing import Dict
 
 from configuration import Config
+from utils.hide_altloc import remove_altloc_from_id
 
 
 #TODO: Add docs
@@ -34,51 +35,56 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     :param config: Config object
     """
 
-    with open(config.categorization_dir / "ligands.json", "r", encoding="utf8") as f:
-        ligands = json.load(f)
+    with open(config.categorization_dir / "modified_ligands.json", "r", encoding="utf8") as f:
+        modified_ligands = json.load(f)
 
-    logger.info(f"Number of structures before filtering: {len(ligands.keys())}")
-    logger.info(f"Number of residues before filtering: {count_num_residues(ligands)}")
+    # FIXME: These numbers can be missleading since the structures with alternative conformations are now split into two
+    logger.info(f"Number of structures before filtering: {len(modified_ligands.keys())}")
+    logger.info(f"Number of residues before filtering: {count_num_residues(modified_ligands)}")
 
     # Save the pdb id of structures with good resolution, because not all structures have resolution
     # Available and we want to continue just with those with resolution
     good_structures = set()
-    with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
-        rscc_rmsd = DictReader(f)
-        for row in rscc_rmsd:
-            if float(row["resolution"]) <= max_resolution and row["type"] == "ligand":
-                good_structures.add(row["pdb"])
-
-    # Delete those structures which are not in good_structures
-    delete_strucutres = [pdb for pdb in ligands.keys() if pdb not in good_structures]
-    for key in delete_strucutres: 
-        del ligands[key]
-
     # Get individual resiudes which have bad rscc or rmsd
     delete_residues = defaultdict(list)
     with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
         rscc_rmsd = DictReader(f)
         for row in rscc_rmsd:
+            if float(row["resolution"]) <= max_resolution and row["type"] == "ligand":
+                good_structures.add(row["pdb"])
             if row["type"] == "ligand" and (float(row["rmsd"]) > max_rmsd or float(row["rscc"]) < min_rscc):
                 delete_residues[row["pdb"]].append({"name": row["name"], "num" : row["num"], "chain": row["chain"]}) 
 
+    # Delete those structures which are not in good_structures
+    delete_structures = set([pdb for pdb in modified_ligands.keys() if remove_altloc_from_id(pdb) not in good_structures])
+    for key in delete_structures:
+        del modified_ligands[key]
+
+    # Get individual resiudes which have bad rscc or rmsd
+    # delete_residues = defaultdict(list)
+    # with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f: # FIXME: Delete this after testing
+        # rscc_rmsd = DictReader(f)
+        # for row in rscc_rmsd:
+        #     if row["type"] == "ligand" and (float(row["rmsd"]) > max_rmsd or float(row["rscc"]) < min_rscc):
+        #         delete_residues[row["pdb"]].append({"name": row["name"], "num" : row["num"], "chain": row["chain"]}) 
+
     # Save structures from which all residues were deleted
     delete_empty_structures = set()
-    for pdb, residues in ligands.items():
-        if pdb in delete_residues:
-            for residue in delete_residues[pdb]:
+    for pdb, residues in modified_ligands.items():# FIXME: Is it necessary to iterate over the same dict twice?
+        if remove_altloc_from_id(pdb) in delete_residues:
+            for residue in delete_residues[remove_altloc_from_id(pdb)]:
                 residues.remove(residue)
             if len(residues) == 0:
                 delete_empty_structures.add(pdb)
 
     for key in delete_empty_structures:
-        del ligands[key]
+        del modified_ligands[key]
 
-    logger.info(f"Number of structures after filtering: {len(ligands.keys())}")
-    logger.info(f"Number of residues after filtering: {count_num_residues(ligands)}")
+    logger.info(f"Number of structures after filtering: {len(modified_ligands.keys())}")
+    logger.info(f"Number of residues after filtering: {count_num_residues(modified_ligands)}")
 
-    with open(config.categorization_dir / "filtered_ligands.json", "w", encoding="utf8") as f:
-        json.dump(ligands, f, indent=4)
+    with open(config.categorization_dir / "filtered_modified_ligands.json", "w", encoding="utf8") as f:
+        json.dump(modified_ligands, f, indent=4)
 
 
 if __name__ == "__main__":
