@@ -20,10 +20,10 @@ from logger import logger, setup_logger
 
 from configuration import Config
 
-from pymol import cmd
+from pymol import cmd, sys
 
 
-def select_sugar(filename: str) -> str:
+def select_sugar(filename: str) -> Tuple[str, str]:
     try:
         _, _, res, num, chain = filename.split("_")
     except ValueError:
@@ -33,16 +33,17 @@ def select_sugar(filename: str) -> str:
         chain = chain[0]
 
     sugar = f"/{filename}//{chain}/{res}`{num}"
-    cmd.select("sugar", sugar)
+    selection_name = "sugar"
+    cmd.select(selection_name, sugar)
 
-    return sugar
+    return sugar, selection_name
 
 
 def get_sugar_ring_center(sugar: str) -> List[float]:
     return cmd.centerofmass(sugar)
 
 
-def measure_distances(residues: List[Tuple[str, str]], sugar_center) -> List[Tuple[Tuple[str, str], float]]:
+def measure_distances(residues: List[Tuple[str, str]], sugar_center, filename) -> List[Tuple[Tuple[str, str], float]]:
     distances: List[Tuple[Tuple[str, str], float]] = []
 
     cmd.pseudoatom(object="tmp", pos=sugar_center)
@@ -51,13 +52,20 @@ def measure_distances(residues: List[Tuple[str, str]], sugar_center) -> List[Tup
         min_distance = math.inf
         
         for atom in atoms:
-            distance = cmd.get_distance(f"resi {resi} and index {atom.index}", "tmp") # In Angstroms [Å]
+            # distance = cmd.get_distance(f"resi {resi} and index {atom.index}", "tmp") # In Angstroms [Å] # FIXME: DEL LATER
+
+            # distance = cmd.get_distance(f"chain {atom.chain} and resi {atom.resi} and resn {atom.resn} and name {atom.name}", "tmp") # In Angstroms [Å]
+
+            # NOTE: filename is the name of the object
+            distance = cmd.get_distance(f"{filename} and index {atom.index}", "tmp") # In Angstroms [Å]
             if distance < min_distance:
                 min_distance = distance
 
         distances.append(((resn, resi), min_distance))
 
-    print(distances)
+    logger.debug(distances)
+
+    cmd.delete("tmp")
     return distances
 
 
@@ -90,6 +98,11 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     filtered_binding_sites = config.filtered_binding_sites_dir
     filtered_binding_sites.mkdir(exist_ok=True, parents=True)
 
+    # FIXME: DEL
+    # raw_binding_sites = Path("/home/kaci/dp/tmp/pymol_dist_test/raw_bs/")
+    # filtered_binding_sites = Path("/home/kaci/dp/tmp/pymol_dist_test/filtered_bs/")
+
+
     less_than_min_aa = []
     more_than_max_aa = []
 
@@ -97,11 +110,13 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     structures_keys = {} # To map index with structure
     for path_to_file in raw_binding_sites.iterdir():
         filename = Path(path_to_file).stem
+        logger.debug(f"Begin to process {filename}")
         cmd.delete("all")
         cmd.load(path_to_file)
         count = cmd.count_atoms("n. CA and polymer")
         if count < min_residues:
             less_than_min_aa.append(filename)
+            logger.debug(f"{filename} less than 5 residues!")
             continue
 
 
@@ -118,22 +133,21 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         # current_sugar = f"/{filename}//{chain}/{res}`{num}"
 
 
-        current_sugar = select_sugar(filename)
+        sugar_path, sugar_selection_name = select_sugar(filename)
 
-        cmd.select("wanted_residues", f"{current_sugar} or polymer")
+        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
         cmd.select("junk_residues", f"not wanted_residues")
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
 
-        # TODO: double check if correct
         if count > max_residues:
             more_than_max_aa.append(filename)
-            sugar_center = get_sugar_ring_center(sugar) # TODO: can be here?
+            sugar_center = get_sugar_ring_center(sugar_selection_name)
             residues: List[Tuple[str, str]] = []
             cmd.iterate("n. CA and polymer", "residues.append((resi, resn))",
                         space=locals())
             
-            distances = measure_distances(residues, sugar_center)
+            distances = measure_distances(residues, sugar_center, filename)
 
             residues_to_remove = sort_distances(distances, max_residues)
             remove_residues(residues_to_remove)
@@ -144,9 +158,12 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         structures_keys[i] = f"{i}_{filename}.pdb"
         i += 1
         cmd.delete("all")
+        logger.debug(f"{filename} succesfully processed!")
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
+    # FIXME: DEL
+    # with open(f"/home/kaci/dp/tmp/pymol_dist_test/{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
 
     logger.info(f"Number of surroundings with less than {min_residues} AA: {len(less_than_min_aa)}")
@@ -175,6 +192,8 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
 
     super_results_path = config.clusters_dir / "super"
     super_results_path.mkdir(parents=True, exist_ok=True)
+    # FIXME: DEL
+    # super_results_path = Path("/home/kaci/dp/tmp/pymol_dist_test/super_results/")
 
     n = len(os.listdir(structures_folder))
     super_rmsd_values = np.zeros((n, n))
@@ -188,6 +207,9 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
     if perform_align:
         align_results_path = config.clusters_dir / "align"
         align_results_path.mkdir(parents=True, exist_ok=True)
+        # FIXME: DEL
+        # align_results_path = Path("/home/kaci/dp/tmp/pymol_dist_test/align_results/")
+
         align_file = open(align_results_path / f"{sugar}_all_pairs_rmsd_align.csv", "w", newline="")
         align_writer = csv.writer(align_file)
         align_writer.writerow(["structure1", "structure2", "rmsd"])
@@ -252,7 +274,6 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
                 # Save pairs with which something went wrong
                 something_wrong.append((structure1, structure2))
                 logger.error(f"Something went wrong: {e}")
-                # FIXME: fill in and crash program
 
     if align_file is not None and align_results_path is not None:
         align_file.close()
@@ -260,12 +281,11 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
 
     np.save(super_results_path / f"{sugar}_all_pairs_rmsd_super.npy", super_rmsd_values)
     with open((config.clusters_dir / "something_wrong.json"), "w") as f:
+    # with open("/home/kaci/dp/tmp/pymol_dist_test/something_wrong.json", "w") as f: # FIXME: DEL
         json.dump(something_wrong, f, indent=4)
 
-    # TODO: exception or just return?
     if something_wrong:
-        logger.error("Something went wrong not empty")
-        return
+        raise Exception("Something went wrong not empty")
 
 
 def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
@@ -275,10 +295,11 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     max_residues = 10
 
     fixed_folder = refine_binding_sites(sugar, min_residues, max_residues, config)
+    sys.stdout.flush()
 
     save_path = config.sugars_dir
     save_path.mkdir(exist_ok=True, parents=True)
-    all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config)
+    all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config) # FIXME: Does it need to take the sugar?
 
 
 if __name__ == "__main__":
@@ -293,4 +314,9 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    perform_alignment(args.sugar, args.perform_align, config)
+    try:
+        perform_alignment(args.sugar, args.perform_align, config)
+    except Exception as e:
+        logger.error(f"Exception caught: {e}")
+        raise e
+
