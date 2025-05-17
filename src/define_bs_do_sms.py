@@ -9,7 +9,10 @@ Author: Kateřina Nazarčuková
 from argparse import ArgumentParser
 from platform import system
 from typing import Union
-from logger import setup_logger
+
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -23,12 +26,34 @@ from process_handlers.structure_motif_search import structure_motif_search
 
 def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
          color_threshold: Union[float, None] = None) -> None:
-    run_pq(sugar, config, is_unix)
-    perform_alignment(sugar, perform_align, config)
-    cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, perform_align, color_threshold)
-    compare_clusters(config, perform_align)
-    create_tanglegram(sugar, n_clusters, cluster_method, config, perform_align)
-    structure_motif_search(config)
+    with tqdm(total=5) as pbar: 
+        pbar.set_description("Running PatternQuery")
+        run_pq(sugar, config, is_unix)
+        pbar.update(1)
+
+        try:
+            pbar.set_description("Performing alignment")
+            perform_alignment(sugar, perform_align, config)
+            pbar.update(1)
+        except Exception as e:
+            logger.error(f"Exception caught: {e}")
+            raise e
+
+        pbar.set_description("Clustering data")
+        cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, perform_align, color_threshold)
+        pbar.update(1)
+
+        pbar.set_description("Comparing clusters")
+        compare_clusters(config, perform_align)
+        pbar.update(1)
+
+        pbar.set_description("Creating tanglegram")
+        create_tanglegram(sugar, n_clusters, cluster_method, config, perform_align)
+        pbar.update(1)
+
+        pbar.set_description("Performing structure motif search")
+        structure_motif_search(config)
+        pbar.update(1)
 
 
 if __name__ == "__main__":
@@ -52,6 +77,7 @@ if __name__ == "__main__":
     is_unix = system() != "Windows"
 
     #TODO: Make the number of clusters optional
-    main(args.sugar, config, is_unix, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
+    with logging_redirect_tqdm():
+        main(args.sugar, config, is_unix, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()

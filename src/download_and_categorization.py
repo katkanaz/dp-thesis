@@ -8,6 +8,9 @@ Author: Kateřina Nazarčuková
 
 from argparse import ArgumentParser
 from platform import system
+
+from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 from logger import setup_logger
 
 from configuration import Config
@@ -27,18 +30,43 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
          max_rmsd: float, res: float, rscc: float, rmsd: float, make_graphs: bool,
          test_mode: bool) -> None:
 
-    download_files(config, test_mode)
-    categorize(config)
-    create_separate_mmcifs(config)
-    extract_rscc_and_resolution(config)
-    run_mv(config, is_unix)
+    with tqdm(total=9 if make_graphs else 6) as pbar: 
+        pbar.set_description("Downloading files")
+        download_files(config, test_mode)
+        pbar.update(1)
 
-    if make_graphs:
-        plot_graphs(config)
-        graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)
-        get_ids_and_remove_o6(config)
+        pbar.set_description("Categorizing sugars")
+        categorize(config)
+        pbar.update(1)
 
-    filter_ligands(res, rscc, rmsd, config)
+        pbar.set_description("Separating alternative conformations")
+        create_separate_mmcifs(config)
+        pbar.update(1)
+
+        pbar.set_description("Extracting RSCC and resolution")
+        extract_rscc_and_resolution(config)
+        pbar.update(1)
+
+        pbar.set_description("Running MotiveValidator")
+        run_mv(config, is_unix)
+        pbar.update(1)
+
+        if make_graphs:
+            pbar.set_description("Plotting graphs")
+            plot_graphs(config)
+            pbar.update(1)
+
+            pbar.set_description("Analysing graphs")
+            graph_analysis(config, min_rscc, max_rscc, min_rmsd, max_rmsd)
+            pbar.update(1)
+
+            pbar.set_description("Removing O6 where needed")
+            get_ids_and_remove_o6(config)
+            pbar.update(1)
+
+        pbar.set_description("Filtering ligands")
+        filter_ligands(res, rscc, rmsd, config)
+        pbar.update(1)
 
 
 if __name__ == "__main__":
@@ -73,7 +101,8 @@ if __name__ == "__main__":
     is_unix = system() != "Windows"
 
     # TODO: Create object to pass arguments
-    main(config, is_unix, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd,
-         args.res, args.rscc, args.rmsd, args.make_graphs, args.test_mode)
+    with logging_redirect_tqdm():
+        main(config, is_unix, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd,
+             args.res, args.rscc, args.rmsd, args.make_graphs, args.test_mode)
 
-    Config.clear_current_run()
+        Config.clear_current_run()
