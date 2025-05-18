@@ -25,10 +25,8 @@ GRAPHQL_ENDPOINT = "https://data.rcsb.org/graphql"
 
 # NOTE: Works just by itself for now
 
-# FIXME:
-# search_results = {}
 
-def extract_representatives(sugar: str, align_method: str, num: int, min_residues: int, method: str, config: Config, input_representatives: Path) -> None:
+def extract_representatives(sugar: str, num: int, method: str, config: Config, input_representatives: Path) -> None:
     # FIXME: Rewrite the docs
     """
     Extract files for structure motif search
@@ -39,22 +37,22 @@ def extract_representatives(sugar: str, align_method: str, num: int, min_residue
     :param config: Config object
     :param input_folder: Folder to extract representatives in
     """
+    logger.info("Extracting representatives")
 
-    filtered_binding_sites: Path = config.filtered_binding_sites_dir / f"min_{min_residues}_aa"
-
-    with open(config.clusters_dir / align_method / f"{num}_{method}_cluster_representatives.json") as rep_file:
+    with open(config.clusters_dir / "super" / f"{num}_{method}_cluster_representatives.json") as rep_file:
         representatives: dict = json.load(rep_file)
     with open(config.clusters_dir / f"{sugar}_structures_keys.json") as struct_keys_file:
         structure_keys: dict = json.load(struct_keys_file)
 
     for num, file_key in representatives.items():
         binding_site_file_name = structure_keys[str(file_key)]
-        shutil.copyfile((filtered_binding_sites / binding_site_file_name), (input_representatives / binding_site_file_name))
+        shutil.copyfile((config.filtered_binding_sites_dir / binding_site_file_name), (input_representatives / binding_site_file_name))
 
 
 def load_representatives(config: Config) -> List[Path]:
     # TODO: Add docs
-    representatives = []
+
+    representatives: List[Path] = []
     for file in sorted(Path(config.structure_motif_search_dir / "input_representatives").glob("*.pdb")):
         representatives.append(file)
 
@@ -63,11 +61,13 @@ def load_representatives(config: Config) -> List[Path]:
 
 def get_struc_name(path_to_file: Path) -> str:
     # TODO: Add docs
+
     return (path_to_file.name).split("_")[1]
 
 
 def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifResidue]:
     # TODO: Add docs
+
     parser = PDBParser()
 
     structure = parser.get_structure(struc_name, path_to_file)
@@ -135,7 +135,7 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
 
     data = response.json()
     entries = data.get("data", {}).get("entries", [])
-    computed_models = {}
+    computed_models: Dict[str, Tuple[str, str]] = {} #TODO: double check type
     for entry in entries:
         rcsd_id = entry.get("rcsb_id", "UNKNOWN_ID")
         title = entry.get("struct", {}).get("title", "N/A")
@@ -151,8 +151,9 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
     return computed_models
 
 
-def run_query(path_to_file: Path, residues: List[StructureMotifResidue]) -> None:
+def run_query(path_to_file: Path, residues: List[StructureMotifResidue], search_results: Dict[str, Dict[str, Tuple[str, str]]]) -> None:
     # TODO: Add docs
+
     q1 = AttributeQuery(
         attribute="rcsb_comp_model_provenance.source_db",
         operator="exact_match",
@@ -173,50 +174,44 @@ def run_query(path_to_file: Path, residues: List[StructureMotifResidue]) -> None
     query = q1 & q2
 
     output: List[str] = list(query(results_verbosity="compact", return_type="assembly", return_content_type=["computational", "experimental"]))# NOTE: Returns different scores of structures when "experimental" is and is not there
-    # print(output)
 
     ids = [modify_id(id) for id in output]
     structures = fetch_metadata(ids)
 
-    print(json.dumps(structures, indent=4))
+    search_results[path_to_file.stem] = structures
 
 
-    # FIXME:
-    # search_results[path_to_file.stem] = output
-    # with open(config.structure_motif_search_dir / "search_result.json", "w", encoding="utf8") as f:
-    #     json.dump(output, f, indent=4)
-
-
-def structure_motif_search(config: Config) -> None:
-    # FIXME: make runable
-    logger.info("Structure motif search not automated yet")
+def structure_motif_search(sugar: str, num_clust: int, clust_method, config: Config) -> None:
     input_folder = config.structure_motif_search_dir / "input_representatives"
     input_folder.mkdir(exist_ok=True, parents=True)
 
+    search_results: Dict[str, Dict[str, Tuple[str, str]]] = {}
 
-    # Files to test
-    path_to_file = Path("../debug/sms_query_test/369_7khu_FUC_6_C.pdb")
-    # min_residues = 10
+    extract_representatives(sugar, num_clust, clust_method, config, input_folder)
+    representatives = load_representatives(config)
+    
+    for file in representatives:
+        struc_name = get_struc_name(file)
 
-    # FIXME: where does one get them
-    # extract_representatives(args.sugar, args.align_method, args.number, min_residues, args.method, config, input_folder)
-    struc_name = get_struc_name(path_to_file)
-    run_query(path_to_file, define_residues(path_to_file, struc_name))
+        try:
+            logger.info(f"Performing structure motif search for {file.stem}")
+            residues = define_residues(file, struc_name)
+            run_query(file, residues, search_results)
+        except ValueError as e:
+            logger.error(f"Exception caught: {e}")
 
 
-
-    # FIXME: 
-    # with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
-    #     json.dump(search_results, f, indent=4)
+    with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
+        json.dump(search_results, f, indent=4)
 
 
 if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
-    parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
-                        choices=["super", "align"], required=True)
-    parser.add_argument("-n", "--number", help="Number of clusters", type=str, required=True)
+    # parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
+                        # choices=["super", "align"], required=True)
+    parser.add_argument("-n", "--number", help="Number of clusters", type=int, required=True)
     parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True)
 
     args = parser.parse_args()
@@ -225,6 +220,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    structure_motif_search(config)
+    structure_motif_search(args.sugar, args.number, args.method, config)
 
     config.clear_current_run()
