@@ -71,7 +71,8 @@ class Config():
         self.run_data_dir = self.user_cfg.data_dir / data_run
 
         path_to_logfile = f"ligand_sort/{data_run}/{data_run}.log"
-        self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
+        # self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
+        self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"sugar_binding_patterns"
         self.components_dir = self.user_cfg.data_dir / f"{data_run}/components"
         self.mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/mmcif_files"
         self.modified_mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/modified_mmcif_files"
