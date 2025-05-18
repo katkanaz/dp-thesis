@@ -79,6 +79,7 @@ def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str], float]]) -> 
         cmd.remove(f"resi {resi}")
 
 
+# TODO: change binding site to surrounding?
 # TODO: Refactor function
 # FIXME: Function description
 def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
@@ -92,6 +93,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     :param config: Config object
     :return: Path to refined binding sites folder
     """
+    logger.info("Refining sugar surroundings")
 
     raw_binding_sites = config.raw_binding_sites_dir
 
