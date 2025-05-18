@@ -9,6 +9,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 from argparse import ArgumentParser
 import json
 from os import listdir
+import pandas as pd
 from pathlib import Path
 from time import sleep
 from typing import List, Set
@@ -28,11 +29,11 @@ def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:
     :param config: Config object
     """
 
-    structures = set()
-    for i in config.sugar_binding_patterns_dir.iterdir():
-        structures.add(str(i.name).split("_")[0])
+    structures = pd.read_csv(config.sugar_binding_patterns_dir / "structures.csv")
+    pdb_ids = structures.iloc[:,0].tolist()
+
     with open(result_file, "w") as f:
-        json.dump(list(structures), f, indent=4)
+        json.dump(pdb_ids, f, indent=4)
 
 
 def get_components_file(config: Config) -> None:
