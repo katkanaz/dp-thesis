@@ -26,6 +26,7 @@ from process_handlers.structure_motif_search import structure_motif_search
 
 def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
          color_threshold: Union[float, None] = None) -> None:
+    logger.info(f"Running 2nd program from {config.run_data_dir.stem} directory")
     with tqdm(total=5) as pbar: 
         pbar.set_description("Running PatternQuery")
         run_pq(sugar, config, is_unix)
