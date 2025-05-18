@@ -53,7 +53,7 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clust
         pbar.update(1)
 
         pbar.set_description("Performing structure motif search")
-        structure_motif_search(config)
+        structure_motif_search(sugar, n_clusters, cluster_method, config)
         pbar.update(1)
 
 
