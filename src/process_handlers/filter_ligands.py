@@ -73,7 +73,11 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     for pdb, residues in modified_ligands.items():# FIXME: Is it necessary to iterate over the same dict twice?
         if remove_altloc_from_id(pdb) in delete_residues:
             for residue in delete_residues[remove_altloc_from_id(pdb)]:
-                residues.remove(residue)
+                try:
+                    residues.remove(residue)
+                except ValueError as e:
+                    pass # Some residues to delete might already not be there due to altloc split
+
             if len(residues) == 0:
                 delete_empty_structures.add(pdb)
 
