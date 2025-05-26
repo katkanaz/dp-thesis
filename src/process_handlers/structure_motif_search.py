@@ -91,10 +91,10 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
         for residue in chain: # NOTE: also possible to only iterate over all residues in a model
             residue: Residue = residue
             chain: Chain = chain
-            # Excludes fucose
+            # Excludes the sugar #FIXME: Make clearer
             if residue.get_id()[0] == " ":
                 residues.append(StructureMotifResidue(struct_oper_id="1", chain_id=chain_id_map[chain.get_id()], label_seq_id=i)) # type: ignore
-                i += 1
+            i += 1
 
     if len(residues) > 10:
         raise ValueError(f"More than 10 residues in the binding site: {path_to_file.name}")
