@@ -82,6 +82,11 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
     chain_id_map = {}
     key = "A"
     for ch in sorted_chains:
+        all_res = list(ch.get_residues())
+
+        # Skip chains made up only of ligands or water
+        if all(res.get_id()[0] != " " for res in all_res):
+            continue
         chain_id_map[ch.get_id()] = key
         key = chr(ord(key) + 1)
 
