@@ -13,7 +13,7 @@ import json
 import math
 import os
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 from logger import logger, setup_logger
@@ -79,10 +79,26 @@ def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str], float]]) -> 
         cmd.remove(f"resi {resi}")
 
 
+def replace_deuterium(file_list: List[Path]) -> None:
+    for file in file_list:
+        logger.info(f"Replacing deuterium for file: {file}")
+        with open(file, "r") as f:
+            lines = f.readlines()
+        new_lines = []
+        for line in lines:
+            if line[76:78] == " D":
+                chars = list(line)
+                chars[77] = "H"
+                line = "".join(chars)
+            new_lines.append(line)
+        with open(file, "w") as f:
+            f.writelines(new_lines)
+
+
 # TODO: change binding site to surrounding?
 # TODO: Refactor function
 # FIXME: Function description
-def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config) -> Path:
+def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Path], None] = None) -> Tuple[Path, List[Path]]:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
     and give the filtered structures unique ID, which will be used as an index for creating the
@@ -108,9 +124,14 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     less_than_min_aa = []
     more_than_max_aa = []
 
+    deuterium_present = []
+
     i = 0
     structures_keys = {} # To map index with structure
-    for path_to_file in raw_binding_sites.iterdir():
+    file_source = raw_binding_sites.iterdir() if file_list is None else file_list
+    for path_to_file in file_source:
+
+
         filename = Path(path_to_file).stem
         logger.debug(f"Begin to process {filename}")
         cmd.delete("all")
@@ -144,7 +165,16 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
         if count > max_residues:
             more_than_max_aa.append(filename)
-            sugar_center = get_sugar_ring_center(sugar_selection_name)
+            try:
+                sugar_center = get_sugar_ring_center(sugar_selection_name)
+            except KeyError as e:
+                if str(e) == "'D'":
+                    deuterium_present.append(path_to_file)
+                    logger.warning(f"Found deuterium in: {path_to_file.stem}")
+                else:
+                    # logger.error("should not get here ------>>>>>>", str(e), isinstance(e, KeyError), type(e))
+                    raise e
+                continue
             residues: List[Tuple[str, str]] = []
             cmd.iterate("n. CA and polymer", "residues.append((resi, resn))",
                         space=locals())
@@ -171,7 +201,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     logger.info(f"Number of surroundings with less than {min_residues} AA: {len(less_than_min_aa)}")
     logger.info(f"Number of surroundings with more than {max_residues} AA: {len(more_than_max_aa)}")
 
-    return filtered_binding_sites
+    return filtered_binding_sites, deuterium_present
 
 
     # Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
@@ -296,7 +326,11 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     min_residues = 5
     max_residues = 10
 
-    fixed_folder = refine_binding_sites(sugar, min_residues, max_residues, config)
+    fixed_folder, deuterium_present = refine_binding_sites(sugar, min_residues, max_residues, config)
+    if deuterium_present:
+        replace_deuterium(deuterium_present)
+        logger.info("Refining binding sites with replaced deuterium")
+        refine_binding_sites(sugar, min_residues, max_residues, config, deuterium_present)
     sys.stdout.flush()
 
     save_path = config.sugars_dir
