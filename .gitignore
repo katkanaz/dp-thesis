@@ -5,7 +5,6 @@ docs/
 img/
 /mv/
 /pq/
-results/
 tmp/
 __pycache__/
 venv/
