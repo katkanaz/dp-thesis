@@ -93,10 +93,10 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
         json.dump(list(pdb_ids), f, indent=4)
 
     sorted_counts = dict(sorted(counts_structures_with_sugar.items(), key=lambda x: x[1], reverse=True))
-    with (config.user_cfg.results_dir / "counts_structures_with_sugar.json").open("w") as f:
+    with (config.run_data_dir / "counts_structures_with_sugar.json").open("w") as f:
         json.dump(sorted_counts, f, indent=4)
 
-    with (config.user_cfg.results_dir / "sugars_not_present_in_any_structure.json").open("w") as f:
+    with (config.run_data_dir / "sugars_not_present_in_any_structure.json").open("w") as f:
         json.dump(sugars_not_present_in_any_structure, f, indent=4)
 
     return pdb_ids
