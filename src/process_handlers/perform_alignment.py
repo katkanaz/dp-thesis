@@ -79,8 +79,8 @@ def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str], float]]) -> 
         cmd.remove(f"resi {resi}")
 
 
-def replace_deuterium(file_list: List[Path]) -> None:
-    for file in file_list:
+def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
+    for file in [f[0] for f in file_list]:
         logger.info(f"Replacing deuterium for file: {file}")
         with open(file, "r") as f:
             lines = f.readlines()
@@ -98,7 +98,7 @@ def replace_deuterium(file_list: List[Path]) -> None:
 # TODO: change binding site to surrounding?
 # TODO: Refactor function
 # FIXME: Function description
-def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Path], None] = None) -> Tuple[Path, List[Path]]:
+def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Tuple[Path, int]], None] = None) -> Tuple[Path, List[Tuple[Path, int]]]:
     """
     Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
     and give the filtered structures unique ID, which will be used as an index for creating the
@@ -127,8 +127,13 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     deuterium_present = []
 
     i = 0
-    structures_keys = {} # To map index with structure
-    file_source = raw_binding_sites.iterdir() if file_list is None else file_list
+    if file_list is not None:
+        with open(config.clusters_dir / f"{sugar}_structures_keys.json", "r") as f:
+            structures_keys = json.load(f)
+    else:
+        structures_keys = {} # To map index with structure
+
+    file_source = raw_binding_sites.iterdir() if file_list is None else [file[0] for file in file_list]
     for path_to_file in file_source:
 
 
@@ -169,11 +174,12 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
                 sugar_center = get_sugar_ring_center(sugar_selection_name)
             except KeyError as e:
                 if str(e) == "'D'":
-                    deuterium_present.append(path_to_file)
+                    deuterium_present.append((path_to_file, i))
                     logger.warning(f"Found deuterium in: {path_to_file.stem}")
                 else:
                     # logger.error("should not get here ------>>>>>>", str(e), isinstance(e, KeyError), type(e))
                     raise e
+                i += 1
                 continue
             residues: List[Tuple[str, str]] = []
             cmd.iterate("n. CA and polymer", "residues.append((resi, resn))",
@@ -185,9 +191,12 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             remove_residues(residues_to_remove)
 
 
-
-        cmd.save(f"{filtered_binding_sites}/{i}_{filename}.pdb")
-        structures_keys[i] = f"{i}_{filename}.pdb"
+        idx = i
+        if file_list is not None:
+            idx = list(filter(lambda x: x[0] == path_to_file, file_list))[0][1]
+            
+        cmd.save(f"{filtered_binding_sites}/{idx}_{filename}.pdb")
+        structures_keys[idx] = f"{idx}_{filename}.pdb"
         i += 1
         cmd.delete("all")
         logger.debug(f"{filename} succesfully processed!")
