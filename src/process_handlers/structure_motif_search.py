@@ -186,15 +186,21 @@ def run_query(path_to_file: Path, residues: List[StructureMotifResidue], search_
     search_results[path_to_file.stem] = structures
 
 
-def structure_motif_search(sugar: str, num_clust: int, clust_method, config: Config) -> None:
+def structure_motif_search(sugar: str, perform_clustering: bool, num_clust: int, clust_method, config: Config) -> None:
     input_folder = config.structure_motif_search_dir / "input_representatives"
     input_folder.mkdir(exist_ok=True, parents=True)
 
     search_results: Dict[str, Dict[str, Tuple[str, str]]] = {}
 
-    extract_representatives(sugar, num_clust, clust_method, config, input_folder)
-    representatives = load_representatives(config)
+    if perform_clustering:
+        extract_representatives(sugar, num_clust, clust_method, config, input_folder)
+        representatives: List[Path] = load_representatives(config)
+    else:
+        representatives: List[Path] = list(config.filtered_binding_sites_dir.glob("*.pdb"))
+        logger.info("Skipping clustering, structure motif search from filtered surroundings")
     
+
+
     for file in representatives:
         struc_name = get_struc_name(file)
 
@@ -216,6 +222,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     # parser.add_argument("-a", "--align_method", help="PyMOL cmd for the calculation of RMSD", type=str,
                         # choices=["super", "align"], required=True)
+    parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
     parser.add_argument("-n", "--number", help="Number of clusters", type=int, required=True)
     parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True)
 
@@ -225,6 +232,6 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    structure_motif_search(args.sugar, args.number, args.method, config)
+    structure_motif_search(args.sugar, args.perform_clustering, args.number, args.method, config)
 
     config.clear_current_run()

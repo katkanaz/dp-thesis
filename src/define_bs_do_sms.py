@@ -24,13 +24,13 @@ from process_handlers.create_tanglegram import create_tanglegram
 from process_handlers.structure_motif_search import structure_motif_search
 
 
-def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
+def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, n_clusters: int, cluster_method: str, make_dendrogram: bool,
          color_threshold: Union[float, None] = None) -> None:
     logger.info(f"Running 2nd program from {config.run_data_dir.stem} directory")
-    with tqdm(total=5) as pbar: 
-        pbar.set_description("Running PatternQuery")
-        run_pq(sugar, config, is_unix)
-        pbar.update(1)
+    with tqdm(total=6 if perform_clustering else 3) as pbar: 
+        # pbar.set_description("Running PatternQuery")
+        # run_pq(sugar, config, is_unix)
+        # pbar.update(1)
 
         try:
             pbar.set_description("Performing alignment")
@@ -40,20 +40,21 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, n_clust
             logger.error(f"Exception caught: {e}")
             raise e
 
-        pbar.set_description("Clustering data")
-        cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, perform_align, color_threshold)
-        pbar.update(1)
+        if perform_clustering:
+            pbar.set_description("Clustering data")
+            cluster_data(sugar, n_clusters, cluster_method, config, make_dendrogram, perform_align, color_threshold)
+            pbar.update(1)
 
-        pbar.set_description("Comparing clusters")
-        compare_clusters(config, perform_align, n_clusters, cluster_method)
-        pbar.update(1)
+            pbar.set_description("Comparing clusters")
+            compare_clusters(config, perform_align, n_clusters, cluster_method)
+            pbar.update(1)
 
-        pbar.set_description("Creating tanglegram")
-        create_tanglegram(sugar, n_clusters, cluster_method, config, perform_align)
-        pbar.update(1)
+            pbar.set_description("Creating tanglegram")
+            create_tanglegram(sugar, n_clusters, cluster_method, config, perform_align)
+            pbar.update(1)
 
         pbar.set_description("Performing structure motif search")
-        structure_motif_search(sugar, n_clusters, cluster_method, config)
+        structure_motif_search(sugar, perform_clustering, n_clusters, cluster_method, config)
         pbar.update(1)
 
 
@@ -62,10 +63,11 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--sugar", help="The sugar abbreviation", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
+    # FIXME: other args not useful, change -m to not required
+    parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
     parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
-    parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,
-                        choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
-                        required=True)
+    parser.add_argument("-m", "--cluster_method", help="Clustering method", type=str,
+                        choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"])
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
 
@@ -79,6 +81,6 @@ if __name__ == "__main__":
 
     #TODO: Make the number of clusters optional
     with logging_redirect_tqdm():
-        main(args.sugar, config, is_unix, args.perform_align, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
+        main(args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.n_clusters, args.cluster_method, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()

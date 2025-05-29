@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
-    parser.add_argument("-c", "--cluster_method", help="Clustering method", type=str,
+    parser.add_argument("-m", "--cluster_method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
                         required=True)
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
