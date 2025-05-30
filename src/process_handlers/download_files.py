@@ -130,7 +130,7 @@ def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) 
         n += 1
         if n == 20:
             n = 0
-            logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
+            logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}/{len(pdb_ids)} (failed: {len(failed_to_download)})")
             sleep(timeout)
 
     logger.info("Finished all iterations - first loop.")
