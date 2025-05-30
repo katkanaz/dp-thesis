@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import List, Tuple, Union
 
 import numpy as np
+from tqdm import tqdm
 from logger import logger, setup_logger
 
 from configuration import Config
@@ -258,63 +259,66 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
     with open(super_results_path / f"{sugar}_all_pairs_rmsd_super.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["structure1", "structure2", "rmsd"])
-        for (structure1, structure2) in itertools.combinations(os.listdir(structures_folder), 2): # FIXME: Ask previous author
-            try:
-                cmd.delete("all")
-                cmd.load(f"{structures_folder}/{structure1}")
-                cmd.load(f"{structures_folder}/{structure2}")
-
-                cmd.fetch(sugar, path=str(save_path))
-
-                filename1 = Path(structure1).stem
-                filename2 = Path(structure2).stem
-
+        all_structures = os.listdir(structures_folder)
+        with tqdm(total=math.comb(len(all_structures), 2), desc="Aligning files") as pbar: 
+            for (structure1, structure2) in itertools.combinations(all_structures, 2):
+                pbar.update(1)
                 try:
-                    id1, _, _, res1, num1, chain1 = filename1.split("_")
-                except ValueError:
-                    id1, _, _, res1, num1, chain1, _ = filename1.split("_")
-                try:
-                    id2, _, _, res2, num2, chain2 = filename2.split("_")
-                except ValueError:
-                    id2, _, _, res2, num2, chain2, _ = filename2.split("_")
-                # Some structures have chains named eg. AaA but when loaded to PyMol
-                # the the chain is reffered to just as A.
-                if len(chain1) > 1:
-                    chain1 = chain1[0]
-                if len(chain2) > 1:
-                    chain2 = chain2[0] 
+                    cmd.delete("all")
+                    cmd.load(f"{structures_folder}/{structure1}")
+                    cmd.load(f"{structures_folder}/{structure2}")
 
-                sugar1 = f"/{filename1}//{chain1}/{res1}`{num1}"
-                sugar2 = f"/{filename2}//{chain2}/{res2}`{num2}"
+                    cmd.fetch(sugar, path=str(save_path))
 
-                cmd.select("original_sugar1", sugar1)
-                cmd.select("original_sugar2", sugar2)
-                cmd.select("polymer1", f"polymer and not {filename2}")
-                cmd.select("polymer2", f"polymer and not {filename1}")
+                    filename1 = Path(structure1).stem
+                    filename2 = Path(structure2).stem
 
-                cmd.align("original_sugar1", sugar)
-                cmd.align("original_sugar2", sugar)
+                    try:
+                        id1, _, _, res1, num1, chain1 = filename1.split("_")
+                    except ValueError:
+                        id1, _, _, res1, num1, chain1, _ = filename1.split("_")
+                    try:
+                        id2, _, _, res2, num2, chain2 = filename2.split("_")
+                    except ValueError:
+                        id2, _, _, res2, num2, chain2, _ = filename2.split("_")
+                    # Some structures have chains named eg. AaA but when loaded to PyMol
+                    # the the chain is reffered to just as A.
+                    if len(chain1) > 1:
+                        chain1 = chain1[0]
+                    if len(chain2) > 1:
+                        chain2 = chain2[0] 
 
-                cmd.super("polymer1", "polymer2", transform=0, cycles=0, object="sup") 
-                rms = float(cmd.rms_cur("polymer1 & sup", "polymer2 & sup", matchmaker=-1))
+                    sugar1 = f"/{filename1}//{chain1}/{res1}`{num1}"
+                    sugar2 = f"/{filename2}//{chain2}/{res2}`{num2}"
 
-                writer.writerow([filename1, filename2, rms])
-                super_rmsd_values[int(id1), int(id2)] = rms 
-                super_rmsd_values[int(id2), int(id1)] = rms
+                    cmd.select("original_sugar1", sugar1)
+                    cmd.select("original_sugar2", sugar2)
+                    cmd.select("polymer1", f"polymer and not {filename2}")
+                    cmd.select("polymer2", f"polymer and not {filename1}")
 
-                if perform_align:
-                    assert align_writer is not None, "If perform_align is true, align_writer has to exist"
-                    cmd.align("polymer1", "polymer2", transform=0, cycles=0, object="aln")
-                    rms = float(cmd.rms_cur("polymer1 & aln", "polymer2 & aln", matchmaker=-1))
-                    align_writer.writerow([filename1, filename2, rms])
-                    align_rmsd_values[int(id1), int(id2)] = rms 
-                    align_rmsd_values[int(id2), int(id1)] = rms
+                    cmd.align("original_sugar1", sugar)
+                    cmd.align("original_sugar2", sugar)
 
-                cmd.delete("all") 
-            except Exception as e:
-                # Save pairs with which something went wrong
-                something_wrong.append((structure1, structure2))
-                logger.error(f"Something went wrong: {e}")
+                    cmd.super("polymer1", "polymer2", transform=0, cycles=0, object="sup") 
+                    rms = float(cmd.rms_cur("polymer1 & sup", "polymer2 & sup", matchmaker=-1))
+
+                    writer.writerow([filename1, filename2, rms])
+                    super_rmsd_values[int(id1), int(id2)] = rms 
+                    super_rmsd_values[int(id2), int(id1)] = rms
+
+                    if perform_align:
+                        assert align_writer is not None, "If perform_align is true, align_writer has to exist"
+                        cmd.align("polymer1", "polymer2", transform=0, cycles=0, object="aln")
+                        rms = float(cmd.rms_cur("polymer1 & aln", "polymer2 & aln", matchmaker=-1))
+                        align_writer.writerow([filename1, filename2, rms])
+                        align_rmsd_values[int(id1), int(id2)] = rms 
+                        align_rmsd_values[int(id2), int(id1)] = rms
+
+                    cmd.delete("all") 
+                except Exception as e:
+                    # Save pairs with which something went wrong
+                    something_wrong.append((structure1, structure2))
+                    logger.error(f"Something went wrong: {e}")
 
     if align_file is not None and align_results_path is not None:
         align_file.close()
