@@ -246,7 +246,29 @@ def create_separate_mmcifs(config: Config) -> None:
     logger.info(f"Number of files with supported altlocs: {supported_altloc}")
     logger.info(f"Number of files with unsupported altlocs: {unsupported_altloc}")
     logger.info(f"Number of files with just one altloc kind: {one_altloc_kind}")
-    
+
+
+# For testing purposes
+def mock_altloc_separation(config: Config) -> None:
+    config.modified_mmcif_files_dir.mkdir(exist_ok=True, parents=True)
+
+    logger.info("Running mock altloc separation")
+
+    with open(config.categorization_dir / "ligands.json", "r") as f:
+        ligands: Dict[str, List[Dict]] = json.load(f)
+
+    ids = [id.lower() for id in ligands.keys()]
+    modified_ligands: Dict[str, List[Dict]] = {}
+    for file in sorted(config.mmcif_files_dir.glob("*.cif")):
+        if file.stem in ids:
+            modified_ligands.update({f"0_{file.stem.upper()}": ligands[file.stem.upper()]})
+            copy2(file, config.modified_mmcif_files_dir / f"0_{file.name}")
+
+
+    with open(config.categorization_dir / "modified_ligands.json", "w", encoding="utf8") as f:
+        json.dump(modified_ligands, f, indent=4)
+
+
 if __name__ == "__main__":
     config = Config.load("config.json", None, False)
 
