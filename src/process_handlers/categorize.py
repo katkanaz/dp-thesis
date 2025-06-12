@@ -239,6 +239,7 @@ def categorize(config: Config) -> None:
         SUGAR_NAMES = json.load(f)
 
     logger.info(config.run_data_dir)
+    # FIXME: Why do we read this here???? it is same as folder content
     with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open() as f:
         pdb_files = json.load(f)
 
