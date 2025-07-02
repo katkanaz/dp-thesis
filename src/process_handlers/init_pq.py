@@ -19,11 +19,10 @@ from configuration import Config
 def create_config(config: Config) -> None:
     pq_config = {
         "InputFolders": [
-            str(), # FIXME: Here goes pdb mirror
+            , # FIXME: Here goes pdb mirror
         ],
         "Queries": [
             {
-                # FIXME: Sugar pattern
                 "Id": "Structures with sugars",
                 "QueryString": """Or(
                                     AtomNames('C3').Inside(Rings(4*['C']+['O'])),
@@ -37,14 +36,14 @@ def create_config(config: Config) -> None:
         "MaxParallelism": 2
     }
 
-    with open(config.init_pq / "config.json", "w") as f: # FIXME: Update configuration for this
+    with open(config.init_pq_dir / "config.json", "w") as f:
         json.dump(pq_config, f, indent=4)
 
 def run_init_pq(config: Config, is_unix: bool) -> None:
     cmd = [f"{'mono ' if is_unix is True else ''}"
            f"{config.user_cfg.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
-           f"{config.init_pq}/results "
-           f"{config.init_pq}/pq_config.json"]
+           f"{config.init_pq_dir}/results "
+           f"{config.init_pq_dir}/pq_config.json"]
 
     with Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True, text=True) as pq_proc:
         assert pq_proc.stdout is not None, "stdout is set to PIPE in Popen" 
