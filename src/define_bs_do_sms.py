@@ -28,9 +28,9 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
          color_threshold: Union[float, None] = None) -> None:
     logger.info(f"Running 2nd program from {config.run_data_dir.stem} directory")
     with tqdm(total=6 if perform_clustering else 3) as pbar: 
-        # pbar.set_description("Running PatternQuery")
-        # run_pq(sugar, config, is_unix)
-        # pbar.update(1)
+        pbar.set_description("Running PatternQuery")
+        run_pq(sugar, config, is_unix)
+        pbar.update(1)
 
         try:
             pbar.set_description("Performing alignment")

@@ -138,6 +138,11 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     for path_to_file in file_source:
 
 
+        # FIXME: Delete, to skip mannose surrounding with only one atom
+        if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
+            logger.info(f"Skipping surrounding: {path_to_file.stem}")
+            continue
+
         filename = Path(path_to_file).stem
         logger.debug(f"Begin to process {filename}")
         cmd.delete("all")

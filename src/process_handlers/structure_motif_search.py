@@ -78,6 +78,9 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
 
     chains = list(models[0])
 
+    # Usually the sugar has "it's own" chain meaning that all amino acid residues have chain ID for example A and the sugar has B
+    # However in some files there is a chain A and then chain B which includes both sugar and amino acids
+    # Sugar cannot be excluded from renumbering? # FIXME:
     sorted_chains = sorted(chains, key = lambda c: c.get_id())
     chain_id_map = {}
     key = "A"
@@ -177,6 +180,7 @@ def run_query(path_to_file: Path, residues: List[StructureMotifResidue], search_
     )
 
     query = q1 & q2
+    # print(query)
 
     output: List[str] = list(query(results_verbosity="compact", return_type="assembly", return_content_type=["computational", "experimental"]))# NOTE: Returns different scores of structures when "experimental" is and is not there
 
@@ -199,6 +203,8 @@ def structure_motif_search(sugar: str, perform_clustering: bool, num_clust: int,
         representatives: List[Path] = list(config.filtered_binding_sites_dir.glob("*.pdb"))
         logger.info("Skipping clustering, structure motif search from filtered surroundings")
     
+    # FIXME: DEL
+    # for file in sorted(Path(f"/home/kaci/dp/debug/sms_query_test/renumber_residues/{sugar}").glob("*.pdb")):
 
 
     for file in representatives:
@@ -206,10 +212,16 @@ def structure_motif_search(sugar: str, perform_clustering: bool, num_clust: int,
 
         try:
             logger.info(f"Performing structure motif search for {file.stem}")
+            # print(f"Performing structure motif search for {file.stem}")
             residues = define_residues(file, struc_name)
             run_query(file, residues, search_results)
         except ValueError as e:
             logger.error(f"Exception caught: {e}")
+            # print(f"Exception caught: {e}")
+
+
+    # FIXME: DEL
+    # with open(f"/home/kaci/dp/debug/sms_query_test/renumber_residues/{sugar}/results.json", "w") as f: 
 
 
     with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
