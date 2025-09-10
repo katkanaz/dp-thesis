@@ -6,11 +6,11 @@ dependencies:
 - beautifulsoup4==4.12.3
 - lxml
 - matplotlib==3.7.3
-- numpy==1.24.4
+- numpy==1.26.4
 - pandas==2.0.3
 - pip
 - pydantic==2.8.2
-- pymol==2.4.1
+- pymol==3.1.6.1
 - requests==2.32.3
 - scipy==1.10.0
 - tqdm==4.66.4
