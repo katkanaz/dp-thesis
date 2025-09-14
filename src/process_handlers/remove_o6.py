@@ -17,13 +17,13 @@ from utils.hide_altloc import get_possible_altloc_file_names
 
 def get_pdb_ids_with_rscc(config: Config) -> None:
     """
-    Get the PDB IDs of structures whose residues have RSCC values
+    Get the PDB IDs of structures whose residues have RSCC values.
 
     :param config: Config object
     """
 
     with open(config.validation_dir / "all_rscc_and_resolution.csv", "r", encoding="utf8") as f:
-        rscc = DictReader(f) # FIXME: Use pandas
+        rscc = DictReader(f)
         pdb_ids = set()
         for row in rscc:
             pdb_ids.add(row["pdb"])
@@ -33,7 +33,7 @@ def get_pdb_ids_with_rscc(config: Config) -> None:
 
 def remove_o6(config: Config) -> None:
     """
-    Remove O6 atom of NAG, GAL, MAN, GLC and BGC from the structures
+    Remove O6 atom of NAG, GAL, MAN, GLC and BGC from the structures.
 
     :param config: Config object
     """
@@ -60,7 +60,6 @@ def remove_o6(config: Config) -> None:
 
 
 def get_ids_and_remove_o6(config: Config) -> None:
-    # Tmp # FIXME:
     (config.no_o6_mmcif_dir).mkdir(exist_ok=True, parents=True)
 
     get_pdb_ids_with_rscc(config)

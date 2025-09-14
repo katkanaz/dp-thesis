@@ -13,12 +13,14 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-def compare_clusters(config: Config, perform_align: bool, n_clusters: int, cluster_method: str) -> None:
+def compare_clusters(config: Config, perform_align: bool, number: int, method: str) -> None:
     """
-    How many clusters from align-data correspond to one cluster from super-data, and vice versa
+    How many clusters from align-data correspond to one cluster from super-data, and vice versa.
 
-    :param sugar: The sugar for which the representative binding site is being defined
     :param config: Config object
+    :param perform_align: If PyMOL align command was used 
+    :param number: The number of created clusters 
+    :param method: Chosen clustering method
     """
 
     if not perform_align:
@@ -27,10 +29,10 @@ def compare_clusters(config: Config, perform_align: bool, n_clusters: int, clust
 
     logger.info("Comparing clusters")
 
-    with (config.clusters_dir / "super" / f"{n_clusters}_{cluster_method}_all_clusters.json").open() as f:
+    with (config.clusters_dir / "super" / f"{number}_{method}_all_clusters.json").open() as f:
         clusters_super = json.load(f)
 
-    with (config.clusters_dir / "align" / f"{n_clusters}_{cluster_method}_all_clusters.json").open() as f:
+    with (config.clusters_dir / "align" / f"{number}_{method}_all_clusters.json").open() as f:
         clusters_align = json.load(f)
 
     # Create dict in a form of {structure: cluster}
@@ -59,10 +61,9 @@ def compare_clusters(config: Config, perform_align: bool, n_clusters: int, clust
 if __name__ == "__main__":
     parser = ArgumentParser()
 
-    parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
-    parser.add_argument("-n", "--n_clusters", help="Number of clusters to create", type=int)
-    parser.add_argument("-m", "--cluster_method", help="Clustering method", type=str,
+    parser.add_argument("-n", "--number", help="Number of clusters to create", type=int)
+    parser.add_argument("-m", "--method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
                         required=True)
 
@@ -72,4 +73,4 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    compare_clusters(config, args.perform_align, args.n_clusters, args.cluster_method)
+    compare_clusters(config, args.perform_align, args.number, args.method)

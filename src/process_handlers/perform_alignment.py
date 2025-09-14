@@ -1,6 +1,6 @@
 """
 Script Name: perform_alignment.py
-Description: Filter and modify binding sites from PatternQuery and calculate RMSD values by aligning all against all using PyMOL.
+Description: Filter and modify surroundings from PatternQuery and calculate RMSD values by aligning all against all using PyMOL.
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
@@ -25,6 +25,13 @@ from pymol import cmd, sys
 
 
 def select_sugar(filename: str) -> Tuple[str, str]:
+    """
+    Select the desired sugar.
+
+    :param filename: Name of the file to extract the sugar name from
+    :return: Name of the sugar and name of the PyMOL selection
+    """
+
     try:
         _, _, res, num, chain = filename.split("_")
     except ValueError:
@@ -41,10 +48,26 @@ def select_sugar(filename: str) -> Tuple[str, str]:
 
 
 def get_sugar_ring_center(sugar: str) -> List[float]:
+    """
+    Locate the center of the sugar ring.
+
+    :param sugar: Sugar which center needs to be found
+    :return: The center coordinates
+    """
+
     return cmd.centerofmass(sugar)
 
 
-def measure_distances(residues: List[Tuple[str, str]], sugar_center, filename) -> List[Tuple[Tuple[str, str], float]]:
+def measure_distances(residues: List[Tuple[str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str], float]]:
+    """
+    Measure the distane from all the residues to the sugar center.
+
+    :param residues: The amino acids of the surrounding
+    :param sugar_center: Coordinates of the sugar center
+    :param filename: Name of the surrounding file which serves as name of the PyMOL object
+    :return: Distances of all the residues from the sugar center
+    """
+
     distances: List[Tuple[Tuple[str, str], float]] = []
 
     cmd.pseudoatom(object="tmp", pos=sugar_center)
@@ -53,11 +76,6 @@ def measure_distances(residues: List[Tuple[str, str]], sugar_center, filename) -
         min_distance = math.inf
         
         for atom in atoms:
-            # distance = cmd.get_distance(f"resi {resi} and index {atom.index}", "tmp") # In Angstroms [Å] # FIXME: DEL LATER
-
-            # distance = cmd.get_distance(f"chain {atom.chain} and resi {atom.resi} and resn {atom.resn} and name {atom.name}", "tmp") # In Angstroms [Å]
-
-            # NOTE: filename is the name of the object
             distance = cmd.get_distance(f"{filename} and index {atom.index}", "tmp") # In Angstroms [Å]
             if distance < min_distance:
                 min_distance = distance
@@ -71,16 +89,36 @@ def measure_distances(residues: List[Tuple[str, str]], sugar_center, filename) -
 
 
 def sort_distances(distances: List[Tuple[Tuple[str, str], float]], max_res: int) -> List[Tuple[Tuple[str, str], float]]:
+    """
+    Sort the residue distances in ascending order and keep information of the residues that are over <max_res>.
+
+    :param distances: The distances of the residues from the sugar
+    :param max_res: Allowed maximum of residues
+    :return: Residues to delete
+    """
+
     sorted_distances = sorted(distances, key=lambda item: item[1])
     return sorted_distances[max_res:]
 
 
 def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str], float]]) -> None:
+    """
+    Remove residues from the surrounding.
+
+    :param residues_to_remove: Residues to be deleted
+    """
+
     for (_, resi), _ in residues_to_remove:
         cmd.remove(f"resi {resi}")
 
 
 def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
+    """
+    Replace deuterium (D) with hydrogen (H)
+
+    :param file_list: Files that need deuterium replacement
+    """
+
     for file in [f[0] for f in file_list]:
         logger.info(f"Replacing deuterium for file: {file}")
         with open(file, "r") as f:
@@ -96,30 +134,26 @@ def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
             f.writelines(new_lines)
 
 
-# TODO: change binding site to surrounding?
-# TODO: Refactor function
-# FIXME: Function description
 def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Tuple[Path, int]], None] = None) -> Tuple[Path, List[Tuple[Path, int]]]:
     """
-    Filter the binding sites obtained by PQ to contain only the target sugar and at least <min_res> AA
+    Filter the surroundings obtained by PQ to contain only the target sugar and at least <min_residues> AA
     and give the filtered structures unique ID, which will be used as an index for creating the
     rmsd matrix.
 
-    :param sugar: The sugar for which representative binding sites are being defined
-    :param min_res: Minimum of amino acids in the binding site
+    :param sugar: The sugar for which the representative surroundings are being defined
+    :param min_residues: Minimum of amino acids in the surrounding
+    :param max_residues: Maximum of amino acids in the surrounding - necessary for struture motif search later in the process
     :param config: Config object
+    :file_list: Surroundings that contain deuterium (D); defaults to None
     :return: Path to refined binding sites folder
     """
+
     logger.info("Refining sugar surroundings")
 
     raw_binding_sites = config.raw_binding_sites_dir
 
     filtered_binding_sites = config.filtered_binding_sites_dir
     filtered_binding_sites.mkdir(exist_ok=True, parents=True)
-
-    # FIXME: DEL
-    # raw_binding_sites = Path("/home/kaci/dp/tmp/pymol_dist_test/raw_bs/")
-    # filtered_binding_sites = Path("/home/kaci/dp/tmp/pymol_dist_test/filtered_bs/")
 
 
     less_than_min_aa = []
@@ -154,19 +188,6 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             continue
 
 
-        # TODO: delete
-        # try:
-        #     _, _, res, num, chain = filename.split("_")
-        # except ValueError:
-        #     _, _, res, num, chain, _ = filename.split("_")
-        # # Some structures have chains named eg. AaA but when loaded to PyMol
-        # # the the chain is reffered to just as A.
-        # if len(chain) > 1:
-        #     chain = chain[0]
-        #
-        # current_sugar = f"/{filename}//{chain}/{res}`{num}"
-
-
         sugar_path, sugar_selection_name = select_sugar(filename)
 
         cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
@@ -183,7 +204,6 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
                     deuterium_present.append((path_to_file, i))
                     logger.warning(f"Found deuterium in: {path_to_file.stem}")
                 else:
-                    # logger.error("should not get here ------>>>>>>", str(e), isinstance(e, KeyError), type(e))
                     raise e
                 i += 1
                 continue
@@ -209,8 +229,6 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
-    # FIXME: DEL
-    # with open(f"/home/kaci/dp/tmp/pymol_dist_test/{sugar}_structures_keys.json", "w") as f:
         json.dump(structures_keys, f, indent=4)
 
     logger.info(f"Number of surroundings with less than {min_residues} AA: {len(less_than_min_aa)}")
@@ -219,19 +237,17 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     return filtered_binding_sites, deuterium_present
 
 
-    # Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
-    # by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
-    # but without actually moving, so the rms_cur is eventually calculated from their position as is
-    # towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
-# TODO: Refactor function
-# FIXME: Function description
 def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: Path, config: Config) -> None:
     """
-    [TODO:description]
+    Calculates all against all RMSD (using PyMol rms_cur command) of all structures firstly aligned
+    by their sugar, then aligned by the aminoacids (to find the alignment object - pairs of AA),
+    but without actually moving, so the rms_cur is eventually calculated from their position as is
+    towards the sugar. Results are saved in a form of distance matrix (.npy) and also as .csv file.
 
-    :param sugar: The sugar for which representative binding sites are being defined
+    :param sugar: The sugar for which representative surroundings are being defined
     :param structures_folder: Path to refined binding sites
-    :param method: The PyMOL command used to calculate RMSD
+    :param perform_align: If PyMOL align command was used 
+    :param save_path: Path to store .cif files fetched by PyMOL
     :param config: Config object
     """
 
@@ -239,8 +255,6 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
 
     super_results_path = config.clusters_dir / "super"
     super_results_path.mkdir(parents=True, exist_ok=True)
-    # FIXME: DEL
-    # super_results_path = Path("/home/kaci/dp/tmp/pymol_dist_test/super_results/")
 
     n = len(os.listdir(structures_folder))
     super_rmsd_values = np.zeros((n, n))
@@ -254,8 +268,6 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
     if perform_align:
         align_results_path = config.clusters_dir / "align"
         align_results_path.mkdir(parents=True, exist_ok=True)
-        # FIXME: DEL
-        # align_results_path = Path("/home/kaci/dp/tmp/pymol_dist_test/align_results/")
 
         align_file = open(align_results_path / f"{sugar}_all_pairs_rmsd_align.csv", "w", newline="")
         align_writer = csv.writer(align_file)
@@ -331,7 +343,6 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
 
     np.save(super_results_path / f"{sugar}_all_pairs_rmsd_super.npy", super_rmsd_values)
     with open((config.clusters_dir / "something_wrong.json"), "w") as f:
-    # with open("/home/kaci/dp/tmp/pymol_dist_test/something_wrong.json", "w") as f: # FIXME: DEL
         json.dump(something_wrong, f, indent=4)
 
     if something_wrong:
@@ -353,7 +364,7 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
 
     save_path = config.sugars_dir
     save_path.mkdir(exist_ok=True, parents=True)
-    all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config) # FIXME: Does it need to take the sugar?
+    all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config)
 
 
 if __name__ == "__main__":

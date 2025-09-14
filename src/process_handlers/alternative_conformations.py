@@ -17,9 +17,6 @@ from logger import logger, setup_logger
 from configuration import Config
 
 
-# FIXME: delete
-# NEW_PATH = "/home/kaci/dp/data/july_2024/"
-
 class AltlocCase(Enum):
     SINGLE_RES = 1
     DOUBLE_RES = 2
@@ -42,12 +39,14 @@ class AltlocKind(Enum):
 
 def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict], ligand_values: List[Tuple[str, str, str]]) -> List[Dict]:
     """
-    Delete unwanted alternative conformations of a structure and set the ones that should be kept to "\0"
+    Delete unwanted alternative conformations of a structure and set the ones that should be kept to "\0".
 
     :param structure: Structure in question
     :param residues_to_keep: List of residues whose altlocs should be set to "\0"
     :param residues_to_delete: List of residues to delete in the given structure
+    :param ligand_values:
     """
+    # FIXME: what is ligand values
 
     for residue in residues_to_keep:
         model_idx = residue["model_idx"]
@@ -81,11 +80,12 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
 
 def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: str, config: Config) -> None:
     """
-    Save new structure with no sugar altlocs to file
+    Save new structure with no sugar altlocs to a file.
 
     :param structure: Structure to be saved
     :param input_file: Path to the original file
     :param conformation_type: Type of conformation A or B
+    :param config: Config object
     """
 
     groups = gemmi.MmcifOutputGroups(True, chem_comp=False, entity=False, auth_all=True)
@@ -101,17 +101,23 @@ def save_files(structure: gemmi.Structure, input_file: Path, conformation_type: 
     options.align_pairs = 48
     options.align_loops = 20
 
-    # new_path = Path("/home/kaci/dp/debug/mv_altlocs/final_test/sep_altlocs_july/") / f"{conformation_type}_{input_file.name}" # FIXME: Delete
     new_path = config.modified_mmcif_files_dir / f"{conformation_type}_{input_file.name}"
-    # structure.make_mmcif_document().write_file(str(new_path), options)
     doc.write_file(str(new_path), options)
 
 
-# TODO: Add docs
 def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, List[Dict]], config: Config) -> Tuple[AltlocKind, Dict[str, List[Dict]]]:
+    """
+    Separate alternative sugar conformations.
+
+    :param input_file: Input structure for sugar conformation separation
+    :param ligands: Sugar ligands of said structure - to update ligands.json
+    :param config: Config object
+    :return: Type of altloc with the new updated structure ligands
+    :raises AltlocError: If the altloc type is not supported
+    """
+
     logger.debug(f"Processing {input_file.name}")
     with open(config.run_data_dir / "sugar_names.json") as f:
-    # with open("/home/kaci/dp/scripts/alternative_conformations/" + "sugar_names.json") as f: #FIXME: Delete
         sugar_names = set(json.load(f)) # Set for optimalization
 
     global files_support_altloc
@@ -133,11 +139,6 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
                 if residue.name in sugar_names:
                     atom_altloc_a = []
                     atom_altloc_b = []
-
-                    # TODO: decide if keep
-                    # NOTE: Can one be sure, one atom won't have a altloc missing
-                    # if residue[0].altloc == "\0":
-                    #     continue
 
                     for atom_idx, atom in enumerate(residue):
                         if atom.altloc != "\0":
@@ -162,7 +163,6 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
                     }
 
                     if atom_altloc_a and atom_altloc_b:
-                        # logger.info(input_file.name)
                         if len(atom_altloc_a) != len(atom_altloc_b):
                             logger.info(f"Not the same number of atoms in each conformation: {input_file.name}")
                         altloc_case = AltlocCase.SINGLE_RES
@@ -176,9 +176,6 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
                         list_to_append_to = altloc_a if atom_altloc_a else altloc_b
                         list_to_append_to.append(res)
 
-
-    # if models_count > 1:
-        # print(f"More than one model in: {input_file.name}") #NOTE: Learn if normal
 
     new_dict = {}
     old_key = ligands[0]
@@ -211,7 +208,6 @@ def create_separate_mmcifs(config: Config) -> None:
     config.modified_mmcif_files_dir.mkdir(exist_ok=True, parents=True)
 
     with open(config.categorization_dir / "ligands.json", "r") as f:
-    # with open("/home/kaci/dp/results/ligand_sort/july_2024/" + "categorization/ligands.json", "r") as f: # FIXME: Delete
         ligands: Dict[str, List[Dict]] = json.load(f)
 
     unsupported_altloc = 0
@@ -221,10 +217,8 @@ def create_separate_mmcifs(config: Config) -> None:
     ids = [id.lower() for id in ligands.keys()]
     modified_ligands: Dict[str, List[Dict]] = {}
     for file in sorted(config.mmcif_files_dir.glob("*.cif")):
-    # for file in sorted(Path(NEW_PATH + "mmcif_files").glob("*.cif")): # FIXME: Delete
         if file.stem in ids:
             try:
-                # NOTE: Might need deepcopy, value is object reference
                 altloc_kind, new_ligands = separate_alternative_conformations(file, (file.stem.upper(), ligands[file.stem.upper()]), config)
                 modified_ligands.update(new_ligands)
                 if altloc_kind == AltlocKind.NO_ALTLOC:
@@ -240,7 +234,6 @@ def create_separate_mmcifs(config: Config) -> None:
                 logger.error(f"Exception caught: {e}")
 
     with open(config.categorization_dir / "modified_ligands.json", "w", encoding="utf8") as f:
-    # with open("/home/kaci/dp/debug/mv_altlocs/final_test/test_modifiend_ligands.json", "w", encoding="utf8") as f: # FIXME: Delete
         json.dump(modified_ligands, f, indent=4)
 
     logger.info(f"Number of files with supported altlocs: {supported_altloc}")
@@ -248,8 +241,13 @@ def create_separate_mmcifs(config: Config) -> None:
     logger.info(f"Number of files with just one altloc kind: {one_altloc_kind}")
 
 
-# For testing purposes
 def mock_altloc_separation(config: Config) -> None:
+    """
+    Mock separation function for testing purposes.
+
+    :param config: Config object
+    """
+
     config.modified_mmcif_files_dir.mkdir(exist_ok=True, parents=True)
 
     logger.info("Running mock altloc separation")

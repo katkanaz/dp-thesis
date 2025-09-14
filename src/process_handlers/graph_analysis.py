@@ -48,7 +48,6 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
     :param config: Config object
     """
 
-    # FIXME: Load merged_rscc_rmsd.csv to pandas, filter (delete data for which the if is not true), then save to graph_analysis file
     with open(config.graph_analysis_dir / f"graph_analysis_{min_rscc}_{max_rscc}_{min_rmsd}_{max_rmsd}.csv", "w", newline="") as f:
         writer = DictWriter(f, ["pdb", "resolution", "name", "num", "chain", "rscc", "type", "rmsd"])
         writer.writeheader()
@@ -58,7 +57,6 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
             for row in rscc_rmsd:
                 if float(row["rmsd"]) >= min_rmsd and float(row["rmsd"]) <= max_rmsd and float(row["rscc"]) >= min_rscc and float(row["rscc"]) <= max_rscc:
                     sugars.add(row["name"])
-                    #print(row)
                     writer.writerow(row)
 
     logger.info(f"Number of sugars in the defined area of the graph {len(sugars)}")
@@ -66,7 +64,6 @@ def analyze_graph(min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: f
 
 
 def graph_analysis(config: Config, min_rscc: float, max_rscc: float, min_rmsd: float, max_rmsd: float) -> None:
-    # Tmp # FIXME:
     config.graph_analysis_dir.mkdir(exist_ok=True, parents=True)
 
     get_average_rmsd_of_peaks(config)

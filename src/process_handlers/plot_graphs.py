@@ -17,10 +17,9 @@ def plot_corr_graphs(config: Config) -> None:
     """
     Create correlation graphs of RSCC and RMSD for all residues and also separately just for ligands,
     glycosylated residues and residues in close contacts. Also create these graphs separately for each
-    of the 10 most abundant sugar types among PDB structures
+    of the 10 most abundant sugar types among PDB structures.
 
     :param config: Config objects
-    :param graphs: Path to save the results
     """
 
     (config.residue_graphs_dir / "individual_sugars" / "correlation").mkdir(exist_ok=True, parents=True)
@@ -68,10 +67,9 @@ def plot_corr_graphs(config: Config) -> None:
 
 def plot_histograms(config: Config) -> None:
     """
-    Make histograms for individual sugars
+    Make histograms for individual sugars.
 
     :param config: Config objects
-    :param graphs: Path to save the results
     """
 
     (config.residue_graphs_dir / "individual_sugars" / "histograms").mkdir(exist_ok=True)
@@ -114,7 +112,6 @@ def plot_3D_graph(config: Config) -> None:
 
 
 def plot_graphs(config: Config) -> None:
-    # Tmp # FIXME:
     (config.residue_graphs_dir).mkdir(exist_ok=True, parents=True)
 
     plot_corr_graphs(config)

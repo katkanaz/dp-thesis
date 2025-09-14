@@ -17,17 +17,22 @@ from configuration import Config
 from utils.hide_altloc import remove_altloc_from_id
 
 
-#TODO: Add docs
 def count_num_residues(res_in_whole_struct: Dict) -> int:
+    """
+    Calculate the overall number of residues in a structure.
+
+    :param res_in_whole_struct: All residues of one structure
+    :return: Overall number of residues
+    """
+
     return sum([len(residues) for residues in res_in_whole_struct.values()])
 
 
 def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, config: Config) -> None:
-    # TODO: Explain default values origin
     """
     Filter ligands.json to contain only the structures with overall resolution
     is better than <max_resolution> and residues with RSCC higher than <min_rscc>
-    and rmsd lower than <max_rmsd>
+    and RMSD lower than <max_rmsd>
 
     :param max_resolution: Maximal overall resolution
     :param min_rscc: Minimum RSCC of residue
@@ -60,17 +65,10 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     for key in delete_structures:
         del modified_ligands[key]
 
-    # Get individual resiudes which have bad rscc or rmsd
-    # delete_residues = defaultdict(list)
-    # with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f: # FIXME: Delete this after testing
-        # rscc_rmsd = DictReader(f)
-        # for row in rscc_rmsd:
-        #     if row["type"] == "ligand" and (float(row["rmsd"]) > max_rmsd or float(row["rscc"]) < min_rscc):
-        #         delete_residues[row["pdb"]].append({"name": row["name"], "num" : row["num"], "chain": row["chain"]}) 
 
     # Save structures from which all residues were deleted
     delete_empty_structures = set()
-    for pdb, residues in modified_ligands.items():# FIXME: Is it necessary to iterate over the same dict twice?
+    for pdb, residues in modified_ligands.items():
         if remove_altloc_from_id(pdb) in delete_residues:
             for residue in delete_residues[remove_altloc_from_id(pdb)]:
                 try:

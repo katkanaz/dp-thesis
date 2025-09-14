@@ -22,7 +22,7 @@ from configuration import Config
 
 def remove_nonsugar_residues(config: Config) -> None:
     """
-    Remove all the non-sugar residues from the model mmCIF file
+    Remove all the non-sugar residues from the model mmCIF file.
 
     :param config: Config object
     """
@@ -44,7 +44,7 @@ def remove_nonsugar_residues(config: Config) -> None:
 
 def download_mv(config: Config) -> None:
     """
-    Download latest version of MotiveValidator and extract the contents of a zip file
+    Download latest version of MotiveValidator and extract the contents of a zip file.
 
     :param config: Config object
     """
@@ -68,7 +68,7 @@ def download_mv(config: Config) -> None:
 
 def create_mv_config(config: Config) -> None:
     """
-    Create MotiveValidator config file
+    Create MotiveValidator config file.
 
     :param config: Config object
     """
@@ -93,7 +93,7 @@ def create_mv_config(config: Config) -> None:
 
 def get_rmsd_and_merge(config: Config) -> None:
     """
-    Get RMSDs from MotiveValidator results and merge them with the values of resolution and RSCC
+    Get RMSDs from MotiveValidator results and merge them with the values of resolution and RSCC.
 
     :param config: Config object
     """

@@ -23,7 +23,7 @@ from configuration import Config
 
 def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:
     """
-    Get PDB IDs of structures from PQ results
+    Get PDB IDs of structures from PQ (PatternQuery) results.
 
     :param result_file: Path to file for writing results
     :param config: Config object
@@ -38,7 +38,7 @@ def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:
 
 def get_components_file(config: Config) -> None:
     """
-    Download components.cif.gz from CCD
+    Download components.cif.gz from CCD (Chemical Component Dictionary).
 
     :param config: Config object
     """
@@ -52,9 +52,11 @@ def get_components_file(config: Config) -> None:
 
 
 def get_sugars_from_ccd(config: Config) -> List[str]:
-    """Get a list of all sugar abbreviations that appear in PDB database
+    """
+    Get a list of all sugar abbreviations that appear in PDB database.
 
-    :return list: List of sugar abbreviations
+    :param config: Config object
+    :return: List of sugar abbreviations
     """
 
     doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
@@ -71,10 +73,12 @@ def get_sugars_from_ccd(config: Config) -> List[str]:
 
 
 def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
-    """Get a set of PDB IDs for all structures containing any of the sugars
+    """
+    Get a set of PDB IDs for all structures containing any of the sugars.
 
-    :param list sugar_names: List of sugar abbreviations
-    :return set: Set of PDB IDs belonging to structures with the sugars
+    :param config: Config object
+    :param sugar_names: List of sugar abbreviations
+    :return: Set of PDB IDs of structures containing the sugars
     """
 
     pdb_ids = set()
@@ -102,10 +106,11 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     return pdb_ids
 
 
-def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) -> None: # FIXME: Rewrite function to deal with timeout
+def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) -> None:
     """
-    Download mmCIF files of structures with sugars and their xml validation files
+    Download mmCIF files of structures with sugars and their xml validation files.
 
+    :param config: Config object
     :param pdb_ids: PDB IDs of structures to download 
     """
 
@@ -120,7 +125,7 @@ def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) 
             response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
             open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
 
-            validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
+            validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml") # TODO: Test if okay to get xmls via api or need to add to mirror
             open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
         except Exception as e:
             logger.info(f"An Error occured: {e}")
@@ -157,7 +162,13 @@ def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) 
 
 
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
-    # TODO: Add docs
+    """
+    Get IDs of structures that were not successfully downloaded.
+
+    :param json_file: File containing IDs of needed strutures
+    :param validation_files: Path to validation files
+    :return: List of IDs of missing structures
+    """
 
     missing_files = []
     # Load json with needed structures
@@ -173,7 +184,12 @@ def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
 
 
 def download_missing_files(config: Config, missing_files: List[str]) -> None:
-    # TODO: Add docs
+    """
+    Download files that did not download in the first iteration.
+
+    :param config: Config object
+    :param missing_files: List of IDs of missing strutures
+    """
 
     timeout = 2
     n = 0
@@ -199,7 +215,7 @@ def download_missing_files(config: Config, missing_files: List[str]) -> None:
 
 def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files: Path) -> bool:
     """
-    Check if all required structure files were downloaded or not
+    Check if all required structure files were downloaded or not.
 
     :param json_file: IDs of files that should have been downloaded
     :param validation_files: Path to validation files

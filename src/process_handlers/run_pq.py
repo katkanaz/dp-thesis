@@ -30,7 +30,7 @@ result_folder_not_created = []      # just in case something else goes wrong
 
 def download_pq(config: Config) -> None:
     """
-    Download latest version of PatternQuery and extract the contents of a zip file
+    Download latest version of PatternQuery and extract the contents of a zip file.
 
     :param config: Config object
     """
@@ -42,7 +42,7 @@ def download_pq(config: Config) -> None:
         f.write(response.content)
 
     with zipfile.ZipFile(config.user_cfg.pq_dir / "PatternQuery.zip", "r") as zip_ref:
-        zip_ref.extractall(config.user_cfg.pq_dir / "PatternQuery")
+        zip_ref.extractall(config.user_cfg.pq_dir / "PatternQuery") #FIXME: keep version number
 
 
 # def update_mv(config: Config) -> None: # TODO: finish function
@@ -52,20 +52,19 @@ def download_pq(config: Config) -> None:
 
 
 def create_pq_config(config: Config, structure: str, residues: List[Dict[str, str]], sugar: str) -> List[str]:
-    # FIXME: Reword docstring, residues type and description
     """
-    Create config file for the given structure
+    Create config file for the given structure.
 
     Every stucture can contain 0 - n residues of interest specified by <sugar>.
-    If the current structure does not contain any rezidue of sugar of interest, empty list is returned - so the program can jump to the next structure.
+    If the current structure does not contain any residue of sugar of interest, empty list is returned - so the program can jump to the next structure.
     If at least one residue of interest is present:
     For every residue a separate query is needed. Therefore one config file with 1-n queries is created per structure.
     Then it is saved and a list of all query names is returnd.
     Name is in a form <pdb>_<name>_<num>_<chain>_*<case_sensitive_tag>*.pdb
 
     :param structure: PDB ID of structure
-    :param residues [TODO:type]: [TODO:description]
-    :param sugar: The sugar for which the representative binding site is being defined
+    :param residues: Ligand residues of the given structure
+    :param sugar: The sugar that the representative surrounding is defined for
     :return: List of query IDs
     """
     
@@ -79,11 +78,10 @@ def create_pq_config(config: Config, structure: str, residues: List[Dict[str, st
     }
     query_names = []
 
-    # TODO: Reword
-    # PQ queries are not case sensitive but there are structures which contain
-    # two chains with the same letter but one upper and the other lower.
-    # In that case eg. residues "GLC 1 M" and "GLC 1 m" would have the same
-    # query in PQ sense. Therefore, tag "_2" is added to such queries.
+    # PQ queries are not case sensitive but there an be structures that contain
+    # two chains with the same letter but one is upper case and the other lower
+    # case. In that case e.g. residues "GLC 1 M" and "GLC 1 m" would have the same
+    # query for PQ. Therefore, tag "_2" is added to such queries.
     case_sensitive_check = []
     for residue in residues:
         if residue["name"] == sugar:
@@ -108,13 +106,13 @@ def create_pq_config(config: Config, structure: str, residues: List[Dict[str, st
 def extract_results(target: Path, zip_result_folder: Path, query_names: List[str]) -> None:
     # FIXME: Reword
     """
-    Unzip the results and rename and move each sugar surrounding (pattern) to one common folder
+    Unzip the results and rename and move each sugar surrounding (pattern) to single common folder.
 
-    Results are present in the zip folder, where every query has its own subfolder
-    with the name same as was its query name: <pdb>_<name>_<num>_<chain>_*<key_sensitive_tag>*.pdb
-    Each query is expected to have only one pattern found
+    Results are present in the zip folder, where every query has its own subfolder with the name
+    same as was its query name: <pdb>_<name>_<num>_<chain>_*<key_sensitive_tag>*.pdb.
+    Each query is expected to have only one pattern found.
 
-    :param target: Common folder to move resulting binding sites to
+    :param target: The common folder to which resulting surroundings are moved
     :param zip_result_folder: Path to zip folder containing PQ results
     :param query_names: List of query IDs
     """
@@ -179,7 +177,6 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
                 shutil.copyfile(src, dst)
 
 
-                # TODO: Extract to function
                 # Run PQ
                 cmd = [f"{'mono ' if is_unix is True else ''}"
                        f"{config.user_cfg.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
@@ -215,7 +212,6 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
                 shutil.rmtree(config.pq_run_dir / "results" / "result")
 
 
-    # TODO: Extract to helper function
     if more_than_one_pattern:
         logger.error(f"More patterns for one id found: {more_than_one_pattern}")
     

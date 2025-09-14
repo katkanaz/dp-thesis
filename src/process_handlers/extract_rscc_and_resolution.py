@@ -18,7 +18,7 @@ from utils.hide_altloc import find_residue_any_altloc, remove_altloc_from_id
 
 def extract_rscc_and_resolution(config: Config) -> None:
     """
-    Extract overall resolution of structures and RSCC values for each of their residues (if said value exists)
+    Extract overall resolution of structures and RSCC values for each of their residues (if said value exists).
 
     :param config: Config object
     """

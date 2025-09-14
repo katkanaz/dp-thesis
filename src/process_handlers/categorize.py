@@ -94,7 +94,7 @@ def extract_sugars(table: Table) -> List[Dict[str, str]]:
 def remove_connections(block: Block, mono: List[Dict[str, str]], oligo: List[Dict[str, str]]) -> List[Dict[str, str]]:
     """
     Remove glycosylated residues from mono and oligo (modify the lists in place)
-    and return list of glycosylated residues (according to conn)
+    and return list of glycosylated residues (according to conn).
 
     :param block: mmCIF file block
     :param mono: List of monosaccharides
@@ -206,11 +206,13 @@ def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[
 
 def save_category(category: Union[Dict, List, Set], filename: str, config: Config) -> None:
     """
-    Save sugars after categorization into JSON files
+    Save sugars after categorization into JSON files.
 
     :param category: Sugar category to be saved
     :param filename: Name of the JSON file
+    :param config: Config object
     """
+
     with open((config.categorization_dir / f"{filename}.json"), "w", encoding="utf8") as f:
         if isinstance(category, set):
             json.dump(list(category), f, indent=4)
@@ -221,11 +223,12 @@ def save_category(category: Union[Dict, List, Set], filename: str, config: Confi
 
 def count_num_residues(res_in_whole_struct: Dict) -> int:
     """
-    Count number of residues for all structures total
+    Count number of residues for all structures total.
 
     :param res_in_whole_struct: Where the residues should be counted
     :return: Number of residues
     """
+
     return sum([len(residues) for residues in res_in_whole_struct.values()])
 
 
