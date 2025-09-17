@@ -73,10 +73,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.perform_clustering:
-        if args.number is None or args.cluster_method is None:
+        if args.number is None or args.method is None:
             parser.error("-n/--number and -m/--method should only be provided if -c/--perform_clustering is used.")
     else:
-        if args.number is not None or args.cluster_method is not None:
+        if args.number is not None or args.method is not None:
             parser.error("When using -c/--perform_clustering both -n/--number and -m/--method must be provided.")
 
     config = Config.load("config.json", args.sugar, True)

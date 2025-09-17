@@ -87,8 +87,9 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
 
     structure = parser.get_structure(struc_name, path_to_file)
 
+    models = list(structure)
+
     # FIXME:
-    # models = list(structure)
     # if len(models) < 1:
     #     raise ValueError("More than one model in the structure!")
 

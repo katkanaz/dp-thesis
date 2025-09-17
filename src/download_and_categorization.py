@@ -15,10 +15,10 @@ from logger import setup_logger
 
 from configuration import Config
 
-# from process_handlers.download_files import download_files
+from process_handlers.download_files import download_files
 from process_handlers.categorize import categorize
-# from process_handlers.alternative_conformations import create_separate_mmcifs
-from process_handlers.alternative_conformations import mock_altloc_separation
+from process_handlers.alternative_conformations import create_separate_mmcifs
+# from process_handlers.alternative_conformations import mock_altloc_separation
 from process_handlers.extract_rscc_and_resolution import extract_rscc_and_resolution
 from process_handlers.run_mv import run_mv
 from process_handlers.plot_graphs import plot_graphs
@@ -32,16 +32,16 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
          test_mode: bool) -> None:
 
     with tqdm(total=9 if make_graphs else 6) as pbar: 
-        # pbar.set_description("Downloading files")
-        # download_files(config, test_mode)
+        pbar.set_description("Downloading files")
+        download_files(config, test_mode)
         pbar.update(1)
 
-        # pbar.set_description("Categorizing sugars")
-        # categorize(config)
+        pbar.set_description("Categorizing sugars")
+        categorize(config)
         pbar.update(1)
 
-        # pbar.set_description("Separating alternative conformations")
-        # create_separate_mmcifs(config)
+        pbar.set_description("Separating alternative conformations")
+        create_separate_mmcifs(config)
         # mock_altloc_separation(config)
         pbar.update(1)
 
