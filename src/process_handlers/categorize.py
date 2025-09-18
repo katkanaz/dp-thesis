@@ -11,6 +11,7 @@ from typing import List, Dict, Set, Union
 
 import gemmi
 from gemmi.cif import Block, Table  # type: ignore
+import gzip
 from logger import logger, setup_logger
 
 from configuration import Config
@@ -247,6 +248,14 @@ def categorize(config: Config) -> None:
         pdb_files = json.load(f)
 
     for pdb in pdb_files:
+        # pdb_gz_path = config.mmcif_files_dir / f"{pdb}.cif.gz"
+        #
+        #
+        # with gzip.open(pdb_gz_path, 'rb') as f_in:
+        #     with open(config.mmcif_files_dir / f"{pdb}.cif", 'wb') as f_out:
+        #         f_out.write(f_in.read())
+        #
+        # pdb_gz_path.unlink()
         monosacharides = []
         oligosacharides = []
 
