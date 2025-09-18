@@ -155,7 +155,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     with open(config.categorization_dir / "filtered_modified_ligands.json", "r") as f:
         ligands: dict = json.load(f)
 
-    target_dir = config.raw_binding_sites_dir
+    target_dir = config.raw_surroundings_dir
     target_dir.mkdir(exist_ok=True, parents=True)
 
     logger.info("Creating PatternQuerry configs")

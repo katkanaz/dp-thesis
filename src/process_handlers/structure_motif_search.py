@@ -44,7 +44,7 @@ def extract_representatives(sugar: str, number: int, method: str, config: Config
 
     for num, file_key in representatives.items():
         binding_site_file_name = structure_keys[str(file_key)]
-        shutil.copyfile((config.filtered_binding_sites_dir / binding_site_file_name), (input_representatives / binding_site_file_name))
+        shutil.copyfile((config.filtered_surroundings_dir / binding_site_file_name), (input_representatives / binding_site_file_name))
 
 
 def load_representatives(config: Config) -> List[Path]:
@@ -222,7 +222,7 @@ def structure_motif_search(sugar: str, perform_clustering: bool, number: int, me
         extract_representatives(sugar, number, method, config, input_folder)
         representatives: List[Path] = load_representatives(config)
     else:
-        representatives: List[Path] = list(config.filtered_binding_sites_dir.glob("*.pdb"))
+        representatives: List[Path] = list(config.filtered_surroundings_dir.glob("*.pdb"))
         logger.info("Skipping clustering, structure motif search from filtered surroundings")
     
 

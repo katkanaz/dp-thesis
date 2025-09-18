@@ -150,10 +150,10 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     logger.info("Refining sugar surroundings")
 
-    raw_binding_sites = config.raw_binding_sites_dir
+    raw_surroundings = config.raw_surroundings_dir
 
-    filtered_binding_sites = config.filtered_binding_sites_dir
-    filtered_binding_sites.mkdir(exist_ok=True, parents=True)
+    filtered_surroundings = config.filtered_surroundings_dir
+    filtered_surroundings.mkdir(exist_ok=True, parents=True)
 
 
     less_than_min_aa = []
@@ -168,7 +168,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     else:
         structures_keys = {} # To map index with structure
 
-    file_source = raw_binding_sites.iterdir() if file_list is None else [file[0] for file in file_list]
+    file_source = raw_surroundings.iterdir() if file_list is None else [file[0] for file in file_list]
     for path_to_file in file_source:
 
 
@@ -188,7 +188,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             continue
 
 
-        sugar_path, sugar_selection_name = select_sugar(filename)
+        _, sugar_selection_name = select_sugar(filename)
 
         cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
         cmd.select("junk_residues", f"not wanted_residues")
@@ -221,7 +221,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         if file_list is not None:
             idx = list(filter(lambda x: x[0] == path_to_file, file_list))[0][1]
             
-        cmd.save(f"{filtered_binding_sites}/{idx}_{filename}.pdb")
+        cmd.save(f"{filtered_surroundings}/{idx}_{filename}.pdb")
         structures_keys[idx] = f"{idx}_{filename}.pdb"
         i += 1
         cmd.delete("all")
@@ -234,7 +234,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     logger.info(f"Number of surroundings with less than {min_residues} AA: {len(less_than_min_aa)}")
     logger.info(f"Number of surroundings with more than {max_residues} AA: {len(more_than_max_aa)}")
 
-    return filtered_binding_sites, deuterium_present
+    return filtered_surroundings, deuterium_present
 
 
 def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: Path, config: Config) -> None:

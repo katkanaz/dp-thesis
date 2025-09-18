@@ -46,8 +46,8 @@ class Config():
     graph_analysis_dir: Path
     residue_graphs_dir: Path
     pq_run_dir: Path
-    raw_binding_sites_dir: Path
-    filtered_binding_sites_dir: Path
+    raw_surroundings_dir: Path
+    filtered_surroundings_dir: Path
     clusters_dir: Path
     structure_motif_search_dir: Path
     dendrograms_dir: Path
@@ -72,7 +72,7 @@ class Config():
         self.run_data_dir = self.user_cfg.data_dir / data_run
 
         path_to_logfile = f"ligand_sort/{data_run}/{data_run}.log"
-        # self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
+
         self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"sugar_binding_patterns"
         self.init_pq_dir = self.user_cfg.data_dir / f"{data_run}/init_pq"
         self.components_dir = self.user_cfg.data_dir / f"{data_run}/components"
@@ -93,12 +93,12 @@ class Config():
         if sugar is not None:
             path_to_logfile = f"motif_based_search/{sugar}/{current_run}/{current_run}.log"
             self.pq_run_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/pq_run"
-            self.raw_binding_sites_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/raw_binding_sites"
-            self.filtered_binding_sites_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/filtered_binding_sites"
+            self.raw_surroundings_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/raw_surroundings"
+            self.filtered_surroundings_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/filtered_surroundings"
             self.clusters_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/clusters"
             self.structure_motif_search_dir = self.user_cfg.results_dir / f"motif_based_search/{sugar}/{current_run}/structure_motif_search"
-            self.dendrograms_dir = self.user_cfg.images_dir / f"binding_sites/{sugar}/{current_run}/dendrograms"
-            self.tanglegrams_dir = self.user_cfg.images_dir / f"binding_sites/{sugar}/{current_run}/tanglegrams"
+            self.dendrograms_dir = self.user_cfg.images_dir / f"surroundings/{sugar}/{current_run}/dendrograms"
+            self.tanglegrams_dir = self.user_cfg.images_dir / f"surroundings/{sugar}/{current_run}/tanglegrams"
 
 
         self.log_path = self.user_cfg.results_dir / path_to_logfile
