@@ -15,7 +15,8 @@ class UserConfig(BaseModel):
     mv_dir: Path
     pq_dir: Path
 
-    pdb_ids_list: List[str] # TODO: Handle if the list is not given in config.json
+    pdb_ids_list: List[str] # TODO: Handle if the list is not given in config.json and -t wants to be run
+    skip_ids: List[str]
 
 
     @classmethod

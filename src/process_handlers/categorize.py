@@ -248,6 +248,7 @@ def categorize(config: Config) -> None:
         pdb_files = json.load(f)
 
     for pdb in pdb_files:
+        # NOTE: can they stay as gzip?
         # pdb_gz_path = config.mmcif_files_dir / f"{pdb}.cif.gz"
         #
         #

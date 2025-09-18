@@ -262,7 +262,9 @@ def download_files(config: Config, test_mode: bool) -> None:
         pdb_ids = set(config.user_cfg.pdb_ids_list)
 
     with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
-        json.dump(list(pdb_ids), f, indent=4)
+        json.dump(list(pdb_ids), f, indent=4) # TODO: what?
+
+    pdb_ids.difference_update(config.user_cfg.skip_ids) # TODO: test me
 
     download_structures_and_validation_files(config, pdb_ids)
     check_downloaded_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
