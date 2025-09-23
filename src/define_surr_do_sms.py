@@ -61,6 +61,9 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
 if __name__ == "__main__":
     parser = ArgumentParser()
 
+    parser.add_argument("--config", help="Path to config file", type=str, default="config.json")
+    parser.add_argument("-t", "--test_mode", action="store_true",
+                        help="Weather to run the whole process in a test mode")
     parser.add_argument("-s", "--sugar", help="The sugar abbreviation", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
     parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
@@ -79,7 +82,7 @@ if __name__ == "__main__":
         if args.number is not None or args.method is not None:
             parser.error("When using -c/--perform_clustering both -n/--number and -m/--method must be provided.")
 
-    config = Config.load("config.json", args.sugar, True)
+    config = Config.load(args.config, args.sugar, True)
 
     setup_logger(config.log_path)
 

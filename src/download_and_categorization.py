@@ -74,6 +74,7 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
 if __name__ == "__main__":
     parser = ArgumentParser()
 
+    parser.add_argument("--config", help="Path to config file", type=str, default="config.json")
     parser.add_argument("-t", "--test_mode", action="store_true",
                         help="Weather to run the whole process in a test mode")
     parser.add_argument("--min_rscc", help="Minimum RSCC used to define graph area",
@@ -84,7 +85,7 @@ if __name__ == "__main__":
                         type=float, default=2.0)
     parser.add_argument("--max_rmsd", help="Maximum RMSD used to define graph area",
                         type=float, default=3.0)
-    # FIXME: Should they have default? how to automate this, it originates in residue graphs?
+    # FIXME: Get rid of graphs in process completely?
     parser.add_argument("--res", help="Value of maximum overall resolution of structure",
                         type=float, default=3.0)
     parser.add_argument("--rscc", help="Value of minimum RSCC of residue",
@@ -96,7 +97,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", None, False) # FIXME: load from cmd line? too many args? object?
+    config = Config.load(args.config, None, False) # FIXME: load from cmd line? too many args? object?
 
     setup_logger(config.log_path)
 
