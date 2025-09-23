@@ -9,7 +9,6 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 from argparse import ArgumentParser
 import json
 from os import listdir
-import pandas as pd
 from pathlib import Path
 from time import sleep
 from typing import List, Set
@@ -20,20 +19,8 @@ from logger import logger, setup_logger
 
 from configuration import Config
 
-
-def get_pdb_ids_from_pq(result_file: Path, config: Config) -> None:
-    """
-    Get PDB IDs of structures from PQ (PatternQuery) results.
-
-    :param result_file: Path to file for writing results
-    :param config: Config object
-    """
-
-    structures = pd.read_csv(config.sugar_binding_patterns_dir / "structures.csv")
-    pdb_ids = structures.iloc[:,0].tolist()
-
-    with open(result_file, "w") as f:
-        json.dump(pdb_ids, f, indent=4)
+import mirror_tools
+from utils.unzip_file import unzip_single_file
 
 
 def get_components_file(config: Config) -> None:
@@ -106,59 +93,60 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     return pdb_ids
 
 
-def download_structures_and_validation_files(config: Config, pdb_ids: Set[str]) -> None:
+def download_validation_files(config: Config, pdb_ids: Set[str]) -> None:
+    # FIXME: docs
     """
-    Download mmCIF files of structures with sugars and their xml validation files.
+    Download XML validation files of the given structures.
 
     :param config: Config object
-    :param pdb_ids: PDB IDs of structures to download 
+    :param pdb_ids: List of PDB IDs of the structures for which to download validation files 
     """
 
-    logger.info("Downloading files")
+    logger.info("Downloading validation files")
 
     failed_to_download = []
-    timeout = 2
-    n = 0
+    # timeout = 2
+    # n = 0
     for i, pdb in enumerate(pdb_ids):
-        try:
+        # try:
             # print(f"Downloading {pdb}")
-            response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-            open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
+            # response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
+            # open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
 
             validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml") # TODO: Test if okay to get xmls via api or need to add to mirror
             open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
-        except Exception as e:
-            logger.info(f"An Error occured: {e}")
-            failed_to_download.append(pdb)
-            continue
+        # except Exception as e:
+        #     logger.info(f"An Error occured: {e}")
+        #     failed_to_download.append(pdb)
+        #     continue
 
-        n += 1
-        if n == 20:
-            n = 0
-            logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}/{len(pdb_ids)} (failed: {len(failed_to_download)})")
-            sleep(timeout)
-
-    logger.info("Finished all iterations - first loop.")
-    logger.info(f"Failed to download: {failed_to_download}")
+    #     n += 1
+    #     if n == 20:
+    #         n = 0
+    #         logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}/{len(pdb_ids)} (failed: {len(failed_to_download)})")
+    #         sleep(timeout)
+    #
+    # logger.info("Finished all iterations - first loop.")
+    # logger.info(f"Failed to download: {failed_to_download}")
 
     # To download files that raised an error in the first loop
-    timeout = 2
-    n = 0
-    for i, pdb in enumerate(failed_to_download):
-        logger.info(f"Downloading {pdb}")
-        response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-        open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
-
-        validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-        open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
-
-        n += 1
-        if n == 20:
-            n = 0
-            logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
-            sleep(timeout)
-
-    logger.info("Finished all iterations - second loop.")
+    # timeout = 2
+    # n = 0
+    # for i, pdb in enumerate(failed_to_download):
+    #     logger.info(f"Downloading {pdb}")
+    #     response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
+    #     open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
+    #
+    #     validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
+    #     open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
+    #
+    #     n += 1
+    #     if n == 20:
+    #         n = 0
+    #         logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
+    #         sleep(timeout)
+    #
+    # logger.info("Finished all iterations - second loop.")
 
 
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
@@ -246,30 +234,37 @@ def download_files(config: Config, test_mode: bool) -> None:
     config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
     config.validation_files_dir.mkdir(exist_ok=True, parents=True)
     config.components_dir.mkdir(exist_ok=True, parents=True)
+    config.sugar_binding_patterns_dir.mkdir(exist_ok=True, parents=True)
 
-    get_components_file(config)
-    sugar_names = get_sugars_from_ccd(config)
 
     if not test_mode: 
+        get_components_file(config)
+        sugar_names = get_sugars_from_ccd(config)
         pdb_ids_pq_file = config.run_data_dir / "pdb_ids_pq.json"
         pdb_ids_ccd = get_pdb_ids_with_sugars(config, sugar_names)
-        get_pdb_ids_from_pq(pdb_ids_pq_file, config)
+        mirror_tools.get_pq_result(config)
+        output_file = unzip_single_file(config.sugar_binding_patterns_dir / "result.zip", config.sugar_binding_patterns_dir, "structures-with-sugars/structures.csv") # TODO: should the name and paths be given in cofig?
+        mirror_tools.get_pdb_ids_from_pq(output_file, pdb_ids_pq_file)
 
-        with (pdb_ids_pq_file).open() as f:
+        with (pdb_ids_pq_file).open() as f: # FIXME: get as return value from function
             pdb_ids_pq = json.load(f)
         pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
+        mirror_tools.create_file_list(config, pdb_ids)
+
+        with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
+            json.dump(list(pdb_ids), f, indent=4)
     else:
         pdb_ids = set(config.user_cfg.pdb_ids_list)
+        mirror_tools.create_file_list(config, pdb_ids)
 
-    with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
-        json.dump(list(pdb_ids), f, indent=4) # TODO: what?
 
-    pdb_ids.difference_update(config.user_cfg.skip_ids) # TODO: test me
+    pdb_ids.difference_update(config.user_cfg.skip_ids)
+    mirror_tools.download_structures_from_mirror(config.mmcif_files_dir, config.run_data_dir / "file_list.txt")
+    download_validation_files(config, pdb_ids)
 
-    download_structures_and_validation_files(config, pdb_ids)
-    check_downloaded_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
-    missing_files = get_ids_missing_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
-    download_missing_files(config, missing_files)
+    # check_downloaded_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
+    # missing_files = get_ids_missing_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
+    # download_missing_files(config, missing_files)
 
 
 if __name__ == "__main__":
