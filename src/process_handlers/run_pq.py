@@ -21,6 +21,7 @@ import requests
 from logger import logger, setup_logger
 
 from configuration import Config
+from utils.unzip_file import unzip_all
 
 
 more_than_one_pattern = []          # just to check no more than one pattern for specific ResidueID was found
@@ -38,11 +39,10 @@ def download_pq(config: Config) -> None:
     logger.info("Downloading PatternQuery")
 
     response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/PatternQuery/DownloadService")
-    with open((config.user_cfg.pq_dir / "PatternQuery.zip"), "wb") as f:
+    with open((config.user_cfg.pq_dir / "PatternQuery.zip"), "wb") as f:  # FIXME: Keep version number
         f.write(response.content)
 
-    with zipfile.ZipFile(config.user_cfg.pq_dir / "PatternQuery.zip", "r") as zip_ref:
-        zip_ref.extractall(config.user_cfg.pq_dir / "PatternQuery") #FIXME: keep version number
+    unzip_all(config.user_cfg.pq_dir / "PatternQuery.zip", config.user_cfg.pq_dir / "PatternQuery")
 
 
 # def update_mv(config: Config) -> None: # TODO: finish function

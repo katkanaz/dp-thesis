@@ -18,6 +18,7 @@ import requests
 from logger import logger, setup_logger
 
 from configuration import Config
+from utils.unzip_file import unzip_all
 
 
 def remove_nonsugar_residues(config: Config) -> None:
@@ -55,8 +56,7 @@ def download_mv(config: Config) -> None:
     with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f: # FIXME: Keep version number
         f.write(response.content)
 
-    with ZipFile(config.user_cfg.mv_dir / "MotiveValidator.zip", "r") as zip_ref:
-        zip_ref.extractall(config.user_cfg.mv_dir / "MotiveValidator")
+    unzip_all(config.user_cfg.mv_dir / "MotiveValidator.zip", config.user_cfg.mv_dir / "MotiveValidator")
 
 
 # TODO: finish function
