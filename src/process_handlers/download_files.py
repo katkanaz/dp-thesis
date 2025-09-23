@@ -19,7 +19,7 @@ from logger import logger, setup_logger
 
 from configuration import Config
 
-import mirror_tools
+from . import mirror_tools
 from utils.unzip_file import unzip_single_file
 
 
@@ -248,18 +248,20 @@ def download_files(config: Config, test_mode: bool) -> None:
 
         with (pdb_ids_pq_file).open() as f: # FIXME: get as return value from function
             pdb_ids_pq = json.load(f)
+
         pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
+        pdb_ids.difference_update(config.user_cfg.skip_ids)
         mirror_tools.create_file_list(config, pdb_ids)
 
         with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4)
     else:
         pdb_ids = set(config.user_cfg.pdb_ids_list)
+        pdb_ids.difference_update(config.user_cfg.skip_ids)
         mirror_tools.create_file_list(config, pdb_ids)
 
 
-    pdb_ids.difference_update(config.user_cfg.skip_ids)
-    mirror_tools.download_structures_from_mirror(config.mmcif_files_dir, config.run_data_dir / "file_list.txt")
+    mirror_tools.download_structures_from_mirror(config.mmcif_files_dir, config.run_data_dir / "file_list.txt") # FIXME: catch if rsync skips missing files
     download_validation_files(config, pdb_ids)
 
     # check_downloaded_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
