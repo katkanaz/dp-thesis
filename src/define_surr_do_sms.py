@@ -71,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"])
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
-    parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
+    parser.add_argument("--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
 
     args = parser.parse_args()
 
