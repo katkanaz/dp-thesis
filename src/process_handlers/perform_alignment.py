@@ -55,7 +55,7 @@ def get_sugar_ring_center(sugar: str) -> List[float]:
     :return: The center coordinates
     """
 
-    return cmd.centerofmass(sugar)
+    return cmd.centerofmass(sugar) # DEBUG: if the center is invalid could resolve in END
 
 
 def measure_distances(residues: List[Tuple[str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str], float]]:
@@ -96,6 +96,12 @@ def sort_distances(distances: List[Tuple[Tuple[str, str], float]], max_res: int)
     :param max_res: Allowed maximum of residues
     :return: Residues to delete
     """
+    # If 2 residues same distance the one with the lower number and chain with the earlier alphabetical ID goes first
+    
+
+
+    # sorted_distances = sorted(distances, key=lambda item: (item[1], int(item[0][0]), item[0][2]))
+    # return sorted_distances[max_res:]
 
     sorted_distances = sorted(distances, key=lambda item: item[1])
     return sorted_distances[max_res:]
@@ -172,11 +178,6 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     for path_to_file in file_source:
 
 
-        # FIXME: Delete, to skip mannose surrounding with only one atom
-        if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
-            logger.info(f"Skipping surrounding: {path_to_file.stem}")
-            continue
-
         filename = Path(path_to_file).stem
         logger.debug(f"Begin to process {filename}")
         cmd.delete("all")
@@ -190,7 +191,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
         _, sugar_selection_name = select_sugar(filename)
 
-        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
+        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer") # DEBUG: if selection wrong END could occur
         cmd.select("junk_residues", f"not wanted_residues")
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
@@ -206,10 +207,10 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
                 else:
                     raise e
                 i += 1
-                continue
+                continue # DEBUG: could possibly break selection and cause END
             residues: List[Tuple[str, str]] = []
-            cmd.iterate("n. CA and polymer", "residues.append((resi, resn))",
-                        space=locals())
+            cmd.iterate("n. CA and polymer", "residues.append((resi, resn))", space=locals()) # DEBUG: if residues empty could resolve in END
+            # cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals()) # FIXME:
             
             distances = measure_distances(residues, sugar_center, filename)
 
