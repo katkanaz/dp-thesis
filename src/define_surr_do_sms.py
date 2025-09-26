@@ -82,7 +82,7 @@ if __name__ == "__main__":
         if args.number is not None or args.method is not None:
             parser.error("When using -c/--perform_clustering both -n/--number and -m/--method must be provided.")
 
-    config = Config.load(args.config, args.sugar, True)
+    config = Config.load(args.config, args.sugar, True, args)
 
     setup_logger(config.log_path)
 

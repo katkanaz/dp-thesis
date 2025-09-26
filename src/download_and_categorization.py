@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load(args.config, None, False) # FIXME: load from cmd line? too many args? object?
+    config = Config.load(args.config, None, False)
 
     setup_logger(config.log_path)
 

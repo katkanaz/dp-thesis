@@ -255,6 +255,7 @@ def categorize(config: Config) -> None:
                 f_out.write(f_in.read())
 
         pdb_gz_path.unlink()
+
         monosacharides = []
         oligosacharides = []
 

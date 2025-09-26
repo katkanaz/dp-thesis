@@ -237,9 +237,10 @@ def download_files(config: Config, test_mode: bool) -> None:
     config.sugar_binding_patterns_dir.mkdir(exist_ok=True, parents=True)
 
 
+    get_components_file(config)
+    sugar_names = get_sugars_from_ccd(config)
+
     if not test_mode: 
-        get_components_file(config)
-        sugar_names = get_sugars_from_ccd(config)
         pdb_ids_pq_file = config.run_data_dir / "pdb_ids_pq.json"
         pdb_ids_ccd = get_pdb_ids_with_sugars(config, sugar_names)
         mirror_tools.get_pq_result(config)
@@ -250,15 +251,20 @@ def download_files(config: Config, test_mode: bool) -> None:
             pdb_ids_pq = json.load(f)
 
         pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
-        pdb_ids.difference_update(config.user_cfg.skip_ids)
+        if config.user_cfg.skip_ids:
+            pdb_ids.difference_update(config.user_cfg.skip_ids)
         mirror_tools.create_file_list(config, pdb_ids)
 
         with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4)
     else:
-        pdb_ids = set(config.user_cfg.pdb_ids_list)
-        pdb_ids.difference_update(config.user_cfg.skip_ids)
+        pdb_ids = set(config.user_cfg.pdb_ids_list) # type: ignore
+        if config.user_cfg.skip_ids:
+            pdb_ids.difference_update(config.user_cfg.skip_ids)
         mirror_tools.create_file_list(config, pdb_ids)
+
+        with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
+            json.dump(list(pdb_ids), f, indent=4) # FIXME: categorize needs it - fix that! dont load from file
 
 
     mirror_tools.download_structures_from_mirror(config.mmcif_files_dir, config.run_data_dir / "file_list.txt") # FIXME: catch if rsync skips missing files
@@ -276,7 +282,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", None, False)
+    config = Config.load("config.json", None, False, args)
 
     setup_logger(config.log_path)
 

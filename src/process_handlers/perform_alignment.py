@@ -11,6 +11,7 @@ import csv
 import itertools
 import json
 import math
+import multiprocessing
 import os
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -176,6 +177,9 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     file_source = raw_surroundings.iterdir() if file_list is None else [file[0] for file in file_list]
     for path_to_file in file_source:
+        if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
+            logger.info(f"Skipping surrounding: {path_to_file.stem}")
+            continue
 
 
         filename = Path(path_to_file).stem
@@ -356,6 +360,8 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     min_residues = 5
     max_residues = 10
 
+    # cmd.set('max_threads', multiprocessing.cpu_count()) # NOTE: Unusable with version 2.4.0 - only possible option is paralelizing with multiprocessing
+
     fixed_folder, deuterium_present = refine_binding_sites(sugar, min_residues, max_residues, config)
     if deuterium_present:
         replace_deuterium(deuterium_present)
@@ -376,7 +382,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", args.sugar, True)
+    config = Config.load("config.json", args.sugar, True, args)
 
     setup_logger(config.log_path)
 
