@@ -11,7 +11,6 @@ import csv
 import itertools
 import json
 import math
-import multiprocessing
 import os
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -59,7 +58,7 @@ def get_sugar_ring_center(sugar: str) -> List[float]:
     return cmd.centerofmass(sugar) # DEBUG: if the center is invalid could resolve in END
 
 
-def measure_distances(residues: List[Tuple[str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str], float]]:
+def measure_distances(residues: List[Tuple[str, str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str, str], float]]:
     """
     Measure the distane from all the residues to the sugar center.
 
@@ -69,10 +68,10 @@ def measure_distances(residues: List[Tuple[str, str]], sugar_center: List[float]
     :return: Distances of all the residues from the sugar center
     """
 
-    distances: List[Tuple[Tuple[str, str], float]] = []
+    distances: List[Tuple[Tuple[str, str, str], float]] = []
 
     cmd.pseudoatom(object="tmp", pos=sugar_center)
-    for resi, resn in residues:
+    for resi, resn, chain in residues:
         atoms = cmd.get_model(f"resi {resi}").atom
         min_distance = math.inf
         
@@ -81,7 +80,7 @@ def measure_distances(residues: List[Tuple[str, str]], sugar_center: List[float]
             if distance < min_distance:
                 min_distance = distance
 
-        distances.append(((resn, resi), min_distance))
+        distances.append(((resi, resn, chain), min_distance))
 
     logger.debug(distances)
 
@@ -89,7 +88,7 @@ def measure_distances(residues: List[Tuple[str, str]], sugar_center: List[float]
     return distances
 
 
-def sort_distances(distances: List[Tuple[Tuple[str, str], float]], max_res: int) -> List[Tuple[Tuple[str, str], float]]:
+def sort_distances(distances: List[Tuple[Tuple[str, str, str], float]], max_res: int) -> List[Tuple[Tuple[str, str, str], float]]:
     """
     Sort the residue distances in ascending order and keep information of the residues that are over <max_res>.
 
@@ -98,25 +97,22 @@ def sort_distances(distances: List[Tuple[Tuple[str, str], float]], max_res: int)
     :return: Residues to delete
     """
     # If 2 residues same distance the one with the lower number and chain with the earlier alphabetical ID goes first
-    
-
-
-    # sorted_distances = sorted(distances, key=lambda item: (item[1], int(item[0][0]), item[0][2]))
-    # return sorted_distances[max_res:]
-
-    sorted_distances = sorted(distances, key=lambda item: item[1])
+    sorted_distances = sorted(distances, key=lambda item: (item[1], int(item[0][0]), item[0][2]))
     return sorted_distances[max_res:]
 
+    # sorted_distances = sorted(distances, key=lambda item: item[1])
+    # return sorted_distances[max_res:]
 
-def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str], float]]) -> None:
+
+def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str, str], float]]) -> None:
     """
     Remove residues from the surrounding.
 
     :param residues_to_remove: Residues to be deleted
     """
 
-    for (_, resi), _ in residues_to_remove:
-        cmd.remove(f"resi {resi}")
+    for (resi, _, _), _ in residues_to_remove:
+        cmd.remove(f"resi {resi}") # FIXME: only one identifier
 
 
 def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
@@ -177,9 +173,9 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     file_source = raw_surroundings.iterdir() if file_list is None else [file[0] for file in file_list]
     for path_to_file in file_source:
-        if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
-            logger.info(f"Skipping surrounding: {path_to_file.stem}")
-            continue
+        # if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
+        #     logger.info(f"Skipping surrounding: {path_to_file.stem}")
+        #     continue
 
 
         filename = Path(path_to_file).stem
@@ -202,6 +198,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
         if count > max_residues:
             more_than_max_aa.append(filename)
+            logger.debug(f"{filename} more than 10 residues!")
             try:
                 sugar_center = get_sugar_ring_center(sugar_selection_name)
             except KeyError as e:
@@ -212,9 +209,9 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
                     raise e
                 i += 1
                 continue # DEBUG: could possibly break selection and cause END
-            residues: List[Tuple[str, str]] = []
-            cmd.iterate("n. CA and polymer", "residues.append((resi, resn))", space=locals()) # DEBUG: if residues empty could resolve in END
-            # cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals()) # FIXME:
+            residues: List[Tuple[str, str, str]] = []
+            # cmd.iterate("n. CA and polymer", "residues.append((resi, resn))", space=locals()) # DEBUG: if residues empty could resolve in END
+            cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals()) # FIXME:
             
             distances = measure_distances(residues, sugar_center, filename)
 
