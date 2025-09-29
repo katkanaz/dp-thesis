@@ -82,7 +82,7 @@ def measure_distances(residues: List[Tuple[str, str, str]], sugar_center: List[f
 
         distances.append(((resi, resn, chain), min_distance))
 
-    logger.debug(distances)
+    # logger.debug(distances)
 
     cmd.delete("tmp")
     return distances
@@ -98,6 +98,8 @@ def sort_distances(distances: List[Tuple[Tuple[str, str, str], float]], max_res:
     """
     # If 2 residues same distance the one with the lower number and chain with the earlier alphabetical ID goes first
     sorted_distances = sorted(distances, key=lambda item: (item[1], int(item[0][0]), item[0][2]))
+    # logger.debug(f"Sorted dist: {sorted_distances}")
+    # logger.debug(f"Sorted dist delete: {sorted_distances[max_res:]}")
     return sorted_distances[max_res:]
 
     # sorted_distances = sorted(distances, key=lambda item: item[1])
@@ -111,8 +113,9 @@ def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str, str], float]]
     :param residues_to_remove: Residues to be deleted
     """
 
-    for (resi, _, _), _ in residues_to_remove:
-        cmd.remove(f"resi {resi}") # FIXME: only one identifier
+    for (resi, resn, chain), _ in residues_to_remove:
+        selection = f"chain {chain} and resi {resi} and resn {resn}"
+        cmd.remove(selection)
 
 
 def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
@@ -179,13 +182,13 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
 
         filename = Path(path_to_file).stem
-        logger.debug(f"Begin to process {filename}")
+        # logger.debug(f"Begin to process {filename}")
         cmd.delete("all")
         cmd.load(path_to_file)
         count = cmd.count_atoms("n. CA and polymer")
         if count < min_residues:
             less_than_min_aa.append(filename)
-            logger.debug(f"{filename} less than 5 residues!")
+            # logger.debug(f"{filename} less than 5 residues!")
             continue
 
 
@@ -198,7 +201,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
         if count > max_residues:
             more_than_max_aa.append(filename)
-            logger.debug(f"{filename} more than 10 residues!")
+            # logger.debug(f"{filename} more than 10 residues!")
             try:
                 sugar_center = get_sugar_ring_center(sugar_selection_name)
             except KeyError as e:
@@ -212,6 +215,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             residues: List[Tuple[str, str, str]] = []
             # cmd.iterate("n. CA and polymer", "residues.append((resi, resn))", space=locals()) # DEBUG: if residues empty could resolve in END
             cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals()) # FIXME:
+            # logger.debug(f"Residues list: {residues}")
             
             distances = measure_distances(residues, sugar_center, filename)
 
@@ -227,7 +231,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         structures_keys[idx] = f"{idx}_{filename}.pdb"
         i += 1
         cmd.delete("all")
-        logger.debug(f"{filename} succesfully processed!")
+        # logger.debug(f"{filename} succesfully processed!")
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
