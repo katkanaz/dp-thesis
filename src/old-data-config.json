@@ -1,0 +1,9 @@
+{
+    "data_dir": "/home/kaci/dp/old_data/data",
+    "results_dir": "/home/kaci/dp/old_data/results",
+    "images_dir": "/home/kaci/dp/old_data/img",
+    "mv_dir": "/home/kaci/dp/old_data/mv",
+    "pq_dir": "/home/kaci/dp/old_data/pq",
+    "pdb_ids_list": [],
+    "skip_ids": []
+}

@@ -1,0 +1,10 @@
+{
+    "data_dir": "../data",
+    "results_dir": "../results",
+    "images_dir": "../img",
+    "mv_dir": "../mv",
+    "pq_dir": "../pq",
+    "pdb_ids_list": ["3ehs","3ehu","3h3g","3n93","3n94","3n95","3n96","4h1g","4wgi","4wms","4wmt","4wmu","4wmv","4wmx","5iqz","5jon","5zd4","6pfo","6pgq","6qxj","6qyk","6qyl","6wgz","6wh0","6ybj","6ybk","7vn2","7vn3","7vn4","7vn5","7vn6","7vn7","7vn8","8ekx","8el0","8g3s","8g3u","8g3w","8g3x","8g3y","8h68","8iiy","8iiz","8jyx","8svy"],
+    "skip_ids": ["7zll"],
+    "data_run": "2025-09-28T21-44-52"
+}
