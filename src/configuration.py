@@ -58,10 +58,10 @@ class Config():
 
 
     @classmethod
-    def load(cls, file_path: Union[Path, str], sugar: Union[str, None], need_data_run: bool, args: argparse.Namespace, force_new: bool = False) -> "Config":
+    def load(cls, file_path: Union[Path, str], sugar: Union[str, None], need_data_run: bool, args: Union[argparse.Namespace, None], force_new: bool = False) -> "Config":
         config = cls()
         config.user_cfg = UserConfig.load_json(file_path)
-        if args.test_mode:
+        if args is not None and args.test_mode:
             assert config.user_cfg.pdb_ids_list is not None, "If run in test mode 'pdb_ids_list' config value cannot be None"
         current_run = config.get_current_run(force_new)
         data_run = config.get_data_run(config.user_cfg.data_dir, config.user_cfg.data_run) if need_data_run else None
