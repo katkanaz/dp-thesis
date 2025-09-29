@@ -97,13 +97,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load(args.config, None, False)
+    config = Config.load(args.config, None, False, args)
 
     setup_logger(config.log_path)
 
     is_unix = system() != "Windows"
 
-    # TODO: Create object to pass arguments
     with logging_redirect_tqdm():
         main(config, is_unix, args.min_rscc, args.max_rscc, args.min_rmsd, args.max_rmsd,
              args.res, args.rscc, args.rmsd, args.make_graphs, args.test_mode)

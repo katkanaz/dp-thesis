@@ -7,6 +7,7 @@ Author: Kateřina Nazarčuková
 
 
 from argparse import ArgumentParser
+import logging
 from platform import system
 from typing import Union
 
@@ -84,7 +85,7 @@ if __name__ == "__main__":
 
     config = Config.load(args.config, args.sugar, True, args)
 
-    setup_logger(config.log_path)
+    setup_logger(config.log_path, logging.DEBUG)
 
     is_unix = system() != "Windows"
 
