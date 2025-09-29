@@ -248,7 +248,6 @@ def categorize(config: Config) -> None:
         pdb_files = json.load(f)
 
     for pdb in pdb_files:
-        # NOTE: can they stay as gzip?
         pdb_gz_path = config.mmcif_files_dir / f"{pdb}.cif.gz"
         with gzip.open(pdb_gz_path, 'rb') as f_in:
             with open(config.mmcif_files_dir / f"{pdb}.cif", 'wb') as f_out:
@@ -359,7 +358,7 @@ def categorize(config: Config) -> None:
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json", None, True)
+    config = Config.load("config.json", None, True, None)
 
     setup_logger(config.log_path)
 

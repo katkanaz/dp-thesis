@@ -93,62 +93,6 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     return pdb_ids
 
 
-def download_validation_files(config: Config, pdb_ids: Set[str]) -> None:
-    # FIXME: docs
-    """
-    Download XML validation files of the given structures.
-
-    :param config: Config object
-    :param pdb_ids: List of PDB IDs of the structures for which to download validation files 
-    """
-
-    logger.info("Downloading validation files")
-
-    failed_to_download = []
-    # timeout = 2
-    # n = 0
-    for i, pdb in enumerate(pdb_ids):
-        # try:
-            # print(f"Downloading {pdb}")
-            # response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-            # open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
-
-            validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml") # TODO: Test if okay to get xmls via api or need to add to mirror
-            open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
-        # except Exception as e:
-        #     logger.info(f"An Error occured: {e}")
-        #     failed_to_download.append(pdb)
-        #     continue
-
-    #     n += 1
-    #     if n == 20:
-    #         n = 0
-    #         logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}/{len(pdb_ids)} (failed: {len(failed_to_download)})")
-    #         sleep(timeout)
-    #
-    # logger.info("Finished all iterations - first loop.")
-    # logger.info(f"Failed to download: {failed_to_download}")
-
-    # To download files that raised an error in the first loop
-    # timeout = 2
-    # n = 0
-    # for i, pdb in enumerate(failed_to_download):
-    #     logger.info(f"Downloading {pdb}")
-    #     response = requests.get(f"https://files.rcsb.org/download/{pdb}.cif")
-    #     open((config.mmcif_files_dir / f"{pdb}.cif"), "wb").write(response.content) 
-    #
-    #     validation_data = requests.get(f"https://www.ebi.ac.uk/pdbe/entry-files/download/{pdb}_validation.xml")
-    #     open((config.validation_files_dir / f"{pdb}.xml"), "wb").write(validation_data.content)
-    #
-    #     n += 1
-    #     if n == 20:
-    #         n = 0
-    #         logger.info(f"Pausing for {timeout} seconds. Iteration {i+1}")
-    #         sleep(timeout)
-    #
-    # logger.info("Finished all iterations - second loop.")
-
-
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
     """
     Get IDs of structures that were not successfully downloaded.
@@ -253,7 +197,6 @@ def download_files(config: Config, test_mode: bool) -> None:
         pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
         if config.user_cfg.skip_ids:
             pdb_ids.difference_update(config.user_cfg.skip_ids)
-        mirror_tools.create_file_list(config, pdb_ids)
 
         with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4)
@@ -261,18 +204,13 @@ def download_files(config: Config, test_mode: bool) -> None:
         pdb_ids = set(config.user_cfg.pdb_ids_list) # type: ignore
         if config.user_cfg.skip_ids:
             pdb_ids.difference_update(config.user_cfg.skip_ids)
-        mirror_tools.create_file_list(config, pdb_ids)
 
         with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4) # FIXME: categorize needs it - fix that! dont load from file
 
 
-    mirror_tools.download_structures_from_mirror(config.mmcif_files_dir, config.run_data_dir / "file_list.txt") # FIXME: catch if rsync skips missing files
-    download_validation_files(config, pdb_ids)
-
-    # check_downloaded_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir, config.mmcif_files_dir)
-    # missing_files = get_ids_missing_files(config.run_data_dir / "pdb_ids_intersection_pq_ccd.json", config.validation_files_dir)
-    # download_missing_files(config, missing_files)
+    mirror_tools.download_structures_from_mirror(config, pdb_ids, config.mmcif_files_dir)
+    mirror_tools.download_validation_files_from_mirror(config, pdb_ids, config.validation_files_dir)
 
 
 if __name__ == "__main__":

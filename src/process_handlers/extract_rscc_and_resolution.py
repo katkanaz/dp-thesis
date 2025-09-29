@@ -47,7 +47,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
         modified_ids_no_altloc = [remove_altloc_from_id(pdb_id) for pdb_id in modified_ligands]
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
         for structure, residues in all_residues.items():
-            file = f"{structure.lower()}.xml"
+            file = f"{structure.lower()}.xml.gz" # FIXME: After fixed on pdb end, read binary via gzip.open() and do not save
             with open(config.validation_files_dir / file, "r", encoding="utf8") as file_xml:
                 d = file_xml.read()
             data = BeautifulSoup(d, "xml")
@@ -100,7 +100,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json", None, False)
+    config = Config.load("config.json", None, False, None)
 
     setup_logger(config.log_path)
 
