@@ -4,6 +4,6 @@
     "images_dir": "../img",
     "mv_dir": "../mv",
     "pq_dir": "../pq",
-    "pdb_ids_list": ["3n95", "3n96", "7khu"],
-    "skip_ids": ["7zll"]
+    "pdb_ids_list": ["7khu", "6nmp", "1gww", "5x3j", "6rig", "3l2j"],
+    "skip_ids": ["7zll", "5x7p"]
 }
