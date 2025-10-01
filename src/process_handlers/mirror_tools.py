@@ -90,7 +90,7 @@ def download_from_mirror(src_dir: str, dest_path: Path, file_list_path: Path) ->
 
     cmd = [
         "/usr/bin/rsync",
-        "-ratl",
+        "-ratL",
         f"--rsh=/usr/bin/sshpass -p {password} ssh -o StrictHostKeyChecking=no",
         f"--files-from={file_list_path}",
         src_path,
