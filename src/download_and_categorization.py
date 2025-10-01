@@ -7,6 +7,7 @@ Author: Kateřina Nazarčuková
 
 
 from argparse import ArgumentParser
+import logging
 from platform import system
 
 from tqdm import tqdm
