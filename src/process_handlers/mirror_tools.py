@@ -50,7 +50,7 @@ def get_pq_result(config: Config) -> None:
     subprocess.run(cmd, check=True) # TODO: add runtimeerror
 
 
-def create_file_list(config: Config, pdb_ids: Set[str], file_name: str, extension: str) -> Path:
+def create_file_list(config: Config, pdb_ids: Set[str], file_name: str, extension: str, name_sufix = "") -> Path:
     """
     Create a text file containing file names based on <pdb_ids> to download for rsync.
 
@@ -65,7 +65,7 @@ def create_file_list(config: Config, pdb_ids: Set[str], file_name: str, extensio
 
     with open(config.run_data_dir / file_name, "w", encoding="utf8") as f:
         for pdb_id in pdb_ids:
-            f.write(f"{pdb_id}{extension}\n")
+            f.write(f"{pdb_id}{name_sufix}{extension}\n")
 
     return config.run_data_dir / file_name 
 
@@ -123,7 +123,7 @@ def download_validation_files_from_mirror(config: Config, pdb_ids: Set[str], des
     :param dest_path: Download destination directory
     """
 
-    file_list_path = create_file_list(config, pdb_ids, "validation_file_list.txt", ".xml.gz")
+    file_list_path = create_file_list(config, pdb_ids, "validation_file_list.txt", ".xml.gz", "_validation")
     logger.info("Downloading validation files")
     download_from_mirror("validation-files", dest_path, file_list_path)
 
