@@ -144,8 +144,10 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
 
 def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     (config.user_cfg.pq_dir).mkdir(exist_ok=True, parents=True)
-    dir_path = config.user_cfg.pq_dir / "PatternQuery"
-    if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
+    pq_base = config.user_cfg.pq_dir
+    mathces = sorted([p for p in pq_base.glob("PatternQuery*") if p.is_dir()])
+    pq_dir = matches[-1] if matches else pq_base / "PatternQuery"
+    if not pq_dir.exists() or (pq_dir.is_dir() and not any(pq_dir.iterdir())):
         download_pq(config)
     # Tmp # FIXME:
     (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)
@@ -179,7 +181,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
 
                 # Run PQ
                 cmd = [f"{'mono ' if is_unix is True else ''}"
-                       f"{config.user_cfg.pq_dir}/PatternQuery/WebChemistry.Queries.Service.exe "
+                       f"{pq_dir}/WebChemistry.Queries.Service.exe "
                        f"{config.pq_run_dir}/results "
                        f"{config.pq_run_dir}/pq_config.json"]
 

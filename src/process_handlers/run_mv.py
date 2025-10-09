@@ -36,11 +36,12 @@ def remove_nonsugar_residues(config: Config) -> None:
         if "saccharide" not in comp_type.lower():
             del doc[i]
 
-    options = gemmi.cif.WriteOptions()
-    options.misuse_hash = True
-    options.align_pairs = 48
-    options.align_loops = 20
-    doc.write_file(str(config.components_dir / "components_sugars_only.cif"), options)
+    # options = gemmi.cif.WriteOptions()
+    # options.misuse_hash = True
+    # options.align_pairs = 48
+    # options.align_loops = 20
+    # doc.write_file(str(config.components_dir / "components_sugars_only.cif"), options)
+    doc.write_file(str(config.components_dir / "components_sugars_only.cif")) # FIXME: prev work
 
 
 def download_mv(config: Config) -> None:
@@ -132,14 +133,16 @@ def run_mv(config: Config, is_unix: bool) -> None:
 
     # Prerequisits for running MV
     remove_nonsugar_residues(config)
-    dir_path = config.user_cfg.mv_dir / "MotiveValidator"
-    if not dir_path.exists() or (dir_path.is_dir() and not any(dir_path.iterdir())):
+    mv_base = config.user_cfg.mv_dir
+    matches = sorted([p for p in mv_base.glob("MotiveValidator*") if p.is_dir()])
+    mv_dir = matches[-1] if matches else mv_base / "MotiveValidator"
+    if not mv_dir.exists() or (mv_dir.is_dir() and not any(mv_dir.iterdir())):
         download_mv(config)
     # update_mv(config) # TODO: If just downloaded do not update
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"
-           f"{config.user_cfg.mv_dir}/MotiveValidator/WebChemistry.MotiveValidator.Service.exe "
+           f"{mv_dir}/WebChemistry.MotiveValidator.Service.exe "
            f"{config.mv_run_dir}/results "
            f"{config.mv_run_dir}/mv_config.json"]
 
