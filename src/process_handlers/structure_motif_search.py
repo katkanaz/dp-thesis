@@ -242,8 +242,8 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
-    parser.add_argument("-n", "--number", help="Number of clusters", type=int, required=True)
-    parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True)
+    parser.add_argument("-n", "--number", help="Number of clusters", type=int, required=True, default=20)
+    parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True, default="centroid")
 
     args = parser.parse_args()
 

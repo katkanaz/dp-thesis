@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", args.sugar, True)
+    config = Config.load("config.json", args.sugar, True, args)
 
     setup_logger(config.log_path)
 
