@@ -164,7 +164,7 @@ def run_mv(config: Config, is_unix: bool) -> None:
 
 
 if __name__ == "__main__":
-    config = Config.load("config.json", None, False)
+    config = Config.load("config.json", None, False, None)
 
     setup_logger(config.log_path)
 
