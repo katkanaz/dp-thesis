@@ -141,17 +141,17 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
-    parser.add_argument("-n", "--number", help="Number of clusters to create", type=int)
+    parser.add_argument("-n", "--number", help="Number of clusters to create", type=int, default=20, required=True)
     parser.add_argument("-m", "--method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"],
-                        required=True)
+                        required=True, default="centroid")
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
     parser.add_argument("-t", "--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", args.sugar, True)
+    config = Config.load("config.json", args.sugar, True, args)
 
     setup_logger(config.log_path)
 
