@@ -7,6 +7,7 @@ Author: Kateřina Nazarčuková
 
 
 from argparse import ArgumentParser
+from datetime import datetime
 import logging
 from platform import system
 from typing import Union
@@ -28,6 +29,7 @@ from process_handlers.structure_motif_search import structure_motif_search
 def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, make_dendrogram: bool,
          color_threshold: Union[float, None] = None) -> None:
     logger.info(f"Running 2nd program from {config.run_data_dir.stem} directory")
+
     with tqdm(total=6 if perform_clustering else 3) as pbar: 
         pbar.set_description("Running PatternQuery")
         run_pq(sugar, config, is_unix)
@@ -60,6 +62,8 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
 
 
 if __name__ == "__main__":
+    start_time = datetime.now()
+
     parser = ArgumentParser()
 
     parser.add_argument("--config", help="Path to config file", type=str, default="config.json")
@@ -83,9 +87,11 @@ if __name__ == "__main__":
         if args.number is not None or args.method is not None:
             parser.error("When using -c/--perform_clustering both -n/--number and -m/--method must be provided.")
 
+
     config = Config.load(args.config, args.sugar, True, args)
 
     setup_logger(config.log_path, logging.DEBUG)
+    logger.info(f"Called with the following arguments: {vars(args)}")
 
     is_unix = system() != "Windows"
 
@@ -93,3 +99,11 @@ if __name__ == "__main__":
         main(args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()
+
+    end_time = datetime.now()
+    duration = end_time - start_time
+    seconds = duration.total_seconds()
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    logger.info(f"Program completed successfully in {int(hours)}h {int(minutes)}m {int(seconds)}s")

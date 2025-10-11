@@ -7,12 +7,12 @@ Author: Kateřina Nazarčuková
 
 
 from argparse import ArgumentParser
-import logging
+from datetime import datetime
 from platform import system
 
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
-from logger import setup_logger
+from logger import logger, setup_logger
 
 from configuration import Config
 
@@ -73,6 +73,8 @@ def main(config: Config, is_unix: bool, min_rscc: float, max_rscc: float, min_rm
 
 
 if __name__ == "__main__":
+    start_time = datetime.now()
+
     parser = ArgumentParser()
 
     parser.add_argument("--config", help="Path to config file", type=str, default="config.json")
@@ -101,6 +103,7 @@ if __name__ == "__main__":
     config = Config.load(args.config, None, False, args)
 
     setup_logger(config.log_path)
+    logger.info(f"Called with the following arguments: {vars(args)}")
 
     is_unix = system() != "Windows"
 
@@ -109,3 +112,11 @@ if __name__ == "__main__":
              args.res, args.rscc, args.rmsd, args.make_graphs, args.test_mode)
 
         Config.clear_current_run()
+
+    end_time = datetime.now()
+    duration = end_time - start_time
+    seconds = duration.total_seconds()
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    logger.info(f"Program completed successfully in {int(hours)}h {int(minutes)}m {int(seconds)}s")
