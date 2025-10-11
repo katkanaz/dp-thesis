@@ -42,7 +42,7 @@ def extract_representatives(sugar: str, number: int, method: str, config: Config
     with open(config.clusters_dir / f"{sugar}_structures_keys.json") as struct_keys_file:
         structure_keys: dict = json.load(struct_keys_file)
 
-    for num, file_key in representatives.items():
+    for _, file_key in representatives.items():
         binding_site_file_name = structure_keys[str(file_key)]
         shutil.copyfile((config.filtered_surroundings_dir / binding_site_file_name), (input_representatives / binding_site_file_name))
 
@@ -88,10 +88,6 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
     structure = parser.get_structure(struc_name, path_to_file)
 
     models = list(structure)
-
-    # FIXME:
-    # if len(models) < 1:
-    #     raise ValueError("More than one model in the structure!")
 
     chains = list(models[0])
 
@@ -160,7 +156,7 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
 
     data = response.json()
     entries = data.get("data", {}).get("entries", [])
-    computed_models: Dict[str, Tuple[str, str]] = {} #TODO: double check type
+    computed_models: Dict[str, Tuple[str, str]] = {} # TODO: double check type
     for entry in entries:
         rcsd_id = entry.get("rcsb_id", "UNKNOWN_ID")
         title = entry.get("struct", {}).get("title", "N/A")

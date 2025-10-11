@@ -36,12 +36,11 @@ def remove_nonsugar_residues(config: Config) -> None:
         if "saccharide" not in comp_type.lower():
             del doc[i]
 
-    # options = gemmi.cif.WriteOptions()
-    # options.misuse_hash = True
-    # options.align_pairs = 48
-    # options.align_loops = 20
-    # doc.write_file(str(config.components_dir / "components_sugars_only.cif"), options)
-    doc.write_file(str(config.components_dir / "components_sugars_only.cif")) # FIXME: prev work
+    options = gemmi.cif.WriteOptions()
+    options.misuse_hash = True
+    options.align_pairs = 48
+    options.align_loops = 20
+    doc.write_file(str(config.components_dir / "components_sugars_only.cif"), options)
 
 
 def download_mv(config: Config) -> None:
