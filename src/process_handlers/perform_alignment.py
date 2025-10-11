@@ -55,7 +55,7 @@ def get_sugar_ring_center(sugar: str) -> List[float]:
     :return: The center coordinates
     """
 
-    return cmd.centerofmass(sugar) # DEBUG: if the center is invalid could resolve in END
+    return cmd.centerofmass(sugar)
 
 
 def measure_distances(residues: List[Tuple[str, str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str, str], float]]:
@@ -176,10 +176,6 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     file_source = raw_surroundings.iterdir() if file_list is None else [file[0] for file in file_list]
     for path_to_file in file_source:
-        # if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
-        #     logger.info(f"Skipping surrounding: {path_to_file.stem}")
-        #     continue
-
 
         filename = Path(path_to_file).stem
         # logger.debug(f"Begin to process {filename}")
@@ -194,7 +190,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
         _, sugar_selection_name = select_sugar(filename)
 
-        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer") # DEBUG: if selection wrong END could occur
+        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
         cmd.select("junk_residues", f"not wanted_residues")
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
@@ -211,10 +207,9 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
                 else:
                     raise e
                 i += 1
-                continue # DEBUG: could possibly break selection and cause END
+                continue
             residues: List[Tuple[str, str, str]] = []
-            # cmd.iterate("n. CA and polymer", "residues.append((resi, resn))", space=locals()) # DEBUG: if residues empty could resolve in END
-            cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals()) # FIXME:
+            cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals())
             # logger.debug(f"Residues list: {residues}")
             
             distances = measure_distances(residues, sugar_center, filename)
@@ -361,7 +356,6 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     min_residues = 5
     max_residues = 10
 
-    # cmd.set('max_threads', multiprocessing.cpu_count()) # NOTE: Unusable with version 2.4.0 - only possible option is paralelizing with multiprocessing
 
     fixed_folder, deuterium_present = refine_binding_sites(sugar, min_residues, max_residues, config)
     if deuterium_present:

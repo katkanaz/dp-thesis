@@ -5,6 +5,5 @@
     "mv_dir": "/home/kaci/dp/old_data/mv",
     "pq_dir": "/home/kaci/dp/old_data/pq",
     "pdb_ids_list": [],
-    "skip_ids": [],
-    "data_run": "2025-09-30T21-00-00"
+    "skip_ids": []
 }

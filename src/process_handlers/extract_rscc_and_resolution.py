@@ -49,10 +49,9 @@ def extract_rscc_and_resolution(config: Config) -> None:
         modified_ids_no_altloc = [remove_altloc_from_id(pdb_id) for pdb_id in modified_ligands]
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
         for structure, residues in all_residues.items(): # FIXME: why for all residues and not just ligands?
-            # file = f"{structure.lower()}.xml"
+            file = f"{structure.lower()}.xml"
             # logger.debug(f"Parsing {file}")
-            file = f"{structure.lower()}_validation.xml.gz"
-            with gzip.open(config.validation_files_dir / file, "rt") as file_xml:
+            with open(config.validation_files_dir / file, "r") as file_xml:
                 d = file_xml.read()
             data = BeautifulSoup(d, "xml")
             structure_info = data.find("Entry")
