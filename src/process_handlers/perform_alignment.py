@@ -140,7 +140,7 @@ def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
             f.writelines(new_lines)
 
 
-def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Tuple[Path, int]], None] = None) -> Tuple[Path, List[Tuple[Path, int]]]:
+def refine_surroundings(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Tuple[Path, int]], None] = None) -> Tuple[Path, List[Tuple[Path, int]]]:
     """
     Filter the surroundings obtained by PQ to contain only the target sugar and at least <min_residues> AA
     and give the filtered structures unique ID, which will be used as an index for creating the
@@ -195,27 +195,27 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         cmd.remove("junk_residues") 
         cmd.delete("junk_residues")
 
-        if count > max_residues:
-            more_than_max_aa.append(filename)
-            # logger.debug(f"{filename} more than 10 residues!")
-            try:
-                sugar_center = get_sugar_ring_center(sugar_selection_name)
-            except KeyError as e:
-                if str(e) == "'D'":
-                    deuterium_present.append((path_to_file, i))
-                    logger.warning(f"Found deuterium in: {path_to_file.stem}")
-                else:
-                    raise e
-                i += 1
-                continue
-            residues: List[Tuple[str, str, str]] = []
-            cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals())
-            # logger.debug(f"Residues list: {residues}")
-            
-            distances = measure_distances(residues, sugar_center, filename)
-
-            residues_to_remove = sort_distances(distances, max_residues)
-            remove_residues(residues_to_remove)
+        # if count > max_residues:
+        #     more_than_max_aa.append(filename)
+        #     # logger.debug(f"{filename} more than 10 residues!")
+        #     try:
+        #         sugar_center = get_sugar_ring_center(sugar_selection_name)
+        #     except KeyError as e:
+        #         if str(e) == "'D'":
+        #             deuterium_present.append((path_to_file, i))
+        #             logger.warning(f"Found deuterium in: {path_to_file.stem}")
+        #         else:
+        #             raise e
+        #         i += 1
+        #         continue
+        #     residues: List[Tuple[str, str, str]] = []
+        #     cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals())
+        #     # logger.debug(f"Residues list: {residues}")
+        #     
+        #     distances = measure_distances(residues, sugar_center, filename)
+        #
+        #     residues_to_remove = sort_distances(distances, max_residues)
+        #     remove_residues(residues_to_remove)
 
 
         idx = i
@@ -357,11 +357,11 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     max_residues = 10
 
 
-    fixed_folder, deuterium_present = refine_binding_sites(sugar, min_residues, max_residues, config)
+    fixed_folder, deuterium_present = refine_surroundings(sugar, min_residues, max_residues, config)
     if deuterium_present:
         replace_deuterium(deuterium_present)
         logger.info("Refining binding sites with replaced deuterium")
-        refine_binding_sites(sugar, min_residues, max_residues, config, deuterium_present)
+        refine_surroundings(sugar, min_residues, max_residues, config, deuterium_present)
     sys.stdout.flush()
 
     save_path = config.sugars_dir

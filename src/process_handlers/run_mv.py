@@ -132,7 +132,7 @@ def run_mv(config: Config, is_unix: bool) -> None:
     (config.user_cfg.mv_dir).mkdir(exist_ok=True, parents=True)
 
     # Prerequisits for running MV
-    remove_nonsugar_residues(config)
+    # remove_nonsugar_residues(config)
     mv_base = config.user_cfg.mv_dir
     matches = sorted([p for p in mv_base.glob("MotiveValidator*") if p.is_dir()])
     mv_dir = matches[-1] if matches else mv_base / "MotiveValidator"

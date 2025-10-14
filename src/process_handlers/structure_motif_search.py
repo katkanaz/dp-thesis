@@ -42,7 +42,7 @@ def extract_representatives(sugar: str, number: int, method: str, config: Config
     with open(config.clusters_dir / f"{sugar}_structures_keys.json") as struct_keys_file:
         structure_keys: dict = json.load(struct_keys_file)
 
-    for num, file_key in representatives.items():
+    for _, file_key in representatives.items():
         binding_site_file_name = structure_keys[str(file_key)]
         shutil.copyfile((config.filtered_surroundings_dir / binding_site_file_name), (input_representatives / binding_site_file_name))
 
@@ -88,10 +88,6 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
     structure = parser.get_structure(struc_name, path_to_file)
 
     models = list(structure)
-
-    # FIXME:
-    # if len(models) < 1:
-    #     raise ValueError("More than one model in the structure!")
 
     chains = list(models[0])
 
@@ -224,21 +220,24 @@ def structure_motif_search(sugar: str, perform_clustering: bool, number: int, me
     else:
         representatives: List[Path] = list(config.filtered_surroundings_dir.glob("*.pdb"))
         logger.info("Skipping clustering, structure motif search from filtered surroundings")
+
+
+    logger.info("Skipping structure motif search!")
     
 
-    for file in representatives:
-        struc_name = get_struc_name(file)
-
-        try:
-            logger.info(f"Performing structure motif search for {file.stem}")
-            residues = define_residues(file, struc_name)
-            run_query(file, residues, search_results)
-        except ValueError as e:
-            logger.error(f"Exception caught: {e}")
-
-
-    with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
-        json.dump(search_results, f, indent=4)
+    # for file in representatives:
+    #     struc_name = get_struc_name(file)
+    #
+    #     try:
+    #         logger.info(f"Performing structure motif search for {file.stem}")
+    #         residues = define_residues(file, struc_name)
+    #         run_query(file, residues, search_results)
+    #     except ValueError as e:
+    #         logger.error(f"Exception caught: {e}")
+    #
+    #
+    # with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
+    #     json.dump(search_results, f, indent=4)
 
 
 if __name__ == "__main__":
