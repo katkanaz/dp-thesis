@@ -46,6 +46,8 @@ def get_sugars_from_ccd(config: Config) -> List[str]:
     :return: List of sugar abbreviations
     """
 
+    logger.info("Extracting sugar abbreviations")
+
     doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
     sugar_names = set()
     for block in doc:
