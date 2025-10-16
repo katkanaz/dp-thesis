@@ -49,10 +49,13 @@ def get_sugars_from_ccd(config: Config) -> List[str]:
     logger.info("Extracting sugar abbreviations")
 
     doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
+    logger.debug("Components loaded as doc")
     sugar_names = set()
     for block in doc:
+        logger.debug("Processing gemmi block")
         comp_type = block.get_mmcif_category("_chem_comp.")["type"][0]
         if "saccharide" in comp_type.lower():
+            logger.debug("Sugar found as compound type")
             sugar_names.add(block.name)
 
     with (config.run_data_dir / "sugar_names.json").open("w") as f:
@@ -203,14 +206,18 @@ def download_files(config: Config, test_mode: bool) -> None:
         with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4)
     else:
+        logger.debug("Else branch was eached")
         pdb_ids = set(config.user_cfg.pdb_ids_list) # type: ignore
         if config.user_cfg.skip_ids:
+            logger.debug("Updating PDB IDs")
             pdb_ids.difference_update(config.user_cfg.skip_ids)
 
-        with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
+        logger.debug("Creating test mode PDB IDs file")
+        with (config.run_data_dir / "pdb_ids_test_mode.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4) # FIXME: categorize needs it - fix that! dont load from file
 
 
+    logger.debug("Before download function executes")
     mirror_tools.download_structures_from_mirror(config, pdb_ids, config.mmcif_files_dir)
     mirror_tools.download_validation_files_from_mirror(config, pdb_ids, config.validation_files_dir)
 
