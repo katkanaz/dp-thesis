@@ -16,6 +16,7 @@ import requests
 import shutil
 
 from Bio.PDB.PDBParser import PDBParser
+from tqdm import tqdm
 from logger import logger, setup_logger
 
 from configuration import Config
@@ -97,6 +98,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
     sorted_chains = sorted(chains, key = lambda c: c.get_id())
     chain_id_map = {}
     key = "A"
+    # TODO: Test runtime if tqdm useful
     for ch in sorted_chains:
         all_res = list(ch.get_residues())
 
@@ -106,6 +108,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
         chain_id_map[ch.get_id()] = key
         key = chr(ord(key) + 1)
 
+    # TODO: Test runtime if tqdm useful
     residues = []
     for chain in chains:
         i = 1
@@ -157,6 +160,7 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
     data = response.json()
     entries = data.get("data", {}).get("entries", [])
     computed_models: Dict[str, Tuple[str, str]] = {} # TODO: double check type
+    # TODO: Test runtime if tqdm useful
     for entry in entries:
         rcsd_id = entry.get("rcsb_id", "UNKNOWN_ID")
         title = entry.get("struct", {}).get("title", "N/A")
@@ -222,7 +226,7 @@ def structure_motif_search(sugar: str, perform_clustering: bool, number: int, me
         logger.info("Skipping clustering, structure motif search from filtered surroundings")
     
 
-    for file in representatives:
+    for file in tqdm(representatives, desc="Processing representatives"):
         struc_name = get_struc_name(file)
 
         try:

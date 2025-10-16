@@ -9,9 +9,9 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 import csv
 import gzip
 import json
-import logging
 
 from bs4 import BeautifulSoup, NavigableString
+from tqdm import tqdm
 from logger import logger, setup_logger
 
 from configuration import Config
@@ -48,7 +48,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
         modified_ids_no_altloc = [remove_altloc_from_id(pdb_id) for pdb_id in modified_ligands]
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
-        for structure, residues in all_residues.items(): # FIXME: why for all residues and not just ligands?
+        for structure, residues in tqdm(all_residues.items(), desc="Extracting RSCC and resolution"): # FIXME: why for all residues and not just ligands?
             file = f"{structure.lower()}_validation.xml.gz"
             logger.debug(f"Parsing {file}")
             with gzip.open(config.validation_files_dir / file, "rt") as file_xml:
@@ -75,8 +75,6 @@ def extract_rscc_and_resolution(config: Config) -> None:
                     continue
 
                 res_type = None
-                # print(structure)
-                # print(modified_ids_no_altloc)
                 if structure in modified_ids_no_altloc and find_residue_any_altloc(modified_ligands, structure, residue):
                         res_type = "ligand"
                 if structure in glycosylated and residue in glycosylated[structure]:

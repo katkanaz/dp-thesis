@@ -31,6 +31,7 @@ def remove_nonsugar_residues(config: Config) -> None:
     logger.info("Creating model file")
 
     doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
+    # TODO: Test how long running, if tqdm useful
     for i in range(len(doc) - 1, -1, -1):
         comp_type = doc[i].find_value('_chem_comp.type')
         if "saccharide" not in comp_type.lower():
@@ -108,6 +109,7 @@ def get_rmsd_and_merge(config: Config) -> None:
     with open(config.validation_dir / "all_rmsd.csv", "w", newline="", encoding="utf8") as f:
         writer = csv.writer(f)
         writer.writerow(["pdb", "name", "num", "chain", "rmsd"])
+    # TODO: Test how long running, if tqdm useful
         for model in data["Models"]:
             for entry in model["Entries"]:
                 pdb = entry["Id"].split("_")[1]
@@ -137,7 +139,7 @@ def run_mv(config: Config, is_unix: bool) -> None:
     mv_dir = matches[-1] if matches else mv_base / "MotiveValidator"
     if not mv_dir.exists() or (mv_dir.is_dir() and not any(mv_dir.iterdir())):
         download_mv(config)
-    # update_mv(config) # TODO: If just downloaded do not update
+    # update_mv(config) # FIXME: probably do not update, have helper script for both mv and pq cmd line update and setup
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"

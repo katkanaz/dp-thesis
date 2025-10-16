@@ -12,7 +12,8 @@ from pathlib import Path
 from typing import List, Dict, Set, Tuple
 from shutil import copy2
 
-import logging
+from tqdm import tqdm
+
 from logger import logger, setup_logger
 from configuration import Config
 
@@ -48,6 +49,7 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
     """
     # FIXME: what is ligand values
 
+    # TODO: Test how long running, if tqdm useful
     for residue in residues_to_keep:
         model_idx = residue["model_idx"]
         chain_idx = residue["chain_idx"] 
@@ -59,6 +61,7 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
     new_values: Set[Tuple[str, str, str]] = set(ligand_values)
     if len(new_values) != len(ligand_values):
         logger.warning(f"Ligand values contains duplicates {new_values=} {ligand_values=}")
+    # TODO: Test how long running, if tqdm useful
     for residue in reversed(residues_to_delete):
         model_idx = residue["model_idx"]
         chain_idx = residue["chain_idx"] 
@@ -135,11 +138,13 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
     for model_idx, model in enumerate(structure_a):
         models_count += 1
         for chain_idx, chain in enumerate(model):
+            # TODO: Test how long running, if tqdm useful
             for residue_idx, residue in enumerate(chain):
                 if residue.name in sugar_names:
                     atom_altloc_a = []
                     atom_altloc_b = []
 
+                    # TODO: Test how long running, if tqdm useful
                     for atom_idx, atom in enumerate(residue):
                         if atom.altloc != "\0":
                             if atom.altloc == "A":
@@ -216,7 +221,7 @@ def create_separate_mmcifs(config: Config) -> None:
 
     ids = [id.lower() for id in ligands.keys()]
     modified_ligands: Dict[str, List[Dict]] = {}
-    for file in sorted(config.mmcif_files_dir.glob("*.cif")):
+    for file in tqdm(sorted(config.mmcif_files_dir.glob("*.cif")), desc="Processing mmCIF files"):
         if file.stem in ids:
             try:
                 altloc_kind, new_ligands = separate_alternative_conformations(file, (file.stem.upper(), ligands[file.stem.upper()]), config)
@@ -257,7 +262,7 @@ def mock_altloc_separation(config: Config) -> None:
 
     ids = [id.lower() for id in ligands.keys()]
     modified_ligands: Dict[str, List[Dict]] = {}
-    for file in sorted(config.mmcif_files_dir.glob("*.cif")):
+    for file in tqdm(sorted(config.mmcif_files_dir.glob("*.cif")), desc="Processing mmCIF files"):
         if file.stem in ids:
             modified_ligands.update({f"0_{file.stem.upper()}": ligands[file.stem.upper()]})
             copy2(file, config.modified_mmcif_files_dir / f"0_{file.name}")

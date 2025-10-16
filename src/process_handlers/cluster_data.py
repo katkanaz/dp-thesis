@@ -94,6 +94,7 @@ def perform_data_clustering(sugar: str, number: int, method: str,
     representatives = {}
     average_rmsds = {}
 
+    # TODO: Test how long running, if tqdm useful
     for cluster, structures in clusters.items():
         lowest_rmsd_sum = np.inf
         representative_structure = None
@@ -109,6 +110,7 @@ def perform_data_clustering(sugar: str, number: int, method: str,
             representatives[cluster] = representative_structure
             average_rmsds[cluster] = [lowest_rmsd_sum / length]
 
+    # TODO: Test how long running, if tqdm useful
     for cluster, structure in representatives.items():
         sum = 0
         for _, structure2 in representatives.items():

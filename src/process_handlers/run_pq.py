@@ -18,6 +18,7 @@ from tempfile import TemporaryDirectory
 import zipfile
 
 import requests
+from tqdm import tqdm
 from logger import logger, setup_logger
 
 from configuration import Config
@@ -83,6 +84,7 @@ def create_pq_config(config: Config, structure: str, residues: List[Dict[str, st
     # case. In that case e.g. residues "GLC 1 M" and "GLC 1 m" would have the same
     # query for PQ. Therefore, tag "_2" is added to such queries.
     case_sensitive_check = []
+    # TODO: Test runtime, if tqdm useful
     for residue in residues:
         if residue["name"] == sugar:
             case = f"{residue['num']}_{residue['chain']}"
@@ -122,6 +124,7 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
     with TemporaryDirectory() as temp_dir:
         with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:
             zip_ref.extractall(temp_dir)
+            # TODO: Test runtime, if tqdm useful
             for query_name in query_names: 
                 results_path = Path(temp_dir) / query_name / "patterns"
                 if not results_path.exists():
@@ -164,7 +167,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     logger.info("Creating PatternQuerry configs")
 
 
-    for structure, residues in ligands.items():
+    for structure, residues in tqdm(ligands.items(), desc="Running PQ for each ligand"):
         prefix, pdb_id = structure.split("_", 1)
         structure = f"{prefix}_{pdb_id.lower()}" # FIXME: Why does it need to be all caps in the first place?
         query_names = create_pq_config(config, structure, residues, sugar)

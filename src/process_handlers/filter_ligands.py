@@ -54,6 +54,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     delete_residues = defaultdict(list)
     with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
         rscc_rmsd = DictReader(f)
+    # TODO: Test how long running, if tqdm useful
         for row in rscc_rmsd:
             if float(row["resolution"]) <= max_resolution and row["type"] == "ligand":
                 good_structures.add(row["pdb"])
@@ -68,12 +69,13 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
 
     # Save structures from which all residues were deleted
     delete_empty_structures = set()
+    # TODO: Test how long running, if tqdm useful
     for pdb, residues in modified_ligands.items():
         if remove_altloc_from_id(pdb) in delete_residues:
             for residue in delete_residues[remove_altloc_from_id(pdb)]:
                 try:
                     residues.remove(residue)
-                except ValueError as e:
+                except ValueError:
                     pass # Some residues to delete might already not be there due to altloc split
 
             if len(residues) == 0:
@@ -101,7 +103,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", None, False)
+    config = Config.load("config.json", None, False, args)
 
     setup_logger(config.log_path)
 

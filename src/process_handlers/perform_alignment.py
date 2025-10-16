@@ -55,7 +55,7 @@ def get_sugar_ring_center(sugar: str) -> List[float]:
     :return: The center coordinates
     """
 
-    return cmd.centerofmass(sugar) # DEBUG: if the center is invalid could resolve in END
+    return cmd.centerofmass(sugar)
 
 
 def measure_distances(residues: List[Tuple[str, str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str, str], float]]:
@@ -82,7 +82,6 @@ def measure_distances(residues: List[Tuple[str, str, str]], sugar_center: List[f
 
         distances.append(((resi, resn, chain), min_distance))
 
-    # logger.debug(distances)
 
     cmd.delete("tmp")
     return distances
@@ -98,12 +97,8 @@ def sort_distances(distances: List[Tuple[Tuple[str, str, str], float]], max_res:
     """
     # If 2 residues same distance the one with the lower number and chain with the earlier alphabetical ID goes first
     sorted_distances = sorted(distances, key=lambda item: (item[1], int(item[0][0]), item[0][2]))
-    # logger.debug(f"Sorted dist: {sorted_distances}")
-    # logger.debug(f"Sorted dist delete: {sorted_distances[max_res:]}")
     return sorted_distances[max_res:]
 
-    # sorted_distances = sorted(distances, key=lambda item: item[1])
-    # return sorted_distances[max_res:]
 
 
 def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str, str], float]]) -> None:
@@ -175,63 +170,62 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         structures_keys = {} # To map index with structure
 
     file_source = raw_surroundings.iterdir() if file_list is None else [file[0] for file in file_list]
-    for path_to_file in file_source:
-        # if str(path_to_file.name) == "0_7zll_MAN_1505_A.pdb" or str(path_to_file.name) == "0_7zll_MAN_1504_A.pdb":
-        #     logger.info(f"Skipping surrounding: {path_to_file.stem}")
-        #     continue
+    # TODO: Test me
+    with tqdm(total=sum(1 for _ in raw_surroundings.iterdir()), desc="Refining surroundings") as pbar:
+        for path_to_file in file_source:
+            pbar.update(1)
 
 
-        filename = Path(path_to_file).stem
-        # logger.debug(f"Begin to process {filename}")
-        cmd.delete("all")
-        cmd.load(path_to_file)
-        count = cmd.count_atoms("n. CA and polymer")
-        if count < min_residues:
-            less_than_min_aa.append(filename)
-            # logger.debug(f"{filename} less than 5 residues!")
-            continue
+            filename = Path(path_to_file).stem
+            logger.debug(f"Begin to process {filename}")
+            cmd.delete("all")
+            cmd.load(path_to_file)
+            count = cmd.count_atoms("n. CA and polymer")
+            if count < min_residues:
+                less_than_min_aa.append(filename)
+                logger.debug(f"{filename} less than 5 residues!")
+                continue
 
 
-        _, sugar_selection_name = select_sugar(filename)
+            _, sugar_selection_name = select_sugar(filename)
 
-        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer") # DEBUG: if selection wrong END could occur
-        cmd.select("junk_residues", f"not wanted_residues")
-        cmd.remove("junk_residues") 
-        cmd.delete("junk_residues")
+            cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
+            cmd.select("junk_residues", f"not wanted_residues")
+            cmd.remove("junk_residues") 
+            cmd.delete("junk_residues")
 
-        if count > max_residues:
-            more_than_max_aa.append(filename)
-            # logger.debug(f"{filename} more than 10 residues!")
-            try:
-                sugar_center = get_sugar_ring_center(sugar_selection_name)
-            except KeyError as e:
-                if str(e) == "'D'":
-                    deuterium_present.append((path_to_file, i))
-                    logger.warning(f"Found deuterium in: {path_to_file.stem}")
-                else:
-                    raise e
-                i += 1
-                continue # DEBUG: could possibly break selection and cause END
-            residues: List[Tuple[str, str, str]] = []
-            # cmd.iterate("n. CA and polymer", "residues.append((resi, resn))", space=locals()) # DEBUG: if residues empty could resolve in END
-            cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals()) # FIXME:
-            # logger.debug(f"Residues list: {residues}")
-            
-            distances = measure_distances(residues, sugar_center, filename)
+            if count > max_residues:
+                more_than_max_aa.append(filename)
+                logger.debug(f"{filename} more than 10 residues!")
+                try:
+                    sugar_center = get_sugar_ring_center(sugar_selection_name)
+                except KeyError as e:
+                    if str(e) == "'D'":
+                        deuterium_present.append((path_to_file, i))
+                        logger.warning(f"Found deuterium in: {path_to_file.stem}")
+                    else:
+                        raise e
+                    i += 1
+                    continue
+                residues: List[Tuple[str, str, str]] = []
+                cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals())
+                logger.debug(f"Residues list: {residues}")
+                
+                distances = measure_distances(residues, sugar_center, filename)
 
-            residues_to_remove = sort_distances(distances, max_residues)
-            remove_residues(residues_to_remove)
+                residues_to_remove = sort_distances(distances, max_residues)
+                remove_residues(residues_to_remove)
 
 
-        idx = i
-        if file_list is not None:
-            idx = list(filter(lambda x: x[0] == path_to_file, file_list))[0][1]
-            
-        cmd.save(f"{filtered_surroundings}/{idx}_{filename}.pdb")
-        structures_keys[idx] = f"{idx}_{filename}.pdb"
-        i += 1
-        cmd.delete("all")
-        # logger.debug(f"{filename} succesfully processed!")
+            idx = i
+            if file_list is not None:
+                idx = list(filter(lambda x: x[0] == path_to_file, file_list))[0][1]
+                
+            cmd.save(f"{filtered_surroundings}/{idx}_{filename}.pdb")
+            structures_keys[idx] = f"{idx}_{filename}.pdb"
+            i += 1
+            cmd.delete("all")
+            logger.debug(f"{filename} succesfully processed!")
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
@@ -361,7 +355,6 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
     min_residues = 5
     max_residues = 10
 
-    # cmd.set('max_threads', multiprocessing.cpu_count()) # NOTE: Unusable with version 2.4.0 - only possible option is paralelizing with multiprocessing
 
     fixed_folder, deuterium_present = refine_binding_sites(sugar, min_residues, max_residues, config)
     if deuterium_present:

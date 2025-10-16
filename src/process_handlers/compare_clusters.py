@@ -37,20 +37,24 @@ def compare_clusters(config: Config, perform_align: bool, number: int, method: s
 
     # Create dict in a form of {structure: cluster}
     reversed_clusters_align = {}
+    # TODO: Test how long running, if tqdm useful
     for cluster, structures in clusters_align.items():
         reversed_clusters_align.update({structure: cluster for structure in structures})
 
     # Iterate over structures from super clusters and save cluster ids of those structures in align clusters
     overall_spread_from_super = {}
+    # TODO: Test how long running, if tqdm useful
     for cluster, structures in clusters_super.items():
         overall_spread_from_super[cluster] = {reversed_clusters_align[structure] for structure in structures}
 
 
     reversed_clusters_super = {}
+    # TODO: Test how long running, if tqdm useful
     for c, ss in clusters_super.items():
         reversed_clusters_super.update({s: c for s in ss})
 
     overall_spread_from_align = {}
+    # TODO: Test how long running, if tqdm useful
     for c, ss in clusters_align.items():
         overall_spread_from_align[c] = {reversed_clusters_super[s] for s in ss}
 

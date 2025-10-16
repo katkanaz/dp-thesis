@@ -76,6 +76,7 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     pdb_ids = set()
     counts_structures_with_sugar = {} 
     sugars_not_present_in_any_structure = []
+    # TODO: Test how long running, if tqdm useful
     for sugar in sugar_names:
         response = requests.get(f"https://www.ebi.ac.uk/pdbe/api/pdb/compound/in_pdb/{sugar}")
         structures = response.json()
