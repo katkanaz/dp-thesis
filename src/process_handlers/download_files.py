@@ -214,7 +214,7 @@ def download_files(config: Config, test_mode: bool) -> None:
             pdb_ids.difference_update(config.user_cfg.skip_ids)
 
         logger.debug("Creating test mode PDB IDs file")
-        with (config.run_data_dir / "pdb_ids_test_mode.json").open("w") as f:
+        with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
             json.dump(list(pdb_ids), f, indent=4) # FIXME: categorize needs it - fix that! dont load from file
 
 
