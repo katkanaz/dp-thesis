@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import re
 from typing import List
 
 
@@ -19,27 +20,52 @@ def compare_repres_dir_with_json(path_to_dir: Path, path_to_json: Path) -> None:
     print(same)
 
 
-def compare_representatives_dirs(path_to_first_dir: Path, path_to_second_dir: Path) -> None:
-    first_representatives: List[str] = []
+def compare_dirs_after_filtration(path_to_first_dir: Path, path_to_second_dir: Path) -> None:
+    first_dir_files: List[str] = []
     for file in sorted(path_to_first_dir.glob("*.pdb")):
-        first_representatives.append(file.name)
+        first_dir_files.append(file.name)
 
-    second_representatives: List[str] = []
+    second_dir_files: List[str] = []
     for file in sorted(path_to_second_dir.glob("*.pdb")):
-        second_representatives.append(file.name)
+        second_dir_files.append(file.name)
 
     # Remove indexes - different for each run
-    first_representatives = [s.partition("_")[2] for s in first_representatives]
-    second_representatives = [s.partition("_")[2] for s in second_representatives]
+    first_dir_files = [s.partition("_")[2] for s in first_dir_files]
+    second_dir_files = [s.partition("_")[2] for s in second_dir_files]
 
-    same = set(first_representatives) & set(second_representatives)
+    same = set(first_dir_files) & set(second_dir_files)
     print(f"Number of same files: {len(same)}")
     print(same)
 
-    ids1 = [s.split("_")[1] for s in first_representatives]
-    ids2 = [s.split("_")[1] for s in second_representatives]
+    ids1 = [s.split("_")[1] for s in first_dir_files]
+    ids2 = [s.split("_")[1] for s in second_dir_files]
 
     same_ids = set(ids1) & set(ids2)
     print(f"Number of same originating structures: {len(same_ids)}")
     print(same_ids)
+
+
+def compare_raw_surrs_no_altloc(path_to_first_dir: Path, path_to_second_dir: Path) -> None:
+    first_dir_files: List[str] = []
+    for file in sorted(path_to_first_dir.glob("*.pdb")):
+        first_dir_files.append(file.name)
+
+    second_dir_files: List[str] = []
+    for file in sorted(path_to_second_dir.glob("*.pdb")):
+        second_dir_files.append(file.name)
+
+    # Remove altloc identifiers if present
+    first_dir_files = [re.sub(r'^\d+_', '', file) for file in first_dir_files]
+    second_dir_files = [re.sub(r'^\d+_', '', file) for file in first_dir_files]
+
+    same = set(first_dir_files) & set(second_dir_files)
+    print(f"Number of same files: {len(same)}")
+    # print(same)
+
+    ids1 = [s.split("_")[0] for s in first_dir_files]
+    ids2 = [s.split("_")[0] for s in second_dir_files]
+
+    same_ids = set(ids1) & set(ids2)
+    print(f"Number of same originating structures: {len(same_ids)}")
+    # print(same_ids)
 
