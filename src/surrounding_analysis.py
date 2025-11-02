@@ -26,8 +26,7 @@ from process_handlers.create_tanglegram import create_tanglegram
 from process_handlers.structure_motif_search import structure_motif_search
 
 
-def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, make_dendrogram: bool,
-         color_threshold: Union[float, None] = None) -> None:
+def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, min_residues: int, max_residues: int, make_dendrogram: bool, color_threshold: Union[float, None] = None) -> None:
     logger.info(f"Running 2nd program with data from {config.run_data_dir.stem} directory")
 
     with tqdm(total=6 if perform_clustering else 3) as pbar: 
@@ -37,7 +36,7 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
 
         try:
             pbar.set_description("Performing alignment")
-            perform_alignment(sugar, perform_align, config)
+            perform_alignment(sugar, perform_align, config, min_residues)
             pbar.update(1)
         except Exception as e:
             logger.error(f"Exception caught: {e}")
@@ -57,7 +56,7 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
             pbar.update(1)
 
         pbar.set_description("Performing structure motif search")
-        structure_motif_search(sugar, perform_clustering, number, method, config)
+        structure_motif_search(sugar, perform_clustering, number, method, config, max_residues)
         pbar.update(1)
 
 
@@ -75,6 +74,8 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--number", help="Number of clusters to create", type=int, default=20)
     parser.add_argument("-m", "--method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"], default="centroid")
+    parser.add_argument("--min_residues", help="Minimal number of residues required in a surrounding", type=int, default=5)
+    parser.add_argument("--max_residues", help="Maximal number of residues in a surrunding. Required by structure motif search", type=int, default=5)
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
 
@@ -90,13 +91,13 @@ if __name__ == "__main__":
 
     config = Config.load(args.config, args.sugar, True, args)
 
-    setup_logger(config.log_path, logging.DEBUG)
+    setup_logger(config.log_path)
     logger.info(f"Called with the following arguments: {vars(args)}")
 
     is_unix = system() != "Windows"
 
     with logging_redirect_tqdm():
-        main(args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.make_dendrogram, args.color_threshold)
+        main(args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()
 

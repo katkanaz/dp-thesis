@@ -13,7 +13,8 @@ import json
 import math
 import os
 from pathlib import Path
-from typing import List, Tuple, Union
+import re
+from typing import Tuple
 
 import numpy as np
 from tqdm import tqdm
@@ -33,9 +34,11 @@ def select_sugar(filename: str) -> Tuple[str, str]:
     """
 
     try:
-        _, _, res, num, chain = filename.split("_")
-    except ValueError:
-        _, _, res, num, chain, _ = filename.split("_")
+        reg = re.compile(r"_([A-Z]{3})_(\d+)_([A-Za-z0-9]+)(?:_[A-Za-z0-9]+)?$")
+        res = reg.search(filename)
+        res, num, chain = res.groups() # type: ignore
+    except:
+        raise ValueError(f"Unexpected PDB file name: {filename}")
 
     if len(chain) > 1:
         chain = chain[0]
@@ -47,95 +50,7 @@ def select_sugar(filename: str) -> Tuple[str, str]:
     return sugar, selection_name
 
 
-def get_sugar_ring_center(sugar: str) -> List[float]:
-    """
-    Locate the center of the sugar ring.
-
-    :param sugar: Sugar which center needs to be found
-    :return: The center coordinates
-    """
-
-    return cmd.centerofmass(sugar)
-
-
-def measure_distances(residues: List[Tuple[str, str, str]], sugar_center: List[float], filename: str) -> List[Tuple[Tuple[str, str, str], float]]:
-    """
-    Measure the distane from all the residues to the sugar center.
-
-    :param residues: The amino acids of the surrounding
-    :param sugar_center: Coordinates of the sugar center
-    :param filename: Name of the surrounding file which serves as name of the PyMOL object
-    :return: Distances of all the residues from the sugar center
-    """
-
-    distances: List[Tuple[Tuple[str, str, str], float]] = []
-
-    cmd.pseudoatom(object="tmp", pos=sugar_center)
-    for resi, resn, chain in residues:
-        atoms = cmd.get_model(f"resi {resi}").atom
-        min_distance = math.inf
-        
-        for atom in atoms:
-            distance = cmd.get_distance(f"{filename} and index {atom.index}", "tmp") # In Angstroms [Å]
-            if distance < min_distance:
-                min_distance = distance
-
-        distances.append(((resi, resn, chain), min_distance))
-
-
-    cmd.delete("tmp")
-    return distances
-
-
-def sort_distances(distances: List[Tuple[Tuple[str, str, str], float]], max_res: int) -> List[Tuple[Tuple[str, str, str], float]]:
-    """
-    Sort the residue distances in ascending order and keep information of the residues that are over <max_res>.
-
-    :param distances: The distances of the residues from the sugar
-    :param max_res: Allowed maximum of residues
-    :return: Residues to delete
-    """
-    # If 2 residues same distance the one with the lower number and chain with the earlier alphabetical ID goes first
-    sorted_distances = sorted(distances, key=lambda item: (item[1], int(item[0][0]), item[0][2]))
-    return sorted_distances[max_res:]
-
-
-
-def remove_residues(residues_to_remove: List[Tuple[Tuple[str, str, str], float]]) -> None:
-    """
-    Remove residues from the surrounding.
-
-    :param residues_to_remove: Residues to be deleted
-    """
-
-    for (resi, resn, chain), _ in residues_to_remove:
-        selection = f"chain {chain} and resi {resi} and resn {resn}"
-        cmd.remove(selection)
-
-
-def replace_deuterium(file_list: List[Tuple[Path, int]]) -> None:
-    """
-    Replace deuterium (D) with hydrogen (H)
-
-    :param file_list: Files that need deuterium replacement
-    """
-
-    for file in [f[0] for f in file_list]:
-        logger.info(f"Replacing deuterium for file: {file}")
-        with open(file, "r") as f:
-            lines = f.readlines()
-        new_lines = []
-        for line in lines:
-            if line[76:78] == " D":
-                chars = list(line)
-                chars[77] = "H"
-                line = "".join(chars)
-            new_lines.append(line)
-        with open(file, "w") as f:
-            f.writelines(new_lines)
-
-
-def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, config: Config, file_list: Union[List[Tuple[Path, int]], None] = None) -> Tuple[Path, List[Tuple[Path, int]]]:
+def refine_binding_sites(sugar: str, min_residues: int, config: Config) -> Path:
     """
     Filter the surroundings obtained by PQ to contain only the target sugar and at least <min_residues> AA
     and give the filtered structures unique ID, which will be used as an index for creating the
@@ -143,10 +58,8 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
 
     :param sugar: The sugar for which the representative surroundings are being defined
     :param min_residues: Minimum of amino acids in the surrounding
-    :param max_residues: Maximum of amino acids in the surrounding - necessary for struture motif search later in the process
     :param config: Config object
-    :file_list: Surroundings that contain deuterium (D); defaults to None
-    :return: Path to refined binding sites folder
+    :return: Path to refined surroundings folder
     """
 
     logger.info("Refining sugar surroundings")
@@ -156,27 +69,17 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
     filtered_surroundings = config.filtered_surroundings_dir
     filtered_surroundings.mkdir(exist_ok=True, parents=True)
 
-
     less_than_min_aa = []
-    more_than_max_aa = []
-
-    deuterium_present = []
 
     i = 0
-    if file_list is not None:
-        with open(config.clusters_dir / f"{sugar}_structures_keys.json", "r") as f:
-            structures_keys = json.load(f)
-    else:
-        structures_keys = {} # To map index with structure
+    structures_keys = {} # To map index with structure
 
-    file_source = raw_surroundings.iterdir() if file_list is None else [file[0] for file in file_list]
-    # TODO: Test me
     with tqdm(total=sum(1 for _ in raw_surroundings.iterdir()), desc="Refining surroundings") as pbar:
-        for path_to_file in file_source:
+        for path_to_file in raw_surroundings.iterdir():
             pbar.update(1)
 
 
-            filename = Path(path_to_file).stem
+            filename = path_to_file.stem
             logger.debug(f"Begin to process {filename}")
             cmd.delete("all")
             cmd.load(path_to_file)
@@ -186,7 +89,6 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
                 logger.debug(f"{filename} less than 5 residues!")
                 continue
 
-
             _, sugar_selection_name = select_sugar(filename)
 
             cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
@@ -194,32 +96,7 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
             cmd.remove("junk_residues") 
             cmd.delete("junk_residues")
 
-            if count > max_residues:
-                more_than_max_aa.append(filename)
-                logger.debug(f"{filename} more than 10 residues!")
-                try:
-                    sugar_center = get_sugar_ring_center(sugar_selection_name)
-                except KeyError as e:
-                    if str(e) == "'D'":
-                        deuterium_present.append((path_to_file, i))
-                        logger.warning(f"Found deuterium in: {path_to_file.stem}")
-                    else:
-                        raise e
-                    i += 1
-                    continue
-                residues: List[Tuple[str, str, str]] = []
-                cmd.iterate("n. CA and polymer", "residues.append((resi, resn, chain))", space=locals())
-                logger.debug(f"Residues list: {residues}")
-                
-                distances = measure_distances(residues, sugar_center, filename)
-
-                residues_to_remove = sort_distances(distances, max_residues)
-                remove_residues(residues_to_remove)
-
-
             idx = i
-            if file_list is not None:
-                idx = list(filter(lambda x: x[0] == path_to_file, file_list))[0][1]
                 
             cmd.save(f"{filtered_surroundings}/{idx}_{filename}.pdb")
             structures_keys[idx] = f"{idx}_{filename}.pdb"
@@ -232,9 +109,8 @@ def refine_binding_sites(sugar: str, min_residues: int, max_residues: int, confi
         json.dump(structures_keys, f, indent=4)
 
     logger.info(f"Number of surroundings with less than {min_residues} AA: {len(less_than_min_aa)}")
-    logger.info(f"Number of surroundings with more than {max_residues} AA: {len(more_than_max_aa)}")
 
-    return filtered_surroundings, deuterium_present
+    return filtered_surroundings
 
 
 def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align: bool, save_path: Path, config: Config) -> None:
@@ -349,23 +225,13 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
         raise Exception("Something went wrong not empty")
 
 
-def perform_alignment(sugar: str, perform_align: bool, config: Config) -> None:
-    # Fixed values based on literature and structure motif search limit
-    # TODO: Extract as arguments with default
-    min_residues = 5
-    max_residues = 10
-
-
-    fixed_folder, deuterium_present = refine_binding_sites(sugar, min_residues, max_residues, config)
-    if deuterium_present:
-        replace_deuterium(deuterium_present)
-        logger.info("Refining binding sites with replaced deuterium")
-        refine_binding_sites(sugar, min_residues, max_residues, config, deuterium_present)
+def perform_alignment(sugar: str, perform_align: bool, config: Config, min_residues) -> None:
+    filtered_surroundings_folder = refine_binding_sites(sugar, min_residues, config)
     sys.stdout.flush()
 
     save_path = config.sugars_dir
     save_path.mkdir(exist_ok=True, parents=True)
-    all_against_all_alignment(sugar, fixed_folder, perform_align, save_path, config)
+    all_against_all_alignment(sugar, filtered_surroundings_folder, perform_align, save_path, config)
 
 
 if __name__ == "__main__":
@@ -373,6 +239,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
+    parser.add_argument("--min_residues", help="Minimal number of residues required in a surrounding", type=int, default=5)
 
     args = parser.parse_args()
 
@@ -381,7 +248,7 @@ if __name__ == "__main__":
     setup_logger(config.log_path)
 
     try:
-        perform_alignment(args.sugar, args.perform_align, config)
+        perform_alignment(args.sugar, args.perform_align, config, args.min_residues)
     except Exception as e:
         logger.error(f"Exception caught: {e}")
         raise e
