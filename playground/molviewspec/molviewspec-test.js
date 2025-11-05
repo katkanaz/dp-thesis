@@ -1,4 +1,3 @@
-
 console.log(searchResults);
 
 const containerOuter = document.getElementById("container-outer");
