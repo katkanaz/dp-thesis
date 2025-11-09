@@ -63,64 +63,73 @@ def save_metadata(input_structure: Path):
     # structure.make_mmcif_document().write_file(str(new_path), options)
     # new_doc.write_file(str(new_path), options)
 
-def gemmi_test(input_structure: Path):
-    # structure = gemmi.make_structure_from_block(cif_block)
+def gemmi_test(input_structure: Path, output_path: Path) -> None:
     structure = gemmi.read_structure(str(input_structure), format=gemmi.CoorFormat.Mmcif)
-    # structure.setup_entities()
-
-    # structure.make_mmcif_headers()
-    # structure.make_mmcif_block(gemmi.MmcifOutputGroups(True, atoms=False))
+    structure.setup_entities()
     
     for model_idx, model in enumerate(structure):
         for chain_idx, chain in enumerate(model):
-                for residue_idx, residue in enumerate(chain):
+                for residue_idx, residue in enumerate(reversed(chain)):
                     if residue.name == "GLC":
                         del structure[model_idx][chain_idx][residue_idx]
-
-    # groups = gemmi.MmcifOutputGroups(False)
-    # groups.ncs = True
-    # groups.atoms = True
-    # groups.entry = True
-    # structure_block = structure.make_mmcif_block()
-    # cif_block.update_mmcif_block(structure_block)
-    # doc = gemmi.cif.read(str(input_structure))
-    # block = doc.find_block((structure.info["_entity.src_method"]))
-    # block = doc.find_block("2Y9G")
-    # block = doc.sole_block()
-    # entity_loop = block.find_loop('_entity.id')
-    # for row in entity_loop:
-    #     print(row)
-    # print(entity_loop.tag)
-    # structure.update_mmcif_block(block)
-    # print(block)
-    # for row in block:
-    #     print(row)
-
 
     options = gemmi.cif.WriteOptions()
     options.misuse_hash = True
     options.align_pairs = 48
     options.align_loops = 20
 
-    new_path = Path("/home/kaci/dp/debug/mv_altlocs/2y9g_just_struc.cif")
-    # doc.write_file(str(new_path), options)
-    structure.make_mmcif_document().write_file(str(new_path), options)
+    structure.make_mmcif_document().write_file(str(output_path), options)
 
-def test(input_structure: Path):
+def test(input_structure: Path, output_path: Path) -> None:
+    # structure = gemmi.make_structure_from_block(cif_block)
     structure = gemmi.read_structure(str(input_structure))
-    doc = gemmi.cif.read(str(input_structure))
 
-    # structure.setup_entities()
-    groups = gemmi.MmcifOutputGroups(True)
-    groups.ncs = True
-    groups.atoms = True
+    structure.setup_entities()
+
+    to_remove = []
 
     for model_idx, model in enumerate(structure):
         for chain_idx, chain in enumerate(model):
                 for residue_idx, residue in enumerate(chain):
                     if residue.name == "GLC":
-                        del structure[model_idx][chain_idx][residue_idx]
+                        to_remove.append([model_idx,chain_idx,residue_idx])
 
+    for rm in reversed(to_remove):
+        del structure[rm[0]][rm[1]][rm[2]]
+
+
+    # structure.make_mmcif_headers()
+    # structure.make_mmcif_block(gemmi.MmcifOutputGroups(True, atoms=False))
+
+    # groups = gemmi.MmcifOutputGroups(False)
+    # groups.ncs = True
+    # groups.atoms = True
+    # groups.entry = True
+
+    # structure_block = structure.make_mmcif_block()
+    # cif_block.update_mmcif_block(structure_block)
+
+    # doc = gemmi.cif.read(str(input_structure))
+
+    # block = doc.find_block((structure.info["_entity.src_method"]))
+    # block = doc.find_block("2Y9G")
+    # entity_loop = block.find_loop('_entity.id')
+
+    # for row in entity_loop:
+    #     print(row)
+    # print(entity_loop.tag)
+    # structure.update_mmcif_block(block)
+
+    # print(block)
+    # for row in block:
+    #     print(row)
+    groups = gemmi.MmcifOutputGroups(True)
+    # groups.ncs = False
+    groups.atoms = True
+
+    doc = gemmi.cif.read(str(input_structure))
+
+    # block = doc.sole_block()
     block = doc.find_block(structure.info["_entry.id"])
     structure.update_mmcif_block(block, groups)
 
@@ -129,8 +138,10 @@ def test(input_structure: Path):
     options.align_pairs = 48
     options.align_loops = 20
 
-    new_path = Path("/home/kaci/dp/debug/mv_altlocs/2y9g_test.cif")
-    doc.write_file(str(new_path), options)
+    # doc.write_file(str(new_path), options)
+
+    # structure.make_mmcif_document().write_file(str(output_path), options)
+    doc.write_file(str(output_path), options)
 
 
 def delete_alternative_conformations(structure: gemmi.Structure, residues_to_keep: List[Dict], residues_to_delete: List[Dict], ligand_values: List[Tuple[str, str, str]]) -> List[Dict]:
@@ -199,11 +210,6 @@ def save_files(original_file, structure: gemmi.Structure, input_file: Path, conf
     # for block in original_file:
     #     if block.name != structure_block.name:
     #         final_doc.add_new_block(block)
-
-
-
-
-
 
 # TODO: Add docs
 def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, List[Dict]]) -> Tuple[AltlocKind, Dict[str, List[Dict]]]:
@@ -433,10 +439,10 @@ def del_atloc_from_doc(input_file: Path, output_file: Path) -> None:
 
 
 if __name__ == "__main__":
-    gemmi_test(Path("/home/kaci/dp/debug/mv_altlocs/2y9g.cif"))
-    # test(Path("/home/kaci/dp/debug/mv_altlocs/2y9g.cif"))
+    # gemmi_test(Path("/home/kaci/dp/debug/mv_altlocs/2y9g.cif"), Path("/home/kaci/dp/debug/mv_altlocs/2y9g_just_struc.cif"))
+    # test(Path("/home/kaci/dp/debug/mv_altlocs/2y9g.cif"), Path("/home/kaci/dp/debug/mv_altlocs/2y9g_test_17.cif"))
     # create_separate_mmcifs()
-    
+
     # write_structure(Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g.cif"),
     #                 Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g_struc_1.cif"))
     write_doc(Path("/home/kaci/dp/debug/mv_altlocs/gemmi_advice/2y9g.cif"),

@@ -8,8 +8,8 @@ data/
 debug/
 docs/
 img/
-/mv/
-/pq/
+/workflow/mv/
+/workflow/pq/
 tmp/
 __pycache__/
 venv/

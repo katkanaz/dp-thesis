@@ -10,7 +10,7 @@ def create_mv_config(run_dir: Path) -> None:
 
     mv_config = {
         "ValidationType": "Sugars",
-        "InputFolder":  "../../debug/mv_altlocs/read_write_test/",
+        "InputFolder":  "../../debug/mv_altlocs/final_test/sep_altlocs_july/",
         "ModelsSource": "../mv/components_sugars_only.cif",
         "IsModelsSourceComponentDictionary": True,
         "IgnoreObsoleteComponentDictionaryEntries": False,
@@ -47,7 +47,7 @@ def run_mv(is_unix: bool, run_dir: Path) -> None:
 
 if __name__ == "__main__":
     is_unix = system() != "Windows"
-    Path(f"../../debug/mv_altlocs/mv_{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}").mkdir(exist_ok=True, parents=True)
-    run_dir = Path(f"../../debug/mv_altlocs/mv_{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}")
+    Path(f"../../debug/mv_altlocs/final_test/mv_{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}").mkdir(exist_ok=True, parents=True)
+    run_dir = Path(f"../../debug/mv_altlocs/final_test/mv_{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}")
 
     run_mv(is_unix, run_dir)

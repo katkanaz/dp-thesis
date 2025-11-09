@@ -47,10 +47,7 @@ def create_pq_config(structure, residues, sugar: str, run_dir: Path) -> List:
     return query_names
 
 
-def run_pq(sugar: str, is_unix: bool, run_dir: Path) -> None:
-    input_structures = Path("/home/kaci/dp/debug/pq_altlocs/input_struct/")
-    path_to_json = Path("/home/kaci/dp/debug/pq_altlocs/")
-
+def run_pq(sugar: str, is_unix: bool, run_dir: Path, input_structures: Path, path_to_json: Path) -> None:
     (run_dir / "structures").mkdir(exist_ok=True, parents=True)
     (run_dir / "results").mkdir(exist_ok=True, parents=True)
 
@@ -117,4 +114,3 @@ if __name__ == "__main__":
     run_dir = Path(f"../../debug/pq_altlocs/pq_{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}")
     run_dir.mkdir(exist_ok=True, parents=True)
 
-    run_pq(args.sugar, is_unix, run_dir)

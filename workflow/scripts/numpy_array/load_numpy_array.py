@@ -1,8 +1,8 @@
 import numpy as np
 
 # Load numpy files
-data_super = np.load("/home/kaci/dp/debug/missing_sugar/oct_27/results/clusters/FUC/super/FUC_all_pairs_rmsd_super.npy")
-data_align = np.load("/home/kaci/dp/debug/missing_sugar/oct_27/results/clusters/FUC/super/FUC_all_pairs_rmsd_super.npy")
+data_super = np.load("results/clusters/FUC/super/FUC_all_pairs_rmsd_super.npy")
+data_align = np.load("results/clusters/FUC/super/FUC_all_pairs_rmsd_super.npy")
 
 # Print the content of the numpy arrays
 print(f"align: {data_align.shape}")
