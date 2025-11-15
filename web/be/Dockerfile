@@ -7,9 +7,11 @@ RUN go mod download
 
 COPY ./main.go ./
 
-RUN go build -o /go-backend
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go-backend
 
 FROM alpine AS build-release-stage
+
+RUN apk add --no-cache ca-certificates
 
 WORKDIR /
 
