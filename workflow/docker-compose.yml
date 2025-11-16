@@ -1,0 +1,12 @@
+services:
+  workflow:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: workflow
+    restart: always
+    volumes:
+      - /home/kaci/docker_dp/data:/app/data
+      - /home/kaci/docker_dp/results/:/app/results
+    env_file:
+      - .env
