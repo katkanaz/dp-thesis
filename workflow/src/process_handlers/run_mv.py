@@ -1,6 +1,6 @@
 """
 Script Name: run_mv.py
-Description: Modify model file, download and run MotiveValidator and extract results.
+Description: Modify model file, run MotiveValidator and extract results.
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
@@ -58,13 +58,6 @@ def download_mv(config: Config) -> None:
         f.write(response.content)
 
     unzip_all(config.user_cfg.mv_dir / "MotiveValidator.zip", config.user_cfg.mv_dir / "MotiveValidator")
-
-
-# TODO: finish function
-# def update_mv(config: Config):
-    # download change log and read current version in it
-    # if version same delete changelog and do nothing else
-    # if not download again current mv and delete changelow
 
 
 def create_mv_config(config: Config) -> None:
@@ -137,9 +130,8 @@ def run_mv(config: Config, is_unix: bool) -> None:
     mv_base = config.user_cfg.mv_dir
     matches = sorted([p for p in mv_base.glob("MotiveValidator*") if p.is_dir()])
     mv_dir = matches[-1] if matches else mv_base / "MotiveValidator"
-    if not mv_dir.exists() or (mv_dir.is_dir() and not any(mv_dir.iterdir())):
-        download_mv(config)
-    # update_mv(config) # FIXME: probably do not update, have helper script for both mv and pq cmd line update and setup
+    # if not mv_dir.exists() or (mv_dir.is_dir() and not any(mv_dir.iterdir())):
+    #     download_mv(config)
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"

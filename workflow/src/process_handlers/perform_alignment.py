@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
-    parser.add_argument("--min_residues", help="Minimal number of residues required in a surrounding", type=int, default=5)
+    parser.add_argument("--min_residues", help="Minimum number of residues required in a surrounding", type=int, default=5)
 
     args = parser.parse_args()
 

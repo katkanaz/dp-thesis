@@ -341,7 +341,7 @@ def run_query(path_to_file: Path, residues: List[StructureMotifResidue], search_
     output: List[str] = list(query(results_verbosity="compact", return_type="assembly", return_content_type=["computational", "experimental"]))# FIXME: Returns different scores of structures when "experimental" is and is not there
 
     ids = [modify_id(id) for id in output]
-    structures = fetch_metadata(ids)
+    structures = fetch_metadata(ids) # FIXME: dont call anymore
 
     search_results[path_to_file.stem] = structures
 
@@ -385,9 +385,9 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
-    parser.add_argument("-n", "--number", help="Number of clusters", type=int, required=True, default=20)
-    parser.add_argument("-m", "--method", help="Cluster method", type=str, required=True, default="centroid")
-    parser.add_argument("--max_residues", help="Maximal number of residues in a surrunding. Required by structure motif search", type=int, default=5)
+    parser.add_argument("-n", "--number", help="Number of clusters", type=int, default=20)
+    parser.add_argument("-m", "--method", help="Cluster method", type=str, default="centroid")
+    parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
 
     args = parser.parse_args()
 

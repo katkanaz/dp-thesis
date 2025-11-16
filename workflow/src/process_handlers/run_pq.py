@@ -1,6 +1,6 @@
 """
 Script Name: run_pq.py
-Description: Download and run PatternQuery, then extract the results.
+Description: Run PatternQuery, then extract the results.
 Authors: Daniela Repelová, Kateřina Nazarčuková
 Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazarčuková
 """
@@ -40,16 +40,10 @@ def download_pq(config: Config) -> None:
     logger.info("Downloading PatternQuery")
 
     response = requests.get(f"https://webchem.ncbr.muni.cz/Platform/PatternQuery/DownloadService")
-    with open((config.user_cfg.pq_dir / "PatternQuery.zip"), "wb") as f:  # FIXME: Keep version number
+    with open((config.user_cfg.pq_dir / "PatternQuery.zip"), "wb") as f:
         f.write(response.content)
 
     unzip_all(config.user_cfg.pq_dir / "PatternQuery.zip", config.user_cfg.pq_dir / "PatternQuery")
-
-
-# def update_mv(config: Config) -> None: # TODO: finish function
-    # download change log and read current version in it
-    # if version same delete changelog and do nothing else
-    # if not download again current mv and delete changelow
 
 
 def create_pq_config(config: Config, structure: str, residues: List[Dict[str, str]], sugar: str) -> List[str]:
@@ -150,8 +144,8 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     pq_base = config.user_cfg.pq_dir
     matches = sorted([p for p in pq_base.glob("PatternQuery*") if p.is_dir()])
     pq_dir = matches[-1] if matches else pq_base / "PatternQuery"
-    if not pq_dir.exists() or (pq_dir.is_dir() and not any(pq_dir.iterdir())):
-        download_pq(config)
+    # if not pq_dir.exists() or (pq_dir.is_dir() and not any(pq_dir.iterdir())):
+    #     download_pq(config) # FIXME:
 
     # Tmp # FIXME:
     (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)

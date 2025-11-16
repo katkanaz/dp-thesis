@@ -74,8 +74,8 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--number", help="Number of clusters to create", type=int, default=20)
     parser.add_argument("-m", "--method", help="Clustering method", type=str,
                         choices=["ward", "average", "centroid", "single", "complete", "weighted", "median"], default="centroid")
-    parser.add_argument("--min_residues", help="Minimal number of residues required in a surrounding", type=int, default=5)
-    parser.add_argument("--max_residues", help="Maximal number of residues in a surrunding. Required by structure motif search", type=int, default=5)
+    parser.add_argument("--min_residues", help="Minimum number of residues required in a surrounding", type=int, default=5)
+    parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
 
