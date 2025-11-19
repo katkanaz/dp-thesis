@@ -3,7 +3,6 @@ opensrc-pymol/
 masters-thesis/
 old_data/
 .env
-clean_me/
 data/
 debug/
 docs/
