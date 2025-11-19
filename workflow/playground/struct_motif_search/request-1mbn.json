@@ -1,0 +1,168 @@
+{
+  "report": "search_summary",
+  "request": {
+    "query": {
+      "type": "group",
+      "nodes": [
+        {
+          "type": "terminal",
+          "service": "strucmotif",
+          "parameters": {
+            "value": {
+              "residue_ids": [
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 55
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 56
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 57
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 58
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 59
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 60
+                }
+              ],
+              "entry_id": "1MBN"
+            },
+            "rmsd_cutoff": 3,
+            "atom_pairing_scheme": "ALL",
+            "exchanges": [
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 55
+                },
+                "allowed": [
+                  "MET"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 56
+                },
+                "allowed": [
+                  "LYS"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 57
+                },
+                "allowed": [
+                  "ALA"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 58
+                },
+                "allowed": [
+                  "SER"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 59
+                },
+                "allowed": [
+                  "GLU"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 60
+                },
+                "allowed": [
+                  "ASP"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "group",
+          "nodes": [
+            {
+              "type": "group",
+              "nodes": [
+                {
+                  "type": "group",
+                  "nodes": [
+                    {
+                      "type": "terminal",
+                      "service": "text",
+                      "parameters": {
+                        "attribute": "rcsb_entry_info.structure_determination_methodology",
+                        "value": "computational",
+                        "operator": "exact_match"
+                      }
+                    }
+                  ],
+                  "logical_operator": "or",
+                  "label": "rcsb_entry_info.structure_determination_methodology"
+                }
+              ],
+              "logical_operator": "and"
+            }
+          ],
+          "logical_operator": "and",
+          "label": "text"
+        }
+      ],
+      "logical_operator": "and"
+    },
+    "return_type": "assembly",
+    "request_options": {
+      "results_content_type": [
+        "computational",
+        "experimental"
+      ],
+      "paginate": {
+        "start": 0,
+        "rows": 25
+      },
+      "sort": [
+        {
+          "sort_by": "score",
+          "direction": "desc"
+        }
+      ],
+      "scoring_strategy": "combined"
+    },
+    "request_info": {
+      "query_id": "ccb77033c8dff29536b12396bc716985"
+    }
+  },
+  "getDrilldown": false,
+  "attributes": null
+}

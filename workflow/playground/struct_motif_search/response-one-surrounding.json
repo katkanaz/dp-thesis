@@ -1,0 +1,1735 @@
+{
+    "result_type": "assembly",
+    "total_count": 3,
+    "result_set": [
+        {
+            "identifier": "AF_AFP22973F1-deposited",
+            "return_type": "assembly",
+            "strucmotif_match": [
+                {
+                    "residue_ids": [
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 89
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 107
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 108
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 109
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 139
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 140
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 224
+                        }
+                    ],
+                    "score": "0.84",
+                    "transformation": [
+                        -0.857,
+                        -0.061,
+                        0.512,
+                        0,
+                        -0.35,
+                        -0.66,
+                        -0.664,
+                        0,
+                        0.379,
+                        -0.748,
+                        0.544,
+                        0,
+                        73.049,
+                        27.465,
+                        74.663,
+                        1
+                    ],
+                    "residue_types": [
+                        "ASP",
+                        "SER",
+                        "ALA",
+                        "GLY",
+                        "TYR",
+                        "ASN",
+                        "GLY"
+                    ]
+                },
+                {
+                    "residue_ids": [
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 89
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 107
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 108
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 109
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 139
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 140
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 222
+                        }
+                    ],
+                    "score": "1.96",
+                    "transformation": [
+                        -0.832,
+                        0.112,
+                        0.543,
+                        0,
+                        -0.487,
+                        -0.618,
+                        -0.618,
+                        0,
+                        0.266,
+                        -0.778,
+                        0.569,
+                        0,
+                        70.633,
+                        27.561,
+                        75.246,
+                        1
+                    ],
+                    "residue_types": [
+                        "ASP",
+                        "SER",
+                        "ALA",
+                        "GLY",
+                        "TYR",
+                        "ASN",
+                        "GLY"
+                    ]
+                }
+            ],
+            "data": {
+                "audit_author": [
+                    {
+                        "name": "Jumper, John"
+                    },
+                    {
+                        "name": "Evans, Richard"
+                    },
+                    {
+                        "name": "Pritzel, Alexander"
+                    },
+                    {
+                        "name": "Green, Tim"
+                    },
+                    {
+                        "name": "Figurnov, Michael"
+                    },
+                    {
+                        "name": "Ronneberger, Olaf"
+                    },
+                    {
+                        "name": "Tunyasuvunakool, Kathryn"
+                    },
+                    {
+                        "name": "Bates, Russ"
+                    },
+                    {
+                        "name": "Zidek, Augustin"
+                    },
+                    {
+                        "name": "Potapenko, Anna"
+                    },
+                    {
+                        "name": "Bridgland, Alex"
+                    },
+                    {
+                        "name": "Meyer, Clemens"
+                    },
+                    {
+                        "name": "Kohl, Simon A. A."
+                    },
+                    {
+                        "name": "Ballard, Andrew J."
+                    },
+                    {
+                        "name": "Cowie, Andrew"
+                    },
+                    {
+                        "name": "Romera-Paredes, Bernardino"
+                    },
+                    {
+                        "name": "Nikolov, Stanislav"
+                    },
+                    {
+                        "name": "Jain, Rishub"
+                    },
+                    {
+                        "name": "Adler, Jonas"
+                    },
+                    {
+                        "name": "Back, Trevor"
+                    },
+                    {
+                        "name": "Petersen, Stig"
+                    },
+                    {
+                        "name": "Reiman, David"
+                    },
+                    {
+                        "name": "Clancy, Ellen"
+                    },
+                    {
+                        "name": "Zielinski, Michal"
+                    },
+                    {
+                        "name": "Steinegger, Martin"
+                    },
+                    {
+                        "name": "Pacholska, Michalina"
+                    },
+                    {
+                        "name": "Berghammer, Tamas"
+                    },
+                    {
+                        "name": "Silver, David"
+                    },
+                    {
+                        "name": "Vinyals, Oriol"
+                    },
+                    {
+                        "name": "Senior, Andrew W."
+                    },
+                    {
+                        "name": "Kavukcuoglu, Koray"
+                    },
+                    {
+                        "name": "Kohli, Pushmeet"
+                    },
+                    {
+                        "name": "Hassabis, Demis"
+                    }
+                ],
+                "exptl": null,
+                "rcsb_comp_model_provenance": {
+                    "entry_id": "AF-P22973-F1",
+                    "source_db": "AlphaFoldDB",
+                    "source_url": "https://alphafold.ebi.ac.uk/files/AF-P22973-F1-model_v4.cif",
+                    "source_db_href": "https://alphafold.ebi.ac.uk/entry/P22973"
+                },
+                "rcsb_entry_group_membership": null,
+                "identifier": "AF_AFP22973F1-deposited",
+                "return_type": "assembly",
+                "entryId": "AF_AFP22973F1",
+                "name": "AF_AFP22973F1: Assembly",
+                "sspHref": "/structure/AF_AFP22973F1?assembly_id=deposited",
+                "deposited_model_count": 1,
+                "representative_model": null,
+                "isIhm": false,
+                "structure_determination_methodology": "computational",
+                "title": "Computed structure model of Anti-H(O) lectin 2",
+                "isCsm": true,
+                "pLDDTs": [
+                    91.92
+                ],
+                "publication": "(2021) <strong>596</strong>: 583-589",
+                "initial_release_date": "2021-12-09",
+                "assembly": {
+                    "id": "deposited",
+                    "symmetry": {
+                        "kind": "Global Symmetry",
+                        "oligomeric_state": "Monomer",
+                        "stoichiometry": [
+                            "A1"
+                        ],
+                        "symbol": "C1",
+                        "type": "Asymmetric"
+                    },
+                    "oligomeric_count": 1
+                },
+                "auth_mapping": {
+                    "A": {
+                        "auth_asym_id": "A",
+                        "auth_to_entity_poly_seq_mapping": [
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12",
+                            "13",
+                            "14",
+                            "15",
+                            "16",
+                            "17",
+                            "18",
+                            "19",
+                            "20",
+                            "21",
+                            "22",
+                            "23",
+                            "24",
+                            "25",
+                            "26",
+                            "27",
+                            "28",
+                            "29",
+                            "30",
+                            "31",
+                            "32",
+                            "33",
+                            "34",
+                            "35",
+                            "36",
+                            "37",
+                            "38",
+                            "39",
+                            "40",
+                            "41",
+                            "42",
+                            "43",
+                            "44",
+                            "45",
+                            "46",
+                            "47",
+                            "48",
+                            "49",
+                            "50",
+                            "51",
+                            "52",
+                            "53",
+                            "54",
+                            "55",
+                            "56",
+                            "57",
+                            "58",
+                            "59",
+                            "60",
+                            "61",
+                            "62",
+                            "63",
+                            "64",
+                            "65",
+                            "66",
+                            "67",
+                            "68",
+                            "69",
+                            "70",
+                            "71",
+                            "72",
+                            "73",
+                            "74",
+                            "75",
+                            "76",
+                            "77",
+                            "78",
+                            "79",
+                            "80",
+                            "81",
+                            "82",
+                            "83",
+                            "84",
+                            "85",
+                            "86",
+                            "87",
+                            "88",
+                            "89",
+                            "90",
+                            "91",
+                            "92",
+                            "93",
+                            "94",
+                            "95",
+                            "96",
+                            "97",
+                            "98",
+                            "99",
+                            "100",
+                            "101",
+                            "102",
+                            "103",
+                            "104",
+                            "105",
+                            "106",
+                            "107",
+                            "108",
+                            "109",
+                            "110",
+                            "111",
+                            "112",
+                            "113",
+                            "114",
+                            "115",
+                            "116",
+                            "117",
+                            "118",
+                            "119",
+                            "120",
+                            "121",
+                            "122",
+                            "123",
+                            "124",
+                            "125",
+                            "126",
+                            "127",
+                            "128",
+                            "129",
+                            "130",
+                            "131",
+                            "132",
+                            "133",
+                            "134",
+                            "135",
+                            "136",
+                            "137",
+                            "138",
+                            "139",
+                            "140",
+                            "141",
+                            "142",
+                            "143",
+                            "144",
+                            "145",
+                            "146",
+                            "147",
+                            "148",
+                            "149",
+                            "150",
+                            "151",
+                            "152",
+                            "153",
+                            "154",
+                            "155",
+                            "156",
+                            "157",
+                            "158",
+                            "159",
+                            "160",
+                            "161",
+                            "162",
+                            "163",
+                            "164",
+                            "165",
+                            "166",
+                            "167",
+                            "168",
+                            "169",
+                            "170",
+                            "171",
+                            "172",
+                            "173",
+                            "174",
+                            "175",
+                            "176",
+                            "177",
+                            "178",
+                            "179",
+                            "180",
+                            "181",
+                            "182",
+                            "183",
+                            "184",
+                            "185",
+                            "186",
+                            "187",
+                            "188",
+                            "189",
+                            "190",
+                            "191",
+                            "192",
+                            "193",
+                            "194",
+                            "195",
+                            "196",
+                            "197",
+                            "198",
+                            "199",
+                            "200",
+                            "201",
+                            "202",
+                            "203",
+                            "204",
+                            "205",
+                            "206",
+                            "207",
+                            "208",
+                            "209",
+                            "210",
+                            "211",
+                            "212",
+                            "213",
+                            "214",
+                            "215",
+                            "216",
+                            "217",
+                            "218",
+                            "219",
+                            "220",
+                            "221",
+                            "222",
+                            "223",
+                            "224",
+                            "225",
+                            "226",
+                            "227",
+                            "228",
+                            "229",
+                            "230",
+                            "231",
+                            "232",
+                            "233",
+                            "234",
+                            "235",
+                            "236",
+                            "237",
+                            "238",
+                            "239",
+                            "240",
+                            "241",
+                            "242",
+                            "243",
+                            "244",
+                            "245",
+                            "246",
+                            "247",
+                            "248",
+                            "249"
+                        ]
+                    }
+                },
+                "imgSrc": "https://cdn.rcsb.org/images/structures/af_afp22973f1_assembly-deposited.jpeg"
+            }
+        },
+        {
+            "identifier": "AF_AFP22970F1-deposited",
+            "return_type": "assembly",
+            "strucmotif_match": [
+                {
+                    "residue_ids": [
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 87
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 105
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 106
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 107
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 136
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 137
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 220
+                        }
+                    ],
+                    "score": "0.85",
+                    "transformation": [
+                        -0.217,
+                        0.958,
+                        0.187,
+                        0,
+                        -0.174,
+                        -0.226,
+                        0.958,
+                        0,
+                        0.961,
+                        0.176,
+                        0.215,
+                        0,
+                        71.456,
+                        26.022,
+                        70.106,
+                        1
+                    ],
+                    "residue_types": [
+                        "ASP",
+                        "SER",
+                        "ALA",
+                        "GLY",
+                        "TYR",
+                        "ASN",
+                        "GLY"
+                    ]
+                },
+                {
+                    "residue_ids": [
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 87
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 105
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 106
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 107
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 136
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 137
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 218
+                        }
+                    ],
+                    "score": "1.94",
+                    "transformation": [
+                        -0.037,
+                        0.988,
+                        0.147,
+                        0,
+                        -0.165,
+                        -0.151,
+                        0.975,
+                        0,
+                        0.986,
+                        0.012,
+                        0.169,
+                        0,
+                        68.583,
+                        26.226,
+                        70.809,
+                        1
+                    ],
+                    "residue_types": [
+                        "ASP",
+                        "SER",
+                        "ALA",
+                        "GLY",
+                        "TYR",
+                        "ASN",
+                        "GLY"
+                    ]
+                }
+            ],
+            "data": {
+                "audit_author": [
+                    {
+                        "name": "Jumper, John"
+                    },
+                    {
+                        "name": "Evans, Richard"
+                    },
+                    {
+                        "name": "Pritzel, Alexander"
+                    },
+                    {
+                        "name": "Green, Tim"
+                    },
+                    {
+                        "name": "Figurnov, Michael"
+                    },
+                    {
+                        "name": "Ronneberger, Olaf"
+                    },
+                    {
+                        "name": "Tunyasuvunakool, Kathryn"
+                    },
+                    {
+                        "name": "Bates, Russ"
+                    },
+                    {
+                        "name": "Zidek, Augustin"
+                    },
+                    {
+                        "name": "Potapenko, Anna"
+                    },
+                    {
+                        "name": "Bridgland, Alex"
+                    },
+                    {
+                        "name": "Meyer, Clemens"
+                    },
+                    {
+                        "name": "Kohl, Simon A. A."
+                    },
+                    {
+                        "name": "Ballard, Andrew J."
+                    },
+                    {
+                        "name": "Cowie, Andrew"
+                    },
+                    {
+                        "name": "Romera-Paredes, Bernardino"
+                    },
+                    {
+                        "name": "Nikolov, Stanislav"
+                    },
+                    {
+                        "name": "Jain, Rishub"
+                    },
+                    {
+                        "name": "Adler, Jonas"
+                    },
+                    {
+                        "name": "Back, Trevor"
+                    },
+                    {
+                        "name": "Petersen, Stig"
+                    },
+                    {
+                        "name": "Reiman, David"
+                    },
+                    {
+                        "name": "Clancy, Ellen"
+                    },
+                    {
+                        "name": "Zielinski, Michal"
+                    },
+                    {
+                        "name": "Steinegger, Martin"
+                    },
+                    {
+                        "name": "Pacholska, Michalina"
+                    },
+                    {
+                        "name": "Berghammer, Tamas"
+                    },
+                    {
+                        "name": "Silver, David"
+                    },
+                    {
+                        "name": "Vinyals, Oriol"
+                    },
+                    {
+                        "name": "Senior, Andrew W."
+                    },
+                    {
+                        "name": "Kavukcuoglu, Koray"
+                    },
+                    {
+                        "name": "Kohli, Pushmeet"
+                    },
+                    {
+                        "name": "Hassabis, Demis"
+                    }
+                ],
+                "exptl": null,
+                "rcsb_comp_model_provenance": {
+                    "entry_id": "AF-P22970-F1",
+                    "source_db": "AlphaFoldDB",
+                    "source_url": "https://alphafold.ebi.ac.uk/files/AF-P22970-F1-model_v4.cif",
+                    "source_db_href": "https://alphafold.ebi.ac.uk/entry/P22970"
+                },
+                "rcsb_entry_group_membership": null,
+                "identifier": "AF_AFP22970F1-deposited",
+                "return_type": "assembly",
+                "entryId": "AF_AFP22970F1",
+                "name": "AF_AFP22970F1: Assembly",
+                "sspHref": "/structure/AF_AFP22970F1?assembly_id=deposited",
+                "deposited_model_count": 1,
+                "representative_model": null,
+                "isIhm": false,
+                "structure_determination_methodology": "computational",
+                "title": "Computed structure model of Anti-H(O) lectin 1",
+                "isCsm": true,
+                "pLDDTs": [
+                    96.43
+                ],
+                "publication": "(2021) <strong>596</strong>: 583-589",
+                "initial_release_date": "2021-12-09",
+                "assembly": {
+                    "id": "deposited",
+                    "symmetry": {
+                        "kind": "Global Symmetry",
+                        "oligomeric_state": "Monomer",
+                        "stoichiometry": [
+                            "A1"
+                        ],
+                        "symbol": "C1",
+                        "type": "Asymmetric"
+                    },
+                    "oligomeric_count": 1
+                },
+                "auth_mapping": {
+                    "A": {
+                        "auth_asym_id": "A",
+                        "auth_to_entity_poly_seq_mapping": [
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12",
+                            "13",
+                            "14",
+                            "15",
+                            "16",
+                            "17",
+                            "18",
+                            "19",
+                            "20",
+                            "21",
+                            "22",
+                            "23",
+                            "24",
+                            "25",
+                            "26",
+                            "27",
+                            "28",
+                            "29",
+                            "30",
+                            "31",
+                            "32",
+                            "33",
+                            "34",
+                            "35",
+                            "36",
+                            "37",
+                            "38",
+                            "39",
+                            "40",
+                            "41",
+                            "42",
+                            "43",
+                            "44",
+                            "45",
+                            "46",
+                            "47",
+                            "48",
+                            "49",
+                            "50",
+                            "51",
+                            "52",
+                            "53",
+                            "54",
+                            "55",
+                            "56",
+                            "57",
+                            "58",
+                            "59",
+                            "60",
+                            "61",
+                            "62",
+                            "63",
+                            "64",
+                            "65",
+                            "66",
+                            "67",
+                            "68",
+                            "69",
+                            "70",
+                            "71",
+                            "72",
+                            "73",
+                            "74",
+                            "75",
+                            "76",
+                            "77",
+                            "78",
+                            "79",
+                            "80",
+                            "81",
+                            "82",
+                            "83",
+                            "84",
+                            "85",
+                            "86",
+                            "87",
+                            "88",
+                            "89",
+                            "90",
+                            "91",
+                            "92",
+                            "93",
+                            "94",
+                            "95",
+                            "96",
+                            "97",
+                            "98",
+                            "99",
+                            "100",
+                            "101",
+                            "102",
+                            "103",
+                            "104",
+                            "105",
+                            "106",
+                            "107",
+                            "108",
+                            "109",
+                            "110",
+                            "111",
+                            "112",
+                            "113",
+                            "114",
+                            "115",
+                            "116",
+                            "117",
+                            "118",
+                            "119",
+                            "120",
+                            "121",
+                            "122",
+                            "123",
+                            "124",
+                            "125",
+                            "126",
+                            "127",
+                            "128",
+                            "129",
+                            "130",
+                            "131",
+                            "132",
+                            "133",
+                            "134",
+                            "135",
+                            "136",
+                            "137",
+                            "138",
+                            "139",
+                            "140",
+                            "141",
+                            "142",
+                            "143",
+                            "144",
+                            "145",
+                            "146",
+                            "147",
+                            "148",
+                            "149",
+                            "150",
+                            "151",
+                            "152",
+                            "153",
+                            "154",
+                            "155",
+                            "156",
+                            "157",
+                            "158",
+                            "159",
+                            "160",
+                            "161",
+                            "162",
+                            "163",
+                            "164",
+                            "165",
+                            "166",
+                            "167",
+                            "168",
+                            "169",
+                            "170",
+                            "171",
+                            "172",
+                            "173",
+                            "174",
+                            "175",
+                            "176",
+                            "177",
+                            "178",
+                            "179",
+                            "180",
+                            "181",
+                            "182",
+                            "183",
+                            "184",
+                            "185",
+                            "186",
+                            "187",
+                            "188",
+                            "189",
+                            "190",
+                            "191",
+                            "192",
+                            "193",
+                            "194",
+                            "195",
+                            "196",
+                            "197",
+                            "198",
+                            "199",
+                            "200",
+                            "201",
+                            "202",
+                            "203",
+                            "204",
+                            "205",
+                            "206",
+                            "207",
+                            "208",
+                            "209",
+                            "210",
+                            "211",
+                            "212",
+                            "213",
+                            "214",
+                            "215",
+                            "216",
+                            "217",
+                            "218",
+                            "219",
+                            "220",
+                            "221",
+                            "222",
+                            "223",
+                            "224",
+                            "225",
+                            "226",
+                            "227",
+                            "228",
+                            "229",
+                            "230",
+                            "231",
+                            "232",
+                            "233",
+                            "234",
+                            "235",
+                            "236",
+                            "237",
+                            "238",
+                            "239",
+                            "240",
+                            "241",
+                            "242",
+                            "243",
+                            "244"
+                        ]
+                    }
+                },
+                "imgSrc": "https://cdn.rcsb.org/images/structures/af_afp22970f1_assembly-deposited.jpeg"
+            }
+        },
+        {
+            "identifier": "AF_AFP23558F1-deposited",
+            "return_type": "assembly",
+            "strucmotif_match": [
+                {
+                    "residue_ids": [
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 88
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 106
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 107
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 108
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 137
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 138
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 221
+                        }
+                    ],
+                    "score": "0.88",
+                    "transformation": [
+                        -0.729,
+                        -0.027,
+                        -0.684,
+                        0,
+                        0.492,
+                        0.674,
+                        -0.552,
+                        0,
+                        0.476,
+                        -0.738,
+                        -0.478,
+                        0,
+                        68.344,
+                        22.388,
+                        69.044,
+                        1
+                    ],
+                    "residue_types": [
+                        "ASP",
+                        "SER",
+                        "ALA",
+                        "GLY",
+                        "TYR",
+                        "ASN",
+                        "GLY"
+                    ]
+                },
+                {
+                    "residue_ids": [
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 88
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 106
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 107
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 108
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 137
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 138
+                        },
+                        {
+                            "label_asym_id": "A",
+                            "struct_oper_id": "1",
+                            "label_seq_id": 219
+                        }
+                    ],
+                    "score": "1.99",
+                    "transformation": [
+                        -0.753,
+                        0.072,
+                        -0.654,
+                        0,
+                        0.576,
+                        0.553,
+                        -0.602,
+                        0,
+                        0.318,
+                        -0.83,
+                        -0.458,
+                        0,
+                        64.825,
+                        23.152,
+                        70.065,
+                        1
+                    ],
+                    "residue_types": [
+                        "ASP",
+                        "SER",
+                        "ALA",
+                        "GLY",
+                        "TYR",
+                        "ASN",
+                        "GLY"
+                    ]
+                }
+            ],
+            "data": {
+                "audit_author": [
+                    {
+                        "name": "Jumper, John"
+                    },
+                    {
+                        "name": "Evans, Richard"
+                    },
+                    {
+                        "name": "Pritzel, Alexander"
+                    },
+                    {
+                        "name": "Green, Tim"
+                    },
+                    {
+                        "name": "Figurnov, Michael"
+                    },
+                    {
+                        "name": "Ronneberger, Olaf"
+                    },
+                    {
+                        "name": "Tunyasuvunakool, Kathryn"
+                    },
+                    {
+                        "name": "Bates, Russ"
+                    },
+                    {
+                        "name": "Zidek, Augustin"
+                    },
+                    {
+                        "name": "Potapenko, Anna"
+                    },
+                    {
+                        "name": "Bridgland, Alex"
+                    },
+                    {
+                        "name": "Meyer, Clemens"
+                    },
+                    {
+                        "name": "Kohl, Simon A. A."
+                    },
+                    {
+                        "name": "Ballard, Andrew J."
+                    },
+                    {
+                        "name": "Cowie, Andrew"
+                    },
+                    {
+                        "name": "Romera-Paredes, Bernardino"
+                    },
+                    {
+                        "name": "Nikolov, Stanislav"
+                    },
+                    {
+                        "name": "Jain, Rishub"
+                    },
+                    {
+                        "name": "Adler, Jonas"
+                    },
+                    {
+                        "name": "Back, Trevor"
+                    },
+                    {
+                        "name": "Petersen, Stig"
+                    },
+                    {
+                        "name": "Reiman, David"
+                    },
+                    {
+                        "name": "Clancy, Ellen"
+                    },
+                    {
+                        "name": "Zielinski, Michal"
+                    },
+                    {
+                        "name": "Steinegger, Martin"
+                    },
+                    {
+                        "name": "Pacholska, Michalina"
+                    },
+                    {
+                        "name": "Berghammer, Tamas"
+                    },
+                    {
+                        "name": "Silver, David"
+                    },
+                    {
+                        "name": "Vinyals, Oriol"
+                    },
+                    {
+                        "name": "Senior, Andrew W."
+                    },
+                    {
+                        "name": "Kavukcuoglu, Koray"
+                    },
+                    {
+                        "name": "Kohli, Pushmeet"
+                    },
+                    {
+                        "name": "Hassabis, Demis"
+                    }
+                ],
+                "exptl": null,
+                "rcsb_comp_model_provenance": {
+                    "entry_id": "AF-P23558-F1",
+                    "source_db": "AlphaFoldDB",
+                    "source_url": "https://alphafold.ebi.ac.uk/files/AF-P23558-F1-model_v4.cif",
+                    "source_db_href": "https://alphafold.ebi.ac.uk/entry/P23558"
+                },
+                "rcsb_entry_group_membership": null,
+                "identifier": "AF_AFP23558F1-deposited",
+                "return_type": "assembly",
+                "entryId": "AF_AFP23558F1",
+                "name": "AF_AFP23558F1: Assembly",
+                "sspHref": "/structure/AF_AFP23558F1?assembly_id=deposited",
+                "deposited_model_count": 1,
+                "representative_model": null,
+                "isIhm": false,
+                "structure_determination_methodology": "computational",
+                "title": "Computed structure model of Lectin 1",
+                "isCsm": true,
+                "pLDDTs": [
+                    90.45
+                ],
+                "publication": "(2021) <strong>596</strong>: 583-589",
+                "initial_release_date": "2021-12-09",
+                "assembly": {
+                    "id": "deposited",
+                    "symmetry": {
+                        "kind": "Global Symmetry",
+                        "oligomeric_state": "Monomer",
+                        "stoichiometry": [
+                            "A1"
+                        ],
+                        "symbol": "C1",
+                        "type": "Asymmetric"
+                    },
+                    "oligomeric_count": 1
+                },
+                "auth_mapping": {
+                    "A": {
+                        "auth_asym_id": "A",
+                        "auth_to_entity_poly_seq_mapping": [
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12",
+                            "13",
+                            "14",
+                            "15",
+                            "16",
+                            "17",
+                            "18",
+                            "19",
+                            "20",
+                            "21",
+                            "22",
+                            "23",
+                            "24",
+                            "25",
+                            "26",
+                            "27",
+                            "28",
+                            "29",
+                            "30",
+                            "31",
+                            "32",
+                            "33",
+                            "34",
+                            "35",
+                            "36",
+                            "37",
+                            "38",
+                            "39",
+                            "40",
+                            "41",
+                            "42",
+                            "43",
+                            "44",
+                            "45",
+                            "46",
+                            "47",
+                            "48",
+                            "49",
+                            "50",
+                            "51",
+                            "52",
+                            "53",
+                            "54",
+                            "55",
+                            "56",
+                            "57",
+                            "58",
+                            "59",
+                            "60",
+                            "61",
+                            "62",
+                            "63",
+                            "64",
+                            "65",
+                            "66",
+                            "67",
+                            "68",
+                            "69",
+                            "70",
+                            "71",
+                            "72",
+                            "73",
+                            "74",
+                            "75",
+                            "76",
+                            "77",
+                            "78",
+                            "79",
+                            "80",
+                            "81",
+                            "82",
+                            "83",
+                            "84",
+                            "85",
+                            "86",
+                            "87",
+                            "88",
+                            "89",
+                            "90",
+                            "91",
+                            "92",
+                            "93",
+                            "94",
+                            "95",
+                            "96",
+                            "97",
+                            "98",
+                            "99",
+                            "100",
+                            "101",
+                            "102",
+                            "103",
+                            "104",
+                            "105",
+                            "106",
+                            "107",
+                            "108",
+                            "109",
+                            "110",
+                            "111",
+                            "112",
+                            "113",
+                            "114",
+                            "115",
+                            "116",
+                            "117",
+                            "118",
+                            "119",
+                            "120",
+                            "121",
+                            "122",
+                            "123",
+                            "124",
+                            "125",
+                            "126",
+                            "127",
+                            "128",
+                            "129",
+                            "130",
+                            "131",
+                            "132",
+                            "133",
+                            "134",
+                            "135",
+                            "136",
+                            "137",
+                            "138",
+                            "139",
+                            "140",
+                            "141",
+                            "142",
+                            "143",
+                            "144",
+                            "145",
+                            "146",
+                            "147",
+                            "148",
+                            "149",
+                            "150",
+                            "151",
+                            "152",
+                            "153",
+                            "154",
+                            "155",
+                            "156",
+                            "157",
+                            "158",
+                            "159",
+                            "160",
+                            "161",
+                            "162",
+                            "163",
+                            "164",
+                            "165",
+                            "166",
+                            "167",
+                            "168",
+                            "169",
+                            "170",
+                            "171",
+                            "172",
+                            "173",
+                            "174",
+                            "175",
+                            "176",
+                            "177",
+                            "178",
+                            "179",
+                            "180",
+                            "181",
+                            "182",
+                            "183",
+                            "184",
+                            "185",
+                            "186",
+                            "187",
+                            "188",
+                            "189",
+                            "190",
+                            "191",
+                            "192",
+                            "193",
+                            "194",
+                            "195",
+                            "196",
+                            "197",
+                            "198",
+                            "199",
+                            "200",
+                            "201",
+                            "202",
+                            "203",
+                            "204",
+                            "205",
+                            "206",
+                            "207",
+                            "208",
+                            "209",
+                            "210",
+                            "211",
+                            "212",
+                            "213",
+                            "214",
+                            "215",
+                            "216",
+                            "217",
+                            "218",
+                            "219",
+                            "220",
+                            "221",
+                            "222",
+                            "223",
+                            "224",
+                            "225",
+                            "226",
+                            "227",
+                            "228",
+                            "229",
+                            "230",
+                            "231",
+                            "232",
+                            "233",
+                            "234",
+                            "235",
+                            "236",
+                            "237",
+                            "238",
+                            "239",
+                            "240",
+                            "241",
+                            "242",
+                            "243",
+                            "244",
+                            "245",
+                            "246",
+                            "247",
+                            "248",
+                            "249",
+                            "250"
+                        ]
+                    }
+                },
+                "imgSrc": "https://cdn.rcsb.org/images/structures/af_afp23558f1_assembly-deposited.jpeg"
+            }
+        }
+    ],
+    "facets": [
+        {
+            "name": "rcsb_entity_source_organism.ncbi_scientific_name",
+            "buckets": [
+                {
+                    "label": "Cytisophyllum sessilifolium",
+                    "population": 1,
+                    "checked": false
+                },
+                {
+                    "label": "Laburnum alpinum",
+                    "population": 1,
+                    "checked": false
+                },
+                {
+                    "label": "Ulex europaeus",
+                    "population": 1,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_entry_info.resolution_combined",
+            "buckets": [],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_polymer_entity_annotation.type",
+            "buckets": [
+                {
+                    "label": "InterPro",
+                    "population": 3,
+                    "checked": false
+                },
+                {
+                    "label": "GO",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_accession_info.initial_release_date",
+            "buckets": [
+                {
+                    "label": "2021",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_ma_qa_metric_global.ma_qa_metric_global.value",
+            "buckets": [
+                {
+                    "label": "90.0-*",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_entity_source_organism.ncbi_parent_scientific_name",
+            "buckets": [
+                {
+                    "label": "Eukaryota",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_entry_info.structure_determination_methodology",
+            "buckets": [
+                {
+                    "label": "computational",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "entity_poly.rcsb_entity_polymer_type",
+            "buckets": [
+                {
+                    "label": "Protein",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_struct_symmetry.type",
+            "buckets": [
+                {
+                    "label": "Asymmetric",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        },
+        {
+            "name": "rcsb_comp_model_provenance.source_db",
+            "buckets": [
+                {
+                    "label": "AlphaFoldDB",
+                    "population": 3,
+                    "checked": false
+                }
+            ],
+            "maxGroups": 10
+        }
+    ],
+    "result_set_count": 3
+}

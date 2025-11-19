@@ -1,0 +1,178 @@
+{
+  "report": "search_summary",
+  "request": {
+    "query": {
+      "type": "group",
+      "nodes": [
+        {
+          "type": "terminal",
+          "service": "strucmotif",
+          "parameters": {
+            "value": {
+              "residue_ids": [
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 1
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 2
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 3
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 4
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 5
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 6
+                },
+                {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 7
+                }
+              ],
+              "format": "bcif",
+              "url": "https://user-upload.rcsb.org/v1/download/665d0402-26e5-40a3-81eb-a7ce93b8a289/146_0_1qot_FUC_2_E.bcif"
+            },
+            "rmsd_cutoff": 3,
+            "atom_pairing_scheme": "ALL",
+            "exchanges": [
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 1
+                },
+                "allowed": [
+                  "ASP"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 2
+                },
+                "allowed": [
+                  "SER"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 3
+                },
+                "allowed": [
+                  "ALA"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 4
+                },
+                "allowed": [
+                  "GLY"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 5
+                },
+                "allowed": [
+                  "TYR"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 6
+                },
+                "allowed": [
+                  "ASN"
+                ]
+              },
+              {
+                "residue_id": {
+                  "label_asym_id": "A",
+                  "struct_oper_id": "1",
+                  "label_seq_id": 7
+                },
+                "allowed": [
+                  "GLY"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "group",
+          "logical_operator": "and",
+          "nodes": [
+            {
+              "type": "group",
+              "nodes": [
+                {
+                  "type": "terminal",
+                  "service": "text",
+                  "parameters": {
+                    "attribute": "rcsb_comp_model_provenance.source_db",
+                    "operator": "exact_match",
+                    "negation": false,
+                    "value": "AlphaFoldDB"
+                  }
+                }
+              ],
+              "logical_operator": "and"
+            }
+          ],
+          "label": "text"
+        }
+      ],
+      "logical_operator": "and"
+    },
+    "return_type": "assembly",
+    "request_options": {
+      "results_content_type": [
+        "computational",
+        "experimental"
+      ],
+      "paginate": {
+        "start": 0,
+        "rows": 25
+      },
+      "sort": [
+        {
+          "sort_by": "score",
+          "direction": "desc"
+        }
+      ],
+      "scoring_strategy": "combined"
+    },
+    "request_info": {
+      "query_id": "0bbd7e8875e60bb4a0663c4a523f9003"
+    }
+  },
+  "getDrilldown": false,
+  "attributes": null
+}
