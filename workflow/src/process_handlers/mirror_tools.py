@@ -9,6 +9,9 @@ import subprocess
 from logger import logger
 from configuration import Config
 
+class DataSourceHandler():
+    local: bool
+
 
 def get_pdb_ids_from_pq(src_path: Path, result_file: Path) -> None:
     """
