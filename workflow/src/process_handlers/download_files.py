@@ -9,6 +9,7 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 from argparse import ArgumentParser
 import json
 from os import listdir
+import pandas as pd
 from pathlib import Path
 from time import sleep
 from typing import List, Set
@@ -18,8 +19,9 @@ import requests
 from logger import logger, setup_logger
 
 from configuration import Config
+from src.process_handlers import data_source_tools
 
-from . import mirror_tools
+from . import data_source_tools
 from utils.unzip_file import unzip_single_file
 
 
@@ -97,6 +99,21 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
         json.dump(sugars_not_present_in_any_structure, f, indent=4)
 
     return pdb_ids
+
+
+def get_pdb_ids_from_pq(src_path: Path, result_file: Path) -> None:
+    """
+    Get PDB IDs of structures from PQ (PatternQuery) results.
+
+    :param result_file: Path to file for writing results
+    :param config: Config object
+    """
+
+    structures = pd.read_csv(src_path)
+    pdb_ids = structures.iloc[:,0].tolist()
+
+    with open(result_file, "w") as f:
+        json.dump(pdb_ids, f, indent=4)
 
 
 def get_ids_missing_files(json_file: Path, validation_files: Path) -> List[str]:
@@ -190,12 +207,14 @@ def download_files(config: Config, test_mode: bool) -> None:
     get_components_file(config)
     sugar_names = get_sugars_from_ccd(config)
 
+    source = data_source_tools.DataSourceHandler.create()
+
     if not test_mode: 
         pdb_ids_pq_file = config.run_data_dir / "pdb_ids_pq.json"
         pdb_ids_ccd = get_pdb_ids_with_sugars(config, sugar_names)
-        mirror_tools.get_pq_result(config)
+        source.get_pq_result(config)
         output_file = unzip_single_file(config.sugar_binding_patterns_dir / "result.zip", config.sugar_binding_patterns_dir, "structures-with-sugars/structures.csv") # TODO: should the name and paths be given in cofig?
-        mirror_tools.get_pdb_ids_from_pq(output_file, pdb_ids_pq_file)
+        get_pdb_ids_from_pq(output_file, pdb_ids_pq_file)
 
         with (pdb_ids_pq_file).open() as f: # FIXME: get as return value from function
             pdb_ids_pq = json.load(f)
@@ -219,8 +238,8 @@ def download_files(config: Config, test_mode: bool) -> None:
 
 
     logger.debug("Before download function executes")
-    mirror_tools.download_structures_from_mirror(config, pdb_ids, config.mmcif_files_dir)
-    mirror_tools.download_validation_files_from_mirror(config, pdb_ids, config.validation_files_dir)
+    source.download_structures(config, pdb_ids, config.mmcif_files_dir)
+    source.download_validation_files(config, pdb_ids, config.validation_files_dir)
 
 
 if __name__ == "__main__":
