@@ -10,6 +10,7 @@ from logger import logger
 
 
 class UserConfig(BaseModel):
+    pdb_mirror_dir: Path
     data_dir: Path
     results_dir: Path
     images_dir: Path
@@ -35,6 +36,8 @@ class Config():
 
     run_data_dir: Path
 
+    pdb_mirror_structures: Path
+    pdb_mirror_validation_files: Path
     log_path: Path
     sugar_binding_patterns_dir: Path
     init_pq_dir: Path
@@ -78,6 +81,9 @@ class Config():
 
         path_to_logfile = f"ligand_sort/{data_run}/{data_run}.log"
 
+        self.pdb_mirror_structures = self.user_cfg.pdb_mirror_dir / f"structures"
+        self.pdb_mirror_validation_files = self.user_cfg.pdb_mirror_dir / f"validation-files"
+        self.init_pq_dir = self.user_cfg.results_dir / f"ligand_sort/{data_run}/init_pq"
         self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
         self.components_dir = self.user_cfg.data_dir / f"{data_run}/components"
         self.mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/mmcif_files"
@@ -109,7 +115,7 @@ class Config():
 
     
     @classmethod
-    def get_data_run(cls, data_dir: Path, data_run: Union[str, None]) -> str: # TODO: add types
+    def get_data_run(cls, data_dir: Path, data_run: Union[str, None]) -> str:
         if data_run is not None:
             assert data_run != "", "User defined 'data_run' cannot be empty string"
             return data_run

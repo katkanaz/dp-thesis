@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 import os
-from typing import Set, Tuple
+from typing import Set, Tuple, List
 import subprocess
 
 from logger import logger
@@ -67,17 +67,52 @@ class LocalDataHandler(DataSourceHandler):
     Concrete DataSourceHandler subclass that represents the data source being local.
     """
 
+    def create_sym_links(self, file_list: List[str], src_dir: Path, dest_dir: Path) -> None:
+        """
+        Create symbolic links in <dest_dir> for each file in file_list, pointing to the files in <src_dir>.
+
+        :param file_list: List of files to link
+        :param src_dir: Source directory of files to link
+        :param dest_dir: Destination directory where to link the files
+        """
+
+        dest_dir.mkdir(parents=True, exist_ok=True)
+
+        for file_name in file_list:
+            src_file = src_dir / file_name
+            dest_link = dest_dir / file_name
+
+            if not src_file.exists():
+                logger.warning(f"Source file does not exist: {src_file}")
+                continue
+
+            if dest_link.exists() or dest_link.is_symlink():
+                dest_link.unlink()
+
+            dest_link.symlink_to(src_file)
+
     def get_pq_result(self, config: Config) -> None:
         """
         Retrieve PatternQuery results archive locally via symbolic link.
 
         :param config: Config object
         """
-        pass
 
-    def create_sym_links(self):
-        # TODO: add docs
-        pass
+        logger.info("Downloading PQ results")
+        self.create_sym_links(["result.zip"], config.init_pq_dir, config.sugar_binding_patterns_dir) # TODO: Double check folder logic when creating script for init pq
+
+    def build_filenames_list(self, pdb_ids: Set[str], extension: str, name_sufix: str = "") -> List[str]:
+        """
+        Return list of full filenames given a set of PDB IDs, an extentio and an optional sufix.
+
+        :param pdb_ids: PDB IDs of to build the file names (structures to work with)
+        :param extension: File extenstion of the specific file
+        :param name_sufix: Optional name sufix (mostly for validation files, to follow RCSB naming convention)
+        :return: List of complete file names
+        """
+
+        return [f"{pdb_id}{name_sufix}{extension}" for pdb_id in pdb_ids]
+
 
     def download_structures(self, config: Config, pdb_ids: Set[str], dest_path: Path) -> None:
         """
@@ -87,7 +122,10 @@ class LocalDataHandler(DataSourceHandler):
         :param pdb_ids: IDs of structures to use for creating the file list 
         :param dest_path: Download destination directory
         """
-        pass
+        
+        logger.info("Downloading structures files")
+        self.create_sym_links(self.build_filenames_list(pdb_ids, ".cif.gz"), config.pdb_mirror_structures, dest_path)
+
 
     def download_validation_files(self, config: Config, pdb_ids: Set[str], dest_path: Path) -> None:
         """
@@ -97,7 +135,9 @@ class LocalDataHandler(DataSourceHandler):
         :param pdb_ids: IDs of structures to use for creating the file list 
         :param dest_path: Download destination directory
         """
-        pass
+        
+        logger.info("Downloading validation files")
+        self.create_sym_links(self.build_filenames_list(pdb_ids, ".xml.gz", "_validation"), config.pdb_mirror_validation_files, dest_path)
 
 
 class RemoteDataHandler(DataSourceHandler):
@@ -206,4 +246,4 @@ class RemoteDataHandler(DataSourceHandler):
 
         file_list_path = self.create_file_list(config, pdb_ids, "validation_file_list.txt", ".xml.gz", "_validation")
         logger.info("Downloading validation files")
-        self.download_from_mirror("validation-files", dest_path, file_list_path)
+        self.download_from_mirror("validation-files", dest_path, file_list_path) # TODO: extract mirror struct definition to config

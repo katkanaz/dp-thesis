@@ -1,4 +1,5 @@
 {
+    "pdb_mirror_dir": "../../../pdb-mirror",
     "data_dir": "../data",
     "results_dir": "../results",
     "images_dir": "../img",
