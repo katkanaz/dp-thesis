@@ -2,13 +2,16 @@ import { Box } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 
 interface MainContainerProps {
+    width?: string
     children?: ReactNode | ReactNode[]
 };
 
 function MainContainer(props: MainContainerProps) {
     return (
-        <Box as="main" px="6">
-            {props.children}
+        <Box as="main" display="flex" justifyContent="center">
+            <Box width={props.width}>
+                {props.children}
+            </Box>
         </Box>
     )
 }

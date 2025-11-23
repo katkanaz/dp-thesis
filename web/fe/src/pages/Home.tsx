@@ -3,7 +3,13 @@ import MainContainer from "../components/MainContainer";
 import NavBar from "../components/NavBar";
 import { SearchIcon } from "@chakra-ui/icons";
 import SugarCard, { type SugarInfo } from "../components/SugarCard";
-import fucSpin from "../assets/fuc_spin.gif"
+
+import fucSpin from "../assets/fuc_spin_2.gif"
+import fulSpin from "../assets/ful_spin_2.gif"
+import manSpin from "../assets/man_spin_2.gif"
+import galSpin from "../assets/gal_spin_2.gif"
+import glcSpin from "../assets/glc_spin_2.gif"
+import siaSpin from "../assets/sia_spin_2.gif"
 
 const sugarList: SugarInfo[] = [
     {
@@ -14,27 +20,27 @@ const sugarList: SugarInfo[] = [
     {
         name: "β-L-fucopyranose",
         abrev: "FUL",
-        img: fucSpin,
+        img: fulSpin,
     },
     {
         name: "α-D-mannopyranose",
         abrev: "MAN",
-        img: fucSpin,
+        img: manSpin,
     },
     {
         name: "β-D-galalctopyranose",
         abrev: "GAL",
-        img: fucSpin,
+        img: galSpin,
     },
     {
         name: "α-D-glucopyranose",
         abrev: "GLC",
-        img: fucSpin,
+        img: glcSpin,
     },
     {
         name: "N-acetyl-α-D-neuraminic acid",
         abrev: "SIA",
-        img: fucSpin,
+        img: siaSpin,
     }
 ]
 
@@ -42,22 +48,24 @@ function Home() {
     return (
         <>
             <NavBar/>
-            <MainContainer>
-                <InputGroup mt="1rem"> {/* FIXME: instead of rem chakra consts */}
+            <MainContainer width="70%">
+                <InputGroup mt="6">
                     <InputLeftElement>
                         <SearchIcon color="gray.300" />
                     </InputLeftElement> 
                     <Input placeholder="Search" />
-                    <InputRightElement color="gray.600" width="4.5rem" mr="0.8rem">
+                    <InputRightElement color="gray.600" width="20" mr="2">
                         <Box display="flex" gap="1">
                             <Kbd>Ctrl</Kbd>
                             <Kbd>K</Kbd>
                         </Box>
                     </InputRightElement>
                 </InputGroup>
-                <HStack mt="8" wrap="wrap">
-                    {sugarList.map(s => <SugarCard sugar={s} />)}
-                </HStack>
+                <Box display="flex" justifyContent="center"> 
+                    <HStack mt="8" wrap="wrap">
+                        {sugarList.map(s => <SugarCard sugar={s} />)} {/* TODO: Change to grid, card not capped width but width 100% within grid */}
+                    </HStack>
+                </Box>
             </MainContainer>
         </>
     )
