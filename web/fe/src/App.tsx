@@ -1,10 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react"
-import Home from "./pages/Home"
+import { RouterProvider } from "@tanstack/react-router"
+import { router } from "./Router"
 
 function App() {
     return (
         <ChakraProvider>
-            <Home/>
+            <RouterProvider router={router} />
         </ChakraProvider>
     )
 }
