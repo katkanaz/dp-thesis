@@ -10,6 +10,7 @@ import galSpin from "../assets/gal_spin_2.gif"
 import glcSpin from "../assets/glc_spin_2.gif"
 import siaSpin from "../assets/sia_spin_2.gif"
 
+// TODO: sugar names proper via regex
 export const sugarList: SugarInfo[] = [
     {
         name: "α-L-fucopyranose",
@@ -67,5 +68,7 @@ function Home() {
         </MainContainer>
     )
 }
+
+// TODO: Add docs button, display when last run, github button?
 
 export default Home

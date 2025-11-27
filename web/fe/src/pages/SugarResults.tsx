@@ -12,17 +12,20 @@ import { sugarResultsRoute } from "../Router"
 const resultsList: ResultInfo[] = [
     {
         "title": "Alpha-(1,3)-fucosyltransferase",
-        "id": "AF-O25142-F1",
+        "afid": "AF-O25142-F1",
+        "uniprotid": "O25142",
         "img": fucosyltransferase,
     },
     {
         "title": "Thioredoxin domain-containing protein",
-        "id": "AF-A0A0K0EH67-F1",
+        "afid": "AF-A0A0K0EH67-F1",
+        "uniprotid": "A0A0K0EH67",
         "img": unchar,
     },
     {
         "title": "Lectin",
-        "id": "AF-P86993-F1",
+        "afid": "AF-P86993-F1",
+        "uniprotid": "P86993",
         "img": lectin,
     },
 ]

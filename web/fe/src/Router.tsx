@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import SugarResults from "./pages/SugarResults";
 import ResultDetail from "./pages/ResultDetail";
+import Docs from "./pages/Docs";
 
 const rootRoute = createRootRoute({
     component: () => (
@@ -31,6 +32,12 @@ const resultDetailRoute = createRoute({
     component: ResultDetail,
 })
 
-const routeTree = rootRoute.addChildren([sugarsRoute, sugarResultsRoute, resultDetailRoute])
+const DocsRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/docs",
+    component: Docs,
+})
+
+const routeTree = rootRoute.addChildren([sugarsRoute, sugarResultsRoute, resultDetailRoute, DocsRoute])
 
 export const router = createRouter({ routeTree })

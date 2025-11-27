@@ -2,7 +2,8 @@ import { HStack, Image, Link, Table, TableContainer, Tbody, Td, Tr, VStack } fro
 
 export type ResultInfo = {
     "title": string,
-    "id": string,
+    "afid": string,
+    "uniprotid": string,
     "img": string,
 };
 
@@ -10,6 +11,7 @@ interface SearchResultItemProps {
     result: ResultInfo
 };
 
+// NOTE: use uniprot ids and names, af id remains
 function SearchResultItem({result}: SearchResultItemProps) {
     return (
         <HStack alignItems="flex-start" w="full">
@@ -25,7 +27,15 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                 <Td width="2" fontWeight="bold" px="0">AlphaFold DB</Td>
                                 <Td>
                                     <Link>
-                                        {result.id}
+                                        {result.afid}
+                                    </Link>
+                                </Td>
+                            </Tr>
+                            <Tr>
+                                <Td width="2" fontWeight="bold" px="0">UniProtKB</Td>
+                                <Td>
+                                    <Link>
+                                        {result.uniprotid}
                                     </Link>
                                 </Td>
                             </Tr>

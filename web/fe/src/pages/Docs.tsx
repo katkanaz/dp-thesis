@@ -1,11 +1,11 @@
 import MainContainer from "../components/MainContainer"
 
-function ResultDetail() {
+function Docs() {
     return (
         <MainContainer>
-            {"This is result detail"}
+            {"This is a documentation"}
         </MainContainer>
     )
 }
 
-export default ResultDetail
+export default Docs
