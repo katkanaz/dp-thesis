@@ -89,7 +89,7 @@ function ResultDetail() {
                         </TableContainer>
                     </Box>
                     <VStack flexGrow="1">
-                        <Box position="relative" width="100%">
+                        <Box position="relative" width="100%" zIndex="10">
                             <MolStarWrapper />
                         </Box>
                         <Switch></Switch>

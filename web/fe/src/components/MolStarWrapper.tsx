@@ -1,11 +1,11 @@
 // import { Box } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
-import { PluginUIContext } from "molstar/lib/commonjs/mol-plugin-ui/context";
+import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { createPluginUI } from "molstar/lib/mol-plugin-ui";
-import { loadMVS, MVSData } from "molstar/lib/commonjs/extensions/mvs";
-import { MAQualityAssessment, MAQualityAssessmentConfig, QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from 'molstar/lib/commonjs/extensions/model-archive/quality-assessment/behavior';
-import { QualityAssessment } from 'molstar/lib/commonjs/extensions/model-archive/quality-assessment/prop';
-import { SbNcbrPartialCharges, SbNcbrPartialChargesPreset, SbNcbrPartialChargesPropertyProvider, SbNcbrTunnels } from 'molstar/lib/commonjs/extensions/sb-ncbr';
+import { loadMVS, MVSData } from "molstar/lib/extensions/mvs";
+import { MAQualityAssessment, MAQualityAssessmentConfig, QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from 'molstar/lib/extensions/model-archive/quality-assessment/behavior';
+import { QualityAssessment } from 'molstar/lib/extensions/model-archive/quality-assessment/prop';
+import { SbNcbrPartialCharges, SbNcbrPartialChargesPreset, SbNcbrPartialChargesPropertyProvider, SbNcbrTunnels } from 'molstar/lib/extensions/sb-ncbr';
 import { PresetStructureRepresentations } from 'molstar/lib/mol-plugin-state/builder/structure/representation-preset';
 import { StateObjectRef, StateObjectSelector } from 'molstar/lib/mol-state';
 import { renderReact18 } from "molstar/lib/mol-plugin-ui/react18";
@@ -61,6 +61,11 @@ export function MolStarWrapper() {
                 const molstar = await createPluginUI({
                     target: parent.current as HTMLDivElement,
                     render: renderReact18,
+                    onBeforeUIRender: plugin => {
+                        // the preset needs to be added before the UI renders otherwise
+                        // "Download Structure" wont be able to pick it up
+                        plugin.builders.structure.representation.registerPreset(ViewerAutoPreset);
+                    },
                     spec: {
                         actions: defaultSpecs.actions,
                         behaviors: [
@@ -89,7 +94,7 @@ export function MolStarWrapper() {
                     .modelStructure({})
                     .component({})
                     .representation({})
-                    .color({ color: "blue" });
+                    .color({ color: "blue" })
                 const mvsData = mvsBuilder.getState();
 
                 // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
@@ -97,7 +102,7 @@ export function MolStarWrapper() {
                 // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
 
 
-                await loadMVS(molstar, mvsData);
+                await loadMVS(molstar, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
 
                 console.log("molstar", molstar)
 
@@ -123,7 +128,7 @@ export function MolStarWrapper() {
     // }, 2000);
 
     // return <div ref={parent} style={{ width: 640, height: 480 }}/>;
-    return <Box ref={parent} border="1px" width="70%" height="30em"></Box>
+    return <Box ref={parent} width="70%" height="30em"></Box>
 }
 
 

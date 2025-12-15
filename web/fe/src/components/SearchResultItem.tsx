@@ -1,4 +1,5 @@
-import { HStack, Image, Link, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra-ui/react";
+import { HStack, Image, Link as ChakraLink, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra-ui/react";
+import { Link as TanstackRouterLink } from '@tanstack/react-router'
 
 export type ResultInfo = {
     "title": string,
@@ -19,26 +20,26 @@ function SearchResultItem({result}: SearchResultItemProps) {
         <HStack alignItems="flex-start" w="full">
             <Image src={result.img} inlineSize="80"/>
             <VStack alignItems="left">
-                <Link fontSize="3xl" fontWeight="bold">
+                <ChakraLink as={TanstackRouterLink} to={result.afid} fontSize="3xl" fontWeight="bold">
                     {result.title}
-                </Link>
+                </ChakraLink>
                 <TableContainer>
                     <Table variant="striped" colorScheme="whiteAlpha" size="sm">
                         <Tbody>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">AlphaFold DB</Td>
                                 <Td>
-                                    <Link>
+                                    <ChakraLink>
                                         {result.afid}
-                                    </Link>
+                                    </ChakraLink>
                                 </Td>
                             </Tr>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">UniProtKB</Td>
                                 <Td>
-                                    <Link>
+                                    <ChakraLink>
                                         {result.uniprotid}
-                                    </Link>
+                                    </ChakraLink>
                                 </Td>
                             </Tr>
                             <Tr>
