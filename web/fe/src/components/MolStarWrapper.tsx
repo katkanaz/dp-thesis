@@ -87,22 +87,25 @@ export function MolStarWrapper() {
                     }
                 });
 
-                const mvsBuilder = MVSData.createBuilder()
-                mvsBuilder
-                    .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
-                    .parse({ format: 'bcif' })
-                    .modelStructure({})
-                    .component({})
-                    .representation({})
-                    .color({ color: "blue" })
-                const mvsData = mvsBuilder.getState();
+                setTimeout(async () => {
+                    const mvsBuilder = MVSData.createBuilder()
+                    mvsBuilder
+                        .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
+                        .parse({ format: 'bcif' })
+                        .modelStructure({})
+                        .component({})
+                        .representation({})
+                        .color({ color: "blue" })
+                    const mvsData = mvsBuilder.getState();
 
-                // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
-                // const rawData = await response.text();
-                // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
+                    // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
+                    // const rawData = await response.text();
+                    // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
 
 
-                await loadMVS(molstar, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
+                    await loadMVS(molstar, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
+
+                }, 1000);
 
                 console.log("molstar", molstar)
 
