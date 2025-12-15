@@ -16,8 +16,10 @@
     "@emotion/styled": "^11.14.1",
     "@tanstack/react-router": "^1.139.3",
     "framer-motion": "^12.23.24",
+    "molstar": "^5.4.2",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "sass-embedded": "^1.96.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

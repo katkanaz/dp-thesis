@@ -1,14 +1,17 @@
-import { Box, Link } from "@chakra-ui/react"
+import { Box, Link as ChakraLink } from "@chakra-ui/react"
+import { Link as TanstackRouterLink } from '@tanstack/react-router'
 
 function NavBar() {
     return (
         <Box shadow="sm" h="3.5em" display="flex" justifyContent="space-between" alignItems="center" px="6">
             <Box>
-                Logo/Title
+                <ChakraLink as={TanstackRouterLink} to="/" textDecoration="none" _hover={{ textDecoration: "none" }}>
+                    Logo/Title
+                </ChakraLink>
             </Box>
-            <Link href="/docs">
+            <ChakraLink href="/docs">
                 Docs
-            </Link>
+            </ChakraLink>
         </Box>
     )
 }

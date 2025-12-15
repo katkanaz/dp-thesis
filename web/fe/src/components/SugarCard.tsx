@@ -14,7 +14,7 @@ interface SugarCardProps {
 function SugarCard({sugar}: SugarCardProps) {
     return (
         <ChakraLink as={TanstackRouterLink} to="/sugars/FUC" textDecoration="none" _hover={{ textDecoration: "none", shadow: "lg" }}> {/* FIXME: update where it leads - abstract*/}
-            <Card maxW={["60", "80"]}>
+            <Card>
                 <CardBody display="flex" flexDir="column" alignItems="center">
                     <Image src={sugar.img} />
                     <Text>

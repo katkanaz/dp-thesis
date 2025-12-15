@@ -26,7 +26,7 @@ export const sugarResultsRoute = createRoute({
     component: SugarResults,
 })
 
-const resultDetailRoute = createRoute({
+export const resultDetailRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/sugars/$abrev/$afId",
     component: ResultDetail,

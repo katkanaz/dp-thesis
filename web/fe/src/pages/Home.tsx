@@ -1,4 +1,4 @@
-import { Box, HStack, Input, InputGroup, InputLeftElement, InputRightElement, Kbd } from "@chakra-ui/react";
+import { Box, Input, InputGroup, InputLeftElement, InputRightElement, Kbd, SimpleGrid } from "@chakra-ui/react";
 import MainContainer from "../components/MainContainer";
 import { SearchIcon } from "@chakra-ui/icons";
 import SugarCard, { type SugarInfo } from "../components/SugarCard";
@@ -61,9 +61,9 @@ function Home() {
                 </InputRightElement>
             </InputGroup>
             <Box display="flex" justifyContent="center"> 
-                <HStack mt="8" wrap="wrap">
-                    {sugarList.map(s => <SugarCard sugar={s} />)} {/* TODO: Change to grid, card not capped width but width 100% within grid */}
-                </HStack>
+                <SimpleGrid mt="8" minChildWidth={["60", "80"]} spacing="3" width="100%">
+                    {sugarList.map(s => <SugarCard sugar={s} />)}
+                </SimpleGrid>
             </Box>
         </MainContainer>
     )

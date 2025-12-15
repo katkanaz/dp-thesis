@@ -9,7 +9,7 @@ import lectin from "../assets/lectin.jpeg"
 import { sugarList } from "./Home"
 import { sugarResultsRoute } from "../Router"
 
-const resultsList: ResultInfo[] = [
+export const resultsList: ResultInfo[] = [
     {
         "title": "Alpha-(1,3)-fucosyltransferase",
         "afid": "AF-O25142-F1",
@@ -42,7 +42,7 @@ function SugarResults() {
         )
     }
     return (
-        <MainContainer width="70%">
+        <MainContainer>
             <Text fontWeight="bold" mt="6" fontSize="4xl">
                 Search Results for {sugarInfo?.name} ({sugarInfo?.abrev})
             </Text>
