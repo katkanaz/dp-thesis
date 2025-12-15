@@ -4,6 +4,7 @@ import type { ResultInfo } from "../components/SearchResultItem"
 import { resultsList } from "./SugarResults"
 import { resultDetailRoute } from "../Router";
 import MolStarWrapper from "../components/MolStarWrapper";
+import MotifDetail from "../components/MotifDetail";
 
 
 function getSugarResult(_abrev: string, afId: string): ResultInfo | undefined {
@@ -25,7 +26,7 @@ function ResultDetail() {
         <MainContainer>
             <VStack width="100%" alignItems="flex-start" mt="3">
                 <Box fontWeight="bold" fontSize="3xl">{result.title}</Box>
-                <HStack width="100%" alignItems="flex-start">
+                <HStack width="100%" alignItems="flex-start" spacing="10">
                     <Box>
                         <TableContainer>
                             <Table variant="striped" colorScheme="whiteAlpha" size="sm">
@@ -61,32 +62,16 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">Total number of found motifs:</Td>
                                         <Td>
-                                            3
-                                        </Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td width="2" fontWeight="bold" px="0">RMSD:</Td>
-                                        <Td>
-                                            0.1 Å
-                                        </Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td width="2" fontWeight="bold" px="0">Motif residues:</Td>
-                                        <Td>
-                                           TRP: A-7, GLN: A-9, VAL:A-10 
-                                        </Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td width="2" fontWeight="bold" px="0">Original structure PDB ID:</Td>
-                                        <Td>
-                                            <Link>
-                                                7KHU
-                                            </Link>
+                                            2
                                         </Td>
                                     </Tr>
                                 </Tbody>
                             </Table>
                         </TableContainer>
+                        <VStack mt="3">
+                            <MotifDetail num={1} sugar="FUC" rmsd="0.1 Å" residues="TRP: A-7, GLN: A-9, VAL:A-10" structurePDB="7KHU" />
+                            <MotifDetail num={2} sugar="FUC" rmsd="0.1 Å" residues="TRP: A-7, GLN: A-9, VAL:A-10" structurePDB="7KHU" />
+                        </VStack>
                     </Box>
                     <VStack flexGrow="1">
                         <Box position="relative" width="100%" zIndex="10">
