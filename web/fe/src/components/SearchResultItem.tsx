@@ -3,6 +3,8 @@ import { HStack, Image, Link, Table, TableContainer, Tbody, Td, Tr, VStack } fro
 export type ResultInfo = {
     "title": string,
     "afid": string,
+    "plddt_global": number,
+    "organism": string,
     "uniprotid": string,
     "img": string,
 };
@@ -37,6 +39,18 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                     <Link>
                                         {result.uniprotid}
                                     </Link>
+                                </Td>
+                            </Tr>
+                            <Tr>
+                                <Td width="2" fontWeight="bold" px="0">pLDDT (global)</Td>
+                                <Td>
+                                    {result.plddt_global}
+                                </Td>
+                            </Tr>
+                            <Tr>
+                                <Td width="2" fontWeight="bold" px="0">Organism</Td>
+                                <Td>
+                                    {result.organism}
                                 </Td>
                             </Tr>
                         </Tbody>
