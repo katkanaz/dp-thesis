@@ -9,6 +9,11 @@ function NavBar() {
                     Logo/Title
                 </ChakraLink>
             </Box>
+            <Box ml="4" height="60%" borderLeft="1px" borderColor="gray.400"></Box>
+            <Box ml="4" color="gray.400">
+                last updated 2025-12-12
+            </Box>
+            <Box flexGrow="1"></Box>
             <ChakraLink href="/docs">
                 Docs
             </ChakraLink>
