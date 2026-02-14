@@ -54,6 +54,8 @@ class DataSourceHandler(ABC):
         """
         source = os.getenv("DATA_SOURCE")
 
+        logger.info(f"Creating data source of type {source}")
+
         if source == "local" or not source:
             return LocalDataHandler()
         elif source == "remote":

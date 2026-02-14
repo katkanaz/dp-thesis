@@ -113,7 +113,7 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
     :param query_names: List of query IDs
     """
 
-    logger.info("Extractiong results")
+    logger.info("Extracting results")
 
     with TemporaryDirectory() as temp_dir:
         with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:

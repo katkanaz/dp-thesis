@@ -149,6 +149,7 @@ def run_mv(config: Config, is_unix: bool) -> None:
 
     if mv_proc.returncode != 0:
         logger.error(f"MV process exited with code {mv_proc.returncode}")
+        # TODO: raise exception
     else:
         logger.info("MV process completed successfully")
 
