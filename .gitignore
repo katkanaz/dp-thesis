@@ -1,6 +1,7 @@
 prev-work-venv/
 opensrc-pymol/
 masters-thesis/
+pymol-venv/
 old_data/
 .env
 data/
