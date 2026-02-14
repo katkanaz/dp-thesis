@@ -11,7 +11,7 @@ from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 from typing import List, Dict, Tuple
-from rcsbsearchapi.search import StructMotifQuery, StructureMotifResidue, AttributeQuery
+from rcsbapi.search import StructMotifQuery, AttributeQuery, StructMotifResidue
 import requests
 
 from Bio.PDB.PDBParser import PDBParser
@@ -52,7 +52,7 @@ def get_struc_name(path_to_file: Path) -> str:
     return (path_to_file.name).split("_")[1]
 
 
-def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifResidue]:
+def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResidue]:
     """
     Define residues for struture motif search query.
 
@@ -95,7 +95,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructureMotifR
             chain: Chain = chain
             # Excludes the sugar #FIXME: Make clearer
             if residue.get_id()[0] == " ":
-                residues.append(StructureMotifResidue(struct_oper_id="1", chain_id=chain_id_map[chain.get_id()], label_seq_id=i)) # type: ignore
+                residues.append(StructMotifResidue(struct_oper_id="1", chain_id=chain_id_map[chain.get_id()], label_seq_id=i)) # type: ignore
             i += 1
 
     if len(residues) > 10:
@@ -154,7 +154,7 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
     return computed_models
 
 
-def run_query(path_to_file: Path, residues: List[StructureMotifResidue], search_results: Dict[str, Dict[str, Tuple[str, str]]]) -> None:
+def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_results: Dict[str, Dict[str, Tuple[str, str]]]) -> None:
     """
     Run structure motif search query.
 
@@ -174,7 +174,7 @@ def run_query(path_to_file: Path, residues: List[StructureMotifResidue], search_
     q2 = StructMotifQuery(
         structure_search_type="file_upload",
         file_path=str(path_to_file),
-        file_extension="pdb",
+        file_format="pdb",
         residue_ids=residues,
         rmsd_cutoff=3,
         atom_pairing_scheme="ALL"
@@ -195,8 +195,8 @@ def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool
 
     # FIXME: Think about keeping or removing flag
     if perform_clustering:
-        representatives: List[Path] = load_representatives(config)
         run_pymol_subprocess("process_handlers.proximity_filtering", ["-t" if test_mode else "", "-s", sugar, "-n", str(number), "-m", method, "--max_residues", str(max_residues)])
+        representatives: List[Path] = load_representatives(config)
     else:
         representatives: List[Path] = list(config.filtered_surroundings_dir.glob("*.pdb"))
         logger.info("Skipping clustering, structure motif search from filtered surroundings")

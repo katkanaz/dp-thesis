@@ -134,7 +134,7 @@ def extract_and_process_representatives(sugar: str, number: int, method: str, co
     deuterium_present: List[Tuple[Path, int]] = []
 
     file_keys = [file_key for _, file_key in representatives.items()] if file_list is None else [file[1] for file in file_list]
-    for file_key in tqdm(file_keys, desc="Extracting and processing representatives"):
+    for file_key in file_keys:
         path_to_surrounding_file = Path(config.filtered_surroundings_dir / structure_keys[str(file_key)])
         surrounding_file_name = path_to_surrounding_file.stem
 
@@ -187,6 +187,8 @@ def main(sugar: str, number: int, method: str, config: Config, max_residues: int
 if __name__ == "__main__":
     parser = ArgumentParser()
 
+    parser.add_argument("-t", "--test_mode", action="store_true",
+                        help="Weather to run the whole process in a test mode")
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
     parser.add_argument("-n", "--number", help="Number of clusters", type=int, default=20)
