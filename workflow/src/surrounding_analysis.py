@@ -8,7 +8,7 @@ Author: Kateřina Nazarčuková
 
 from argparse import ArgumentParser
 from datetime import datetime
-import logging
+from pathlib import Path
 from platform import system
 from typing import Union
 
@@ -19,14 +19,14 @@ from logger import logger, setup_logger
 from configuration import Config
 
 from process_handlers.run_pq import run_pq
-from process_handlers.perform_alignment import perform_alignment
+from utils.pymol_subprocess import run_pymol_subprocess
 from process_handlers.cluster_data import cluster_data
 from process_handlers.compare_clusters import compare_clusters
 from process_handlers.create_tanglegram import create_tanglegram
-from process_handlers.structure_motif_search import structure_motif_search
+# from process_handlers.structure_motif_search import structure_motif_search
 
 
-def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, min_residues: int, max_residues: int, make_dendrogram: bool, color_threshold: Union[float, None] = None) -> None:
+def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, min_residues: int, max_residues: int, make_dendrogram: bool, color_threshold: Union[float, None] = None) -> None:
     logger.info(f"Running 2nd program with data from {config.run_data_dir.stem} directory")
 
     with tqdm(total=6 if perform_clustering else 3) as pbar: 
@@ -36,7 +36,7 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
 
         try:
             pbar.set_description("Performing alignment")
-            perform_alignment(sugar, perform_align, config, min_residues)
+            run_pymol_subprocess("process_handlers.perform_alignment", ["-t" if test_mode else "", "-s", sugar, "-a" if perform_align else "", "--min_residues", str(min_residues)])
             pbar.update(1)
         except Exception as e:
             logger.error(f"Exception caught: {e}")
@@ -55,9 +55,9 @@ def main(sugar: str, config: Config, is_unix: bool, perform_align: bool, perform
             create_tanglegram(sugar, number, method, config, perform_align)
             pbar.update(1)
 
-        pbar.set_description("Performing structure motif search")
-        structure_motif_search(sugar, perform_clustering, number, method, config, max_residues)
-        pbar.update(1)
+        # pbar.set_description("Performing structure motif search")
+        # structure_motif_search(sugar, perform_clustering, number, method, config, max_residues)
+        # pbar.update(1)
 
 
 if __name__ == "__main__":
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     is_unix = system() != "Windows"
 
     with logging_redirect_tqdm():
-        main(args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.color_threshold)
+        main(args.test_mode, args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.color_threshold)
 
     Config.clear_current_run()
 

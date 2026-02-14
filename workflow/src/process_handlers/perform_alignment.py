@@ -74,35 +74,31 @@ def refine_binding_sites(sugar: str, min_residues: int, config: Config) -> Path:
     i = 0
     structures_keys = {} # To map index with structure
 
-    with tqdm(total=sum(1 for _ in raw_surroundings.iterdir()), desc="Refining surroundings") as pbar:
-        for path_to_file in raw_surroundings.iterdir():
-            pbar.update(1)
+    for path_to_file in raw_surroundings.iterdir():
+        filename = path_to_file.stem
+        logger.debug(f"Begin to process {filename}")
+        cmd.delete("all")
+        cmd.load(path_to_file)
+        count = cmd.count_atoms("n. CA and polymer")
+        if count < min_residues:
+            less_than_min_aa.append(filename)
+            logger.debug(f"{filename} less than 5 residues!")
+            continue
 
+        _, sugar_selection_name = select_sugar(filename)
 
-            filename = path_to_file.stem
-            logger.debug(f"Begin to process {filename}")
-            cmd.delete("all")
-            cmd.load(path_to_file)
-            count = cmd.count_atoms("n. CA and polymer")
-            if count < min_residues:
-                less_than_min_aa.append(filename)
-                logger.debug(f"{filename} less than 5 residues!")
-                continue
+        cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
+        cmd.select("junk_residues", f"not wanted_residues")
+        cmd.remove("junk_residues") 
+        cmd.delete("junk_residues")
 
-            _, sugar_selection_name = select_sugar(filename)
-
-            cmd.select("wanted_residues", f"{sugar_selection_name} or polymer")
-            cmd.select("junk_residues", f"not wanted_residues")
-            cmd.remove("junk_residues") 
-            cmd.delete("junk_residues")
-
-            idx = i
-                
-            cmd.save(f"{filtered_surroundings}/{idx}_{filename}.pdb")
-            structures_keys[idx] = f"{idx}_{filename}.pdb"
-            i += 1
-            cmd.delete("all")
-            logger.debug(f"{filename} succesfully processed!")
+        idx = i
+            
+        cmd.save(f"{filtered_surroundings}/{idx}_{filename}.pdb")
+        structures_keys[idx] = f"{idx}_{filename}.pdb"
+        i += 1
+        cmd.delete("all")
+        logger.debug(f"{filename} succesfully processed!")
 
     (config.clusters_dir).mkdir(exist_ok=True, parents=True)
     with open(config.clusters_dir / f"{sugar}_structures_keys.json", "w") as f:
@@ -153,65 +149,63 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
         writer = csv.writer(f)
         writer.writerow(["structure1", "structure2", "rmsd"])
         all_structures = os.listdir(structures_folder)
-        with tqdm(total=math.comb(len(all_structures), 2), desc="Aligning files") as pbar: 
-            for (structure1, structure2) in itertools.combinations(all_structures, 2):
-                pbar.update(1)
+        for (structure1, structure2) in itertools.combinations(all_structures, 2):
+            try:
+                cmd.delete("all")
+                cmd.load(f"{structures_folder}/{structure1}")
+                cmd.load(f"{structures_folder}/{structure2}")
+
+                cmd.fetch(sugar, path=str(save_path))
+
+                filename1 = Path(structure1).stem
+                filename2 = Path(structure2).stem
+
                 try:
-                    cmd.delete("all")
-                    cmd.load(f"{structures_folder}/{structure1}")
-                    cmd.load(f"{structures_folder}/{structure2}")
+                    id1, _, _, res1, num1, chain1 = filename1.split("_")
+                except ValueError:
+                    id1, _, _, res1, num1, chain1, _ = filename1.split("_")
+                try:
+                    id2, _, _, res2, num2, chain2 = filename2.split("_")
+                except ValueError:
+                    id2, _, _, res2, num2, chain2, _ = filename2.split("_")
+                # Some structures have chains named eg. AaA but when loaded to PyMol
+                # the the chain is reffered to just as A.
+                if len(chain1) > 1:
+                    chain1 = chain1[0]
+                if len(chain2) > 1:
+                    chain2 = chain2[0] 
 
-                    cmd.fetch(sugar, path=str(save_path))
+                sugar1 = f"/{filename1}//{chain1}/{res1}`{num1}"
+                sugar2 = f"/{filename2}//{chain2}/{res2}`{num2}"
 
-                    filename1 = Path(structure1).stem
-                    filename2 = Path(structure2).stem
+                cmd.select("original_sugar1", sugar1)
+                cmd.select("original_sugar2", sugar2)
+                cmd.select("polymer1", f"polymer and not {filename2}")
+                cmd.select("polymer2", f"polymer and not {filename1}")
 
-                    try:
-                        id1, _, _, res1, num1, chain1 = filename1.split("_")
-                    except ValueError:
-                        id1, _, _, res1, num1, chain1, _ = filename1.split("_")
-                    try:
-                        id2, _, _, res2, num2, chain2 = filename2.split("_")
-                    except ValueError:
-                        id2, _, _, res2, num2, chain2, _ = filename2.split("_")
-                    # Some structures have chains named eg. AaA but when loaded to PyMol
-                    # the the chain is reffered to just as A.
-                    if len(chain1) > 1:
-                        chain1 = chain1[0]
-                    if len(chain2) > 1:
-                        chain2 = chain2[0] 
+                cmd.align("original_sugar1", sugar)
+                cmd.align("original_sugar2", sugar)
 
-                    sugar1 = f"/{filename1}//{chain1}/{res1}`{num1}"
-                    sugar2 = f"/{filename2}//{chain2}/{res2}`{num2}"
+                cmd.super("polymer1", "polymer2", transform=0, cycles=0, object="sup") 
+                rms = float(cmd.rms_cur("polymer1 & sup", "polymer2 & sup", matchmaker=-1))
 
-                    cmd.select("original_sugar1", sugar1)
-                    cmd.select("original_sugar2", sugar2)
-                    cmd.select("polymer1", f"polymer and not {filename2}")
-                    cmd.select("polymer2", f"polymer and not {filename1}")
+                writer.writerow([filename1, filename2, rms])
+                super_rmsd_values[int(id1), int(id2)] = rms 
+                super_rmsd_values[int(id2), int(id1)] = rms
 
-                    cmd.align("original_sugar1", sugar)
-                    cmd.align("original_sugar2", sugar)
+                if perform_align:
+                    assert align_writer is not None, "If perform_align is true, align_writer has to exist"
+                    cmd.align("polymer1", "polymer2", transform=0, cycles=0, object="aln")
+                    rms = float(cmd.rms_cur("polymer1 & aln", "polymer2 & aln", matchmaker=-1))
+                    align_writer.writerow([filename1, filename2, rms])
+                    align_rmsd_values[int(id1), int(id2)] = rms 
+                    align_rmsd_values[int(id2), int(id1)] = rms
 
-                    cmd.super("polymer1", "polymer2", transform=0, cycles=0, object="sup") 
-                    rms = float(cmd.rms_cur("polymer1 & sup", "polymer2 & sup", matchmaker=-1))
-
-                    writer.writerow([filename1, filename2, rms])
-                    super_rmsd_values[int(id1), int(id2)] = rms 
-                    super_rmsd_values[int(id2), int(id1)] = rms
-
-                    if perform_align:
-                        assert align_writer is not None, "If perform_align is true, align_writer has to exist"
-                        cmd.align("polymer1", "polymer2", transform=0, cycles=0, object="aln")
-                        rms = float(cmd.rms_cur("polymer1 & aln", "polymer2 & aln", matchmaker=-1))
-                        align_writer.writerow([filename1, filename2, rms])
-                        align_rmsd_values[int(id1), int(id2)] = rms 
-                        align_rmsd_values[int(id2), int(id1)] = rms
-
-                    cmd.delete("all") 
-                except Exception as e:
-                    # Save pairs with which something went wrong
-                    something_wrong.append((structure1, structure2))
-                    logger.error(f"Something went wrong: {e}")
+                cmd.delete("all") 
+            except Exception as e:
+                # Save pairs with which something went wrong
+                something_wrong.append((structure1, structure2))
+                logger.error(f"Something went wrong: {e}")
 
     if align_file is not None and align_results_path is not None:
         align_file.close()
@@ -237,6 +231,8 @@ def perform_alignment(sugar: str, perform_align: bool, config: Config, min_resid
 if __name__ == "__main__":
     parser = ArgumentParser()
 
+    parser.add_argument("-t", "--test_mode", action="store_true",
+                        help="Weather to run the whole process in a test mode")
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-a", "--perform_align", action="store_true", help="Whether to perform calculation of RMSD using the PyMOL align command as well")
     parser.add_argument("--min_residues", help="Minimum number of residues required in a surrounding", type=int, default=5)
