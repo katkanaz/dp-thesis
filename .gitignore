@@ -2,7 +2,7 @@ prev-work-venv/
 opensrc-pymol/
 masters-thesis/
 pymol-venv/
-old_data/
+prev-work/
 .env
 data/
 debug/
