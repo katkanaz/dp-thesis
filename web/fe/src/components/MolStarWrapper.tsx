@@ -10,7 +10,7 @@ import { PresetStructureRepresentations } from 'molstar/lib/mol-plugin-state/bui
 import { StateObjectRef, StateObjectSelector } from 'molstar/lib/mol-state';
 import { renderReact18 } from "molstar/lib/mol-plugin-ui/react18";
 import "molstar/lib/mol-plugin-ui/skin/light.scss";
-import { DefaultPluginUISpec } from "molstar/lib/mol-plugin-ui/spec";
+import { DefaultPluginUISpec, PluginUISpec } from "molstar/lib/mol-plugin-ui/spec";
 import { Box } from "@chakra-ui/react";
 import { PluginSpec } from "molstar/lib/mol-plugin/spec";
 import { MolViewSpec } from 'molstar/lib/extensions/mvs/behavior';
@@ -18,6 +18,9 @@ import { StructureRepresentationPresetProvider } from "molstar/lib/mol-plugin-st
 import { PluginConfig } from "molstar/lib/mol-plugin/config";
 // import { PluginConfigItem } from "molstar/lib/mol-plugin/config";
 // import "../assets/light.scss"
+import { Viewer } from 'molstar/lib/apps/viewer/app.js'
+import { Plugin } from "molstar/lib/mol-plugin-ui/plugin";
+
 
 // function MolStarWrapper() {
 //     const containerRef = useRef(null);
@@ -49,111 +52,207 @@ import { PluginConfig } from "molstar/lib/mol-plugin/config";
 //
 //
 
-export function MolStarWrapper() {
-    const parent = useRef<HTMLDivElement>(null);
+// export function MolStarWrapper() {
+//     const parent = useRef<HTMLDivElement>(null);
+//
+//     // const [ viewer, setViewer ] = useState<PluginUIContext|null>(null)
+//     const viewer = useRef<Viewer>(null)
+//
+//     useEffect(() => {
+//         async function init() {
+//             if (!viewer.current) {
+//                 // const defaultSpecs = DefaultPluginUISpec();
+//                 // const molstar = await createPluginUI({
+//                 //     target: parent.current as HTMLDivElement,
+//                 //     render: renderReact18,
+//                 //     onBeforeUIRender: plugin => {
+//                 //         // the preset needs to be added before the UI renders otherwise
+//                 //         // "Download Structure" wont be able to pick it up
+//                 //         plugin.builders.structure.representation.registerPreset(ViewerAutoPreset);
+//                 //     },
+//                 //     spec: {
+//                 //         actions: defaultSpecs.actions,
+//                 //         behaviors: [
+//                 //             ...defaultSpecs.behaviors,
+//                 //             PluginSpec.Behavior(MolViewSpec)
+//                 //         ],
+//                 //         components: {
+//                 //             ...defaultSpecs.components,
+//                 //         },
+//                 //         layout: {
+//                 //             initial: {
+//                 //                 isExpanded: false,
+//                 //                 showControls: false,
+//                 //             }
+//                 //         },
+//                 //         config: [
+//                 //             [PluginConfig.Structure.DefaultRepresentationPreset, ViewerAutoPreset.id],
+//                 //         ]
+//                 //     }
+//                 // });
+//                 const molstar = await Viewer.create(parent.current, { layoutIsExpanded: false, layoutShowControls: false })
+//
+//                 setTimeout(async () => {
+//                     const mvsBuilder = MVSData.createBuilder()
+//                     mvsBuilder
+//                         .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
+//                         .parse({ format: 'bcif' })
+//                         .modelStructure({})
+//                         .component({})
+//                         .representation({})
+//                         .color({ color: "blue" })
+//                     const mvsData = mvsBuilder.getState();
+//
+//                     // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
+//                     // const rawData = await response.text();
+//                     // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
+//
+//
+//                     await loadMVS(molstar.plugin, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
+//
+//                 }, 1000);
+//
+//                 console.log("molstar", molstar)
+//
+//                 // //@ts-ignore
+//                 viewer.current = molstar
+//                 console.log("viewer", viewer)
+//             }
+//
+//         }
+//         init().then(() => console.log("molstar created", viewer));
+//         // return () => {
+//         //     viewer?.dispose();
+//         //     setViewer(null);
+//         // };
+//     }, []);
+//
+//     // setTimeout(async () => {
+//     //     console.log(viewer)
+//     //         const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
+//     //         const rawData = await response.text();
+//     //         const mvsData: MVSData = MVSData.fromMVSJ(rawData);
+//     //         await loadMVS(viewer, mvsData);
+//     // }, 2000);
+//
+//     // return <div ref={parent} style={{ width: 640, height: 480 }}/>;
+//     return <Box ref={parent} width="70%" height="30em"></Box>
+// }
 
-    const [ viewer, setViewer ] = useState<PluginUIContext|null>(null)
+export class MolStarWrapperModel {
+  private resolveInit: () => void;
+  initialized = new Promise<boolean>(res => { this.resolveInit = () => res(true); });
 
-    useEffect(() => {
-        async function init() {
-            if (viewer === null) {
-                const defaultSpecs = DefaultPluginUISpec();
-                const molstar = await createPluginUI({
-                    target: parent.current as HTMLDivElement,
-                    render: renderReact18,
-                    onBeforeUIRender: plugin => {
-                        // the preset needs to be added before the UI renders otherwise
-                        // "Download Structure" wont be able to pick it up
-                        plugin.builders.structure.representation.registerPreset(ViewerAutoPreset);
-                    },
-                    spec: {
-                        actions: defaultSpecs.actions,
-                        behaviors: [
-                            ...defaultSpecs.behaviors,
-                            PluginSpec.Behavior(MolViewSpec)
-                        ],
-                        components: {
-                            ...defaultSpecs.components,
-                        },
-                        layout: {
-                            initial: {
-                                isExpanded: false,
-                                showControls: false,
-                            }
-                        },
-                        config: [
-                            [PluginConfig.Structure.DefaultRepresentationPreset, ViewerAutoPreset.id],
-                        ]
-                    }
-                });
+  private initCalled = false;
+  plugin: PluginUIContext;
+  async init() {
+    if (this.initCalled) return;
+    this.initCalled = true;
 
-                setTimeout(async () => {
-                    const mvsBuilder = MVSData.createBuilder()
-                    mvsBuilder
-                        .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
-                        .parse({ format: 'bcif' })
-                        .modelStructure({})
-                        .component({})
-                        .representation({})
-                        .color({ color: "blue" })
-                    const mvsData = mvsBuilder.getState();
+    const defaultSpecs = DefaultPluginUISpec();
+    const specs: PluginUISpec = {
+      behaviors: [...defaultSpecs.behaviors, PluginSpec.Behavior(MolViewSpec) ],
+      components: {
+        ...defaultSpecs.components,
+        remoteState: "none",
+      },
 
-                    // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
-                    // const rawData = await response.text();
-                    // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
+      layout: {
+        initial: {
+          isExpanded: false,
+          showControls: false,
+          regionState: {
+            bottom: "full",
+            left: "full",
+            right: "full",
+            top: "full",
+          },
+        },
+      },
+    };
 
+    specs.behaviors.push(PluginSpec.Behavior(SbNcbrPartialCharges));
 
-                    await loadMVS(molstar, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
+    const plugin = new PluginUIContext(specs);
 
-                }, 1000);
+    this.plugin = plugin
+    await this.plugin.init();
+    this.resolveInit();
+  }
+}
 
-                console.log("molstar", molstar)
+function MolStarViewer({ model }: { model: MolStarWrapperModel }) {
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => {
+     async function init() {
+       await model.init();
+       setInitialized(true);
+     }
+     init();
+  }, [model]);
 
-                // //@ts-ignore
-                setViewer(molstar)
-                console.log("viewer", viewer)
-            }
+  if (!initialized) return <>Loading</>;
 
-        }
-        init().then(() => console.log("molstar created", viewer));
-        // return () => {
-        //     viewer?.dispose();
-        //     setViewer(null);
-        // };
-    }, []);
-
-    // setTimeout(async () => {
-    //     console.log(viewer)
-    //         const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
-    //         const rawData = await response.text();
-    //         const mvsData: MVSData = MVSData.fromMVSJ(rawData);
-    //         await loadMVS(viewer, mvsData);
-    // }, 2000);
-
-    // return <div ref={parent} style={{ width: 640, height: 480 }}/>;
-    return <Box ref={parent} width="70%" height="30em"></Box>
+    return <Box width="70%" height="30em" position="relative">
+        <Plugin plugin={model.plugin} />
+    </Box>
 }
 
 
+export type MolstarWrapperProps = {
+  setMolstar: React.Dispatch<React.SetStateAction<MolStarWrapperModel | undefined>>;
+};
 
-// export type MolstarViewerProps = {
-//   plugin: PluginUIContext;
-// } & HTMLAttributes<HTMLElement>;
-//
-// export const MolstarViewer = ({
-//   plugin,
-//   className,
-//   ...props
-// }: MolstarViewerProps) => {
-//
-//   return (
-//     <Box {...props} >
-//       <div className="w-full h-full relative">
-//         <Plugin plugin={plugin} />
-//       </div>
-//     </Box>
-//   );
-// };
+
+function MolstarWrapper({ setMolstar }: MolstarWrapperProps) {
+  const [plugin, setPlugin] = useState<MolStarWrapperModel | undefined>();
+
+  const setup = async () => {
+    const molstar = new MolStarWrapperModel();
+
+    setPlugin(molstar);
+    setMolstar(molstar);
+
+  };
+
+  useEffect(() => {
+    void setup();
+  }, []);
+
+    // useEffect(() => {
+    //     if (!plugin) return
+    //     setTimeout(() => {
+    //
+    //
+    //         const mvsBuilder = MVSData.createBuilder()
+    //         mvsBuilder
+    //             .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
+    //             .parse({ format: 'bcif' })
+    //             .modelStructure({})
+    //             .component({})
+    //             .representation({})
+    //             .color({ color: "blue" })
+    //         const mvsData = mvsBuilder.getState();
+    //
+    //         // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
+    //         // const rawData = await response.text();
+    //         // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
+    //
+    //
+    //         loadMVS(plugin.plugin, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
+    //
+    //
+    //
+    //     }, 1000)
+    //
+    // }, [plugin])
+
+  return (
+    <>
+      {plugin && <MolStarViewer model={plugin} />}
+    </>
+  );
+};
 
 
 const ViewerAutoPreset = StructureRepresentationPresetProvider({
@@ -186,4 +285,4 @@ const ViewerAutoPreset = StructureRepresentationPresetProvider({
     }
 });
 
-export default MolStarWrapper
+export default MolstarWrapper

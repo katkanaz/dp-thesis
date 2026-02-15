@@ -3,8 +3,10 @@ import MainContainer from "../components/MainContainer"
 import type { ResultInfo } from "../components/SearchResultItem"
 import { resultsList } from "./SugarResults"
 import { resultDetailRoute } from "../Router";
-import MolStarWrapper from "../components/MolStarWrapper";
+import MolStarWrapper, { MolStarWrapperModel } from "../components/MolStarWrapper";
 import MotifDetail from "../components/MotifDetail";
+import { useEffect, useState } from "react";
+import { loadMVS, MVSData } from "molstar/lib/extensions/mvs";
 
 
 function getSugarResult(_abrev: string, afId: string): ResultInfo | undefined {
@@ -14,6 +16,9 @@ function getSugarResult(_abrev: string, afId: string): ResultInfo | undefined {
 
 function ResultDetail() {
     const { abrev, afId } = resultDetailRoute.useParams()
+
+    const [molstar, setMolstar] = useState<MolStarWrapperModel|undefined>(undefined)
+
     const result = getSugarResult(abrev, afId)
     if (result === undefined) {
         return (
@@ -22,6 +27,30 @@ function ResultDetail() {
             </MainContainer>
         )
     }
+
+    useEffect(() => {
+        if (!molstar) return
+
+            const mvsBuilder = MVSData.createBuilder()
+            mvsBuilder
+                .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
+                .parse({ format: 'bcif' })
+                .modelStructure({})
+                .component({})
+                .representation({})
+                .color({ color: "blue" })
+            const mvsData = mvsBuilder.getState();
+
+            // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
+            // const rawData = await response.text();
+            // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
+
+
+            loadMVS(molstar.plugin, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
+        
+
+    }, [molstar])
+
     return (
         <MainContainer>
             <VStack width="100%" alignItems="flex-start" mt="3">
@@ -75,7 +104,7 @@ function ResultDetail() {
                     </Box>
                     <VStack flexGrow="1">
                         <Box position="relative" width="100%" zIndex="10">
-                            <MolStarWrapper />
+                            <MolStarWrapper setMolstar={setMolstar}/>
                         </Box>
                         <Switch></Switch>
                     </VStack>
