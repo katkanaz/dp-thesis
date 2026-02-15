@@ -23,7 +23,7 @@ from utils.pymol_subprocess import run_pymol_subprocess
 from process_handlers.cluster_data import cluster_data
 from process_handlers.compare_clusters import compare_clusters
 from process_handlers.create_tanglegram import create_tanglegram
-# from process_handlers.structure_motif_search import structure_motif_search
+from process_handlers.structure_motif_search import structure_motif_search
 
 
 def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, min_residues: int, max_residues: int, make_dendrogram: bool, color_threshold: Union[float, None] = None) -> None:
@@ -55,9 +55,9 @@ def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_ali
             create_tanglegram(sugar, number, method, config, perform_align)
             pbar.update(1)
 
-        # pbar.set_description("Performing structure motif search")
-        # structure_motif_search(sugar, perform_clustering, number, method, config, max_residues)
-        # pbar.update(1)
+        pbar.set_description("Performing structure motif search")
+        structure_motif_search(test_mode, sugar, perform_clustering, number, method, config, max_residues)
+        pbar.update(1)
 
 
 if __name__ == "__main__":
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
+    parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
 
     args = parser.parse_args()
 
@@ -99,7 +100,8 @@ if __name__ == "__main__":
     with logging_redirect_tqdm():
         main(args.test_mode, args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.color_threshold)
 
-    Config.clear_current_run()
+        if not args.keep_current_run:
+            Config.clear_current_run()
 
     end_time = datetime.now()
     duration = end_time - start_time

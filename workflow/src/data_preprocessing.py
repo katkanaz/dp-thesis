@@ -68,6 +68,7 @@ if __name__ == "__main__":
                         type=float, default=0.8)
     parser.add_argument("--rmsd", help="Value of maximum RMSD of residue",
                         type=float, default=2.0)
+    parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
 
     args = parser.parse_args()
 
@@ -81,7 +82,8 @@ if __name__ == "__main__":
     with logging_redirect_tqdm():
         main(config, is_unix, args.res, args.rscc, args.rmsd, args.test_mode)
 
-        Config.clear_current_run()
+        if not args.keep_current_run:
+            Config.clear_current_run()
 
     end_time = datetime.now()
     duration = end_time - start_time

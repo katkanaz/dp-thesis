@@ -100,6 +100,7 @@ if __name__ == "__main__":
                         type="float", default=0.8)
     parser.add_argument("--rmsd", help="Value of maximum RMSD of residue",
                         type="float", default=2.0)
+    parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
 
     args = parser.parse_args()
 
@@ -109,4 +110,5 @@ if __name__ == "__main__":
 
     filter_ligands(args.res, args.rscc, args.rmsd, config)
 
-    Config.clear_current_run()
+    if not args.keep_current_run:
+        Config.clear_current_run()
