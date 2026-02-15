@@ -10,9 +10,9 @@ import json
 from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
-from typing import List, Dict, Tuple
+from typing import List, Dict
 from rcsbapi.search import StructMotifQuery, AttributeQuery, StructMotifResidue
-import requests
+from rcsbapi.data import DataQuery
 
 from Bio.PDB.PDBParser import PDBParser
 from tqdm import tqdm
@@ -22,8 +22,6 @@ from logger import logger, setup_logger
 from configuration import Config
 from utils.modify_struct_search_id import modify_id
 from utils.pymol_subprocess import run_pymol_subprocess
-
-GRAPHQL_ENDPOINT = "https://data.rcsb.org/graphql"
 
 
 def load_representatives(config: Config) -> List[Path]:
@@ -104,57 +102,54 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResi
     return residues
 
 
-def fetch_metadata(ids: List[str]) -> Dict[str, Tuple[str, str]]:
+def fetch_metadata(ids: List[str]) -> Dict[str, Dict]:
     """
-    Fetch desired structure metadata using RCSB GraphQL API.
+    Fetch desired computed models metadata using RCSB PDB Data API.
 
-    :param ids: IDs of structures
-    :return: Computed structures with their titles and other metadata
+    :param ids: IDs of computed models
+    :return: Computed structures with the desired metadata.
     """
 
-    query = """
-    query getMetadata($ids: [String!]!) {
-        entries(entry_ids: $ids) {
-            rcsb_id
-            struct {
-                title
-            }
-            struct_keywords {
-                pdbx_keywords
-            }
-        }
-    }
-    """
-    variables = {"ids": ids}
-    response = requests.post(
-        GRAPHQL_ENDPOINT,
-        headers={"Content-Type": "application/json"},
-        json={"query": query, "variables": variables}
+    query = DataQuery(
+        input_type="entries",
+        input_ids=ids,
+        return_data_list=["struct.title", "software", "polymer_entities.rcsb_entity_source_organism.ncbi_scientific_name", "rcsb_ma_qa_metric_global.ma_qa_metric_global", "rcsb_comp_model_provenance.entry_id", "rcsb_accession_info.major_revision"]
     )
 
-    if response.status_code != 200:
-        raise Exception(f"GraphQL query failed with status {response.status_code}")
+    result_dict = query.exec()
 
-    data = response.json()
-    entries = data.get("data", {}).get("entries", [])
-    computed_models: Dict[str, Tuple[str, str]] = {} # TODO: double check type
-    # TODO: Test runtime if tqdm useful
-    for entry in entries:
-        rcsd_id = entry.get("rcsb_id", "UNKNOWN_ID")
-        title = entry.get("struct", {}).get("title", "N/A")
-        keywords_data = entry.get("struct_keywords")
+    comp_structures = {}
+    for entry in result_dict["data"]["entries"]:
 
-        if keywords_data and isinstance(keywords_data, dict):
-            keywords = keywords_data.get("pdbx_keywords", "No keywords")
-        else:
-            keywords = "No keywords"
+        if len(entry["polymer_entities"]) != 1:
+            logger.warning(f"{entry["rcsb_id"]} expected to have 1 polymer_entity, has: {len(entry["polymer_entities"])}")
+        organisms = [o["ncbi_scientific_name"] for o in entry["polymer_entities"][0]["rcsb_entity_source_organism"]]
 
-        computed_models[rcsd_id] = (title, keywords)
+        soft_list = [s["version"] for s in entry["software"] if s["name"] == "AlphaFold"]
+        if len(soft_list) != 1:
+            logger.error(f"Expected source software to be AlphaFold. Did not find AlphaFold version. len(soft_list) = {len(soft_list)}")
+            raise Exception("did not find source AlphaFold version")
+        af_version = soft_list[0]
 
-    return computed_models
+        plddt = [m["value"] for m in entry["rcsb_ma_qa_metric_global"][0]["ma_qa_metric_global"] if m["type"] == "pLDDT"]
+        if len(plddt) != 1:
+            logger.error(f"Expected one pLDDT value. found: {len(plddt)}")
+            raise Exception("did not find expected plddt value")
+
+        comp_model_data = {
+            "afdb_id": entry["rcsb_comp_model_provenance"]["entry_id"],
+            "title": entry["struct"]["title"],
+            "organism": organisms,
+            "plddt": plddt[0],
+            "af_version": af_version,
+            "af_revision": entry["rcsb_accession_info"]["major_revision"]
+        }
+        comp_structures[entry["rcsb_id"]] = comp_model_data
+
+    return comp_structures
 
 
-def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_results: Dict[str, Dict[str, Tuple[str, str]]]) -> None:
+def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_results: Dict[str, Dict[str, Dict]]) -> None:
     """
     Run structure motif search query.
 
@@ -182,16 +177,32 @@ def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_res
 
     query = q1 & q2
 
-    output: List[str] = list(query(results_verbosity="compact", return_type="assembly", return_content_type=["computational", "experimental"]))# FIXME: Returns different scores of structures when "experimental" is and is not there
+    output = query(results_verbosity="verbose", return_type="assembly", return_content_type=["computational", "experimental"])
+    assert not isinstance(output, int), "query result is of type Session"
+    # FIXME: Returns different scores of structures when "experimental" is and is not there
 
-    ids = [modify_id(id) for id in output]
-    structures = fetch_metadata(ids) # FIXME: dont call anymore
+
+    ids = [modify_id(comp_struct["identifier"]) for comp_struct in output] # type: ignore
+    structures = fetch_metadata(ids)
+
+    for comp_struct in output: #type: ignore
+        comp_struct: Dict = comp_struct
+        services = [s for s in comp_struct["services"] if s["service_type"] == "strucmotif"]
+        if len(services) != 1:
+            logger.error(f"Expected one strucmotif service. found: {len(services)}")
+            raise Exception("did not find expected structmotif service")
+        nodes = services[0]["nodes"]
+        if len(nodes) != 1:
+            logger.error(f"Expected one node. found: {len(nodes)}")
+            raise Exception("did not find expected number of nodes")
+        motifs = nodes[0]["match_context"] 
+        structures[modify_id(comp_struct["identifier"])]["motifs"] = motifs 
 
     search_results[path_to_file.stem] = structures
 
 
 def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool, number: int, method: str, config: Config, max_residues: int) -> None:
-    search_results: Dict[str, Dict[str, Tuple[str, str]]] = {}
+    search_results: Dict[str, Dict[str, Dict]] = {}
 
     # FIXME: Think about keeping or removing flag
     if perform_clustering:
@@ -213,7 +224,7 @@ def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool
             logger.error(f"Exception caught: {e}")
 
 
-    with open(config.structure_motif_search_dir / "search_results.json", "w", encoding="utf8") as f:
+    with open(config.structure_motif_search_dir / f"{sugar}_search_results.json", "w", encoding="utf8") as f:
         json.dump(search_results, f, indent=4)
 
 
@@ -227,6 +238,7 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--number", help="Number of clusters", type=int, default=20)
     parser.add_argument("-m", "--method", help="Cluster method", type=str, default="centroid")
     parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
+    parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
 
     args = parser.parse_args()
 
@@ -236,4 +248,5 @@ if __name__ == "__main__":
 
     structure_motif_search(args.test_mode, args.sugar, args.perform_clustering, args.number, args.method, config, args.max_residues)
 
-    config.clear_current_run()
+    if not args.keep_current_run:
+        Config.clear_current_run()
