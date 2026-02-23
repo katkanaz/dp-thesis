@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
-from typing import List, Dict
+from typing import List, Dict, Union
 from rcsbapi.search import StructMotifQuery, AttributeQuery, StructMotifResidue
 from rcsbapi.data import DataQuery
 
@@ -201,7 +201,7 @@ def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_res
     search_results[path_to_file.stem] = structures
 
 
-def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool, number: int, method: str, config: Config, max_residues: int) -> None:
+def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool, number: int, method: str, config: Config, max_residues: int, store_result_path: Union[Path, None]) -> None:
     search_results: Dict[str, Dict[str, Dict]] = {}
 
     # FIXME: Think about keeping or removing flag
@@ -224,8 +224,13 @@ def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool
             logger.error(f"Exception caught: {e}")
 
 
-    with open(config.structure_motif_search_dir / f"{sugar}_search_results.json", "w", encoding="utf8") as f:
+    res_path = config.structure_motif_search_dir / f"{sugar}_search_results.json"
+    with open(res_path, "w", encoding="utf8") as f:
         json.dump(search_results, f, indent=4)
+
+    if store_result_path is not None:
+        with open(store_result_path, "w", encoding="utf8") as f:
+            f.writelines([str(res_path)])
 
 
 if __name__ == "__main__":
@@ -239,6 +244,7 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--method", help="Cluster method", type=str, default="centroid")
     parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
     parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
+    parser.add_argument("--store_result_path", type=Path, help="Where to write result file path")
 
     args = parser.parse_args()
 
@@ -246,7 +252,7 @@ if __name__ == "__main__":
 
     setup_logger(config.log_path)
 
-    structure_motif_search(args.test_mode, args.sugar, args.perform_clustering, args.number, args.method, config, args.max_residues)
+    structure_motif_search(args.test_mode, args.sugar, args.perform_clustering, args.number, args.method, config, args.max_residues, args.store_result_path)
 
     if not args.keep_current_run:
         Config.clear_current_run()

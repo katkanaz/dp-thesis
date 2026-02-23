@@ -26,7 +26,7 @@ from process_handlers.create_tanglegram import create_tanglegram
 from process_handlers.structure_motif_search import structure_motif_search
 
 
-def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, min_residues: int, max_residues: int, make_dendrogram: bool, color_threshold: Union[float, None] = None) -> None:
+def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_align: bool, perform_clustering: bool, number: int, method: str, min_residues: int, max_residues: int, make_dendrogram: bool, store_result_path: Union[Path, None], color_threshold: Union[float, None] = None) -> None:
     logger.info(f"Running 2nd program with data from {config.run_data_dir.stem} directory")
 
     with tqdm(total=6 if perform_clustering else 3) as pbar: 
@@ -56,7 +56,7 @@ def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_ali
             pbar.update(1)
 
         pbar.set_description("Performing structure motif search")
-        structure_motif_search(test_mode, sugar, perform_clustering, number, method, config, max_residues)
+        structure_motif_search(test_mode, sugar, perform_clustering, number, method, config, max_residues, store_result_path)
         pbar.update(1)
 
 
@@ -79,6 +79,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--make_dendrogram", action="store_true", help="Whether to create and save the dendrogram")
     parser.add_argument("--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
     parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
+    parser.add_argument("--store_result_path", type=Path, help="Where to write result file path")
 
     args = parser.parse_args()
 
@@ -98,7 +99,7 @@ if __name__ == "__main__":
     is_unix = system() != "Windows"
 
     with logging_redirect_tqdm():
-        main(args.test_mode, args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.color_threshold)
+        main(args.test_mode, args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.store_result_path, args.color_threshold)
 
         if not args.keep_current_run:
             Config.clear_current_run()
