@@ -1,0 +1,37 @@
+[
+    {
+        "name": "α-L-fucopyranose",
+        "abrev": "FUC",
+        "img": "sugars/fuc.gif"
+    },
+    {
+        "name": "β-L-fucopyranose",
+        "abrev": "FUL",
+        "img": "sugars/ful.gif"
+    },
+    {
+        "name": "α-D-mannopyranose",
+        "abrev": "MAN",
+        "img": "sugars/man.gif"
+    },
+    {
+        "name": "β-D-galalctopyranose",
+        "abrev": "GAL",
+        "img": "sugars/gal.gif"
+    },
+    {
+        "name": "α-D-glucopyranose",
+        "abrev": "GLC",
+        "img": "sugars/glc.gif"
+    },
+    {
+        "name": "N-acetyl-α-D-neuraminic acid",
+        "abrev": "SIA",
+        "img": "sugars/sia.gif"
+    },
+    {
+        "name": "β-D-glucopyranose",
+        "abrev": "BGC",
+        "img": "sugars/bgc.gif"
+    }
+]
