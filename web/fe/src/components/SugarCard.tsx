@@ -1,7 +1,7 @@
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { Card, CardBody, Image, Link as ChakraLink, Text } from "@chakra-ui/react";
 
-export type SugarInfo = {
+export type SugarInfo = { // TODO: still need this?
     name: string
     abrev: string
     img: string 
@@ -13,10 +13,11 @@ interface SugarCardProps {
 
 function SugarCard({sugar}: SugarCardProps) {
     return (
-        <ChakraLink as={TanstackRouterLink} to="/sugars/FUC" textDecoration="none" _hover={{ textDecoration: "none", shadow: "lg" }}> {/* FIXME: update where it leads - abstract*/}
+        <ChakraLink as={TanstackRouterLink} to="/results" textDecoration="none" _hover={{ textDecoration: "none", shadow: "lg" }}>
+        {/* FIXME: update where it leads - query filter apply*/}
             <Card>
                 <CardBody display="flex" flexDir="column" alignItems="center">
-                    <Image src={sugar.img} />
+                    <Image src={`api/img/${sugar.img}`} />
                     <Text>
                         {sugar.abrev}
                     </Text>

@@ -8,7 +8,7 @@ interface MainContainerProps {
 
 function MainContainer({children, width = {base: "100%", lg: "60%"}}: MainContainerProps) {
     return (
-        <Box as="main" display="flex" justifyContent="center">
+        <Box as="main" display="flex" justifyContent="center" mb="5">
             <Box width={width}>
                 {children}
             </Box>

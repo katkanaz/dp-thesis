@@ -6,8 +6,10 @@ import SearchResultItem, { type ResultInfo } from "../components/SearchResultIte
 import fucosyltransferase from "../assets/fucosyltransferase.jpeg"
 import unchar from "../assets/domain-containing.jpeg"
 import lectin from "../assets/lectin.jpeg"
-import { sugarList } from "./Home"
 import { sugarResultsRoute } from "../Router"
+
+import { getSugars, Sugar } from "../api/sugars";
+import { useQuery } from "@tanstack/react-query";
 
 export const resultsList: ResultInfo[] = [
     {
@@ -36,22 +38,40 @@ export const resultsList: ResultInfo[] = [
     },
 ]
 // NOTE: "Computed model of" is added by RCSB, unchar. protein has different name in AFDB, AFDB ID: AF-O25142-F1 but RCSB AF_AFO25142F1
+//
+// TODO: change to result list
 
-function SugarResults() {
-    const { abrev } = sugarResultsRoute.useParams()
-    const sugarInfo = sugarList.find(s => s.abrev === abrev)
-    if (sugarInfo === undefined) {
-        return (
-            <Box>
-                Sugar {abrev} not found!
-            </Box>
-        )
-    }
+function Results() {
+    const { data: sugarList, isLoading, isError, error } = useQuery<Sugar[], Error>({
+        queryKey: ["sugars"],
+        queryFn: getSugars
+    });
+
+    if (isLoading) return <div>Loading sugars...</div>;
+    if (isError) return <div>Error: {error.message}</div>;
+
+    // const { abrev } = sugarResultsRoute.useParams()
+    // const sugarInfo = sugarList?.find((s: Sugar) => s.abrev === abrev)
+    // if (sugarInfo === undefined) {
+    //     return (
+    //         <Box>
+    //             Sugar {abrev} not found!
+    //         </Box>
+    //     )
+    // }
+
+    // const { data, isPending, error } = useQuery({
+    //     queryKey: ['results'],
+    //     queryFn: () => fetch('/api/results').then(r => r.json()),
+    // })
+
+
+
     return (
         <MainContainer>
-            <Text fontWeight="bold" mt="6" fontSize="4xl">
-                Search Results for {sugarInfo?.name} ({sugarInfo?.abrev})
-            </Text>
+            {/* <Text fontWeight="bold" mt="6" fontSize="4xl"> */}
+            {/*     Search Results for {sugarInfo?.name} ({sugarInfo?.abrev}) */}
+            {/* </Text> */}
             <InputGroup mt="6" width="40%">
                 <InputLeftElement>
                     <SearchIcon color="gray.300" />
@@ -71,4 +91,4 @@ function SugarResults() {
     )
 }
 
-export default SugarResults
+export default Results

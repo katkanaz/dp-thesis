@@ -1,7 +1,7 @@
 import { Box, HStack, Link, Switch, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import type { ResultInfo } from "../components/SearchResultItem"
-import { resultsList } from "./SugarResults"
+import { resultsList } from "./Results"
 import { resultDetailRoute } from "../Router";
 import MolStarWrapper, { MolStarWrapperModel } from "../components/MolStarWrapper";
 import MotifDetail from "../components/MotifDetail";
@@ -63,7 +63,7 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">AlphaFold DB:</Td>
                                         <Td>
-                                            <Link>
+                                            <Link href={`https://alphafold.ebi.ac.uk/entry/${result.afid.split("-")[1]}`}>
                                                 {result.afid}
                                             </Link>
                                         </Td>
@@ -71,8 +71,8 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">UniProtKB:</Td>
                                         <Td>
-                                            <Link>
-                                                {result.uniprotid}
+                                            <Link href={`https://www.uniprot.org/uniprotkb/${result.afid.split("-")[1]}`}>
+                                                {`${result.afid.split("-")[1]}`}
                                             </Link>
                                         </Td>
                                     </Tr>

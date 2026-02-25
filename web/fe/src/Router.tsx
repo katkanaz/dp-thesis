@@ -1,7 +1,7 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
-import SugarResults from "./pages/SugarResults";
+import Results from "./pages/Results";
 import ResultDetail from "./pages/ResultDetail";
 import Docs from "./pages/Docs";
 
@@ -22,13 +22,13 @@ const sugarsRoute = createRoute({
 
 export const sugarResultsRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: "/sugars/$abrev",
-    component: SugarResults,
+    path: "/results",
+    component: Results,
 })
 
 export const resultDetailRoute = createRoute({
     getParentRoute: () => rootRoute,
-    path: "/sugars/$abrev/$afId",
+    path: "/results/$afId",
     component: ResultDetail,
 })
 

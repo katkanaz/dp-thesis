@@ -1,4 +1,4 @@
-import { Box, Link as ChakraLink } from "@chakra-ui/react"
+import { Box, Link as ChakraLink, HStack } from "@chakra-ui/react"
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 
 function NavBar() {
@@ -14,9 +14,14 @@ function NavBar() {
                 last updated 2025-12-12
             </Box>
             <Box flexGrow="1"></Box>
-            <ChakraLink href="/docs">
-                Docs
-            </ChakraLink>
+            <HStack spacing="2">
+                <ChakraLink as={TanstackRouterLink} to="/">
+                    Home
+                </ChakraLink>
+                <ChakraLink as={TanstackRouterLink} to="/docs">
+                    Docs
+                </ChakraLink>
+            </HStack>
         </Box>
     )
 }

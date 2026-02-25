@@ -1,51 +1,23 @@
 import { Box, Input, InputGroup, InputLeftElement, InputRightElement, Kbd, SimpleGrid } from "@chakra-ui/react";
-import MainContainer from "../components/MainContainer";
 import { SearchIcon } from "@chakra-ui/icons";
-import SugarCard, { type SugarInfo } from "../components/SugarCard";
+import { useQuery } from "@tanstack/react-query";
+import { getSugars, Sugar } from "../api/sugars";
+import MainContainer from "../components/MainContainer";
+import SugarCard from "../components/SugarCard";
 
-import fucSpin from "../assets/fuc_spin_2.gif"
-import fulSpin from "../assets/ful_spin_2.gif"
-import manSpin from "../assets/man_spin_2.gif"
-import galSpin from "../assets/gal_spin_2.gif"
-import glcSpin from "../assets/glc_spin_2.gif"
-import siaSpin from "../assets/sia_spin_2.gif"
-
-// TODO: sugar names proper via regex
-export const sugarList: SugarInfo[] = [
-    {
-        name: "α-L-fucopyranose",
-        abrev: "FUC",
-        img: fucSpin,
-    },
-    {
-        name: "β-L-fucopyranose",
-        abrev: "FUL",
-        img: fulSpin,
-    },
-    {
-        name: "α-D-mannopyranose",
-        abrev: "MAN",
-        img: manSpin,
-    },
-    {
-        name: "β-D-galalctopyranose",
-        abrev: "GAL",
-        img: galSpin,
-    },
-    {
-        name: "α-D-glucopyranose",
-        abrev: "GLC",
-        img: glcSpin,
-    },
-    {
-        name: "N-acetyl-α-D-neuraminic acid",
-        abrev: "SIA",
-        img: siaSpin,
-    }
-]
+//
+// TODO: sugar names proper via regex - italics and smallcaps
 // TODO: functional search bar, search bar match grid of sugars, sugar graphic pic, fix small caps and italic (not called this, not tag i) via CSS
 
 function Home() {
+    const { data: sugarList, isLoading, isError, error } = useQuery<Sugar[], Error>({
+        queryKey: ["sugars"],
+        queryFn: getSugars
+    });
+
+    if (isLoading) return <div>Loading sugars...</div>;
+    if (isError) return <div>Error: {error.message}</div>;
+
     return (
         <MainContainer width="70%">
             <InputGroup mt="6">
@@ -62,13 +34,12 @@ function Home() {
             </InputGroup>
             <Box display="flex" justifyContent="center"> 
                 <SimpleGrid mt="8" minChildWidth={["60", "80"]} spacing="3" width="100%">
-                    {sugarList.map(s => <SugarCard sugar={s} />)}
+                    {sugarList?.map((s: Sugar) => <SugarCard key={s.name} sugar={s} />)}
                 </SimpleGrid>
             </Box>
         </MainContainer>
     )
 }
 
-// TODO: Add docs button, display when last run, github button?
 
 export default Home

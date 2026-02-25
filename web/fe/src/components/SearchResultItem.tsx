@@ -6,7 +6,6 @@ export type ResultInfo = {
     "afid": string,
     "plddt_global": number,
     "organism": string,
-    "uniprotid": string,
     "img": string,
 };
 
@@ -29,7 +28,7 @@ function SearchResultItem({result}: SearchResultItemProps) {
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">AlphaFold DB</Td>
                                 <Td>
-                                    <ChakraLink>
+                                    <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${result.afid.split("-")[1]}`}>
                                         {result.afid}
                                     </ChakraLink>
                                 </Td>
@@ -37,8 +36,8 @@ function SearchResultItem({result}: SearchResultItemProps) {
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">UniProtKB</Td>
                                 <Td>
-                                    <ChakraLink>
-                                        {result.uniprotid}
+                                    <ChakraLink href={`https://www.uniprot.org/uniprotkb/${result.afid.split("-")[1]}`}>
+                                        {`${result.afid.split("-")[1]}`}
                                     </ChakraLink>
                                 </Td>
                             </Tr>
