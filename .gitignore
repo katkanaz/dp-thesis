@@ -4,10 +4,10 @@ masters-thesis/
 pymol-venv/
 prev-work/
 .env
-data/
+workflow/data/
 debug/
 docs/
-img/
+workflow/img/
 /workflow/mv/
 /workflow/pq/
 tmp/
