@@ -12,14 +12,12 @@ func NewRouter() *chi.Mux {
 	fileServer := http.FileServer(http.Dir("./data/img"))
 	r.Handle("/img/*", http.StripPrefix("/img/", fileServer))
 	r.Get("/sugars", getSugars)
-	// r.Get("/sugars/{abrev}", getResultsSpecificSugar) // TODO: still needed?
 
-	// r.Get("/results", getResults)
+	r.Get("/results", getAllResults)
+	r.Get("/results/{afid}", getCompStructDetail)
 
 	return r
 }
-
-
 
 
 // nginx
