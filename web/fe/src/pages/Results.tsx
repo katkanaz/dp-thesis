@@ -1,53 +1,21 @@
 import { SearchIcon } from "@chakra-ui/icons"
-import { InputGroup, InputLeftElement, Input, InputRightElement, Box, Kbd, VStack, Text } from "@chakra-ui/react"
+import { InputGroup, InputLeftElement, Input, InputRightElement, Box, Kbd, VStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
-import SearchResultItem, { type ResultInfo } from "../components/SearchResultItem"
+import SearchResultItem from "../components/SearchResultItem"
 
-import fucosyltransferase from "../assets/fucosyltransferase.jpeg"
-import unchar from "../assets/domain-containing.jpeg"
-import lectin from "../assets/lectin.jpeg"
-import { sugarResultsRoute } from "../Router"
-
-import { getSugars, Sugar } from "../api/sugars";
+import { getResults, ComputedStructure } from "../api/computed_structure";
 import { useQuery } from "@tanstack/react-query";
 
-export const resultsList: ResultInfo[] = [
-    {
-        "title": "Alpha-(1,3)-fucosyltransferase",
-        "afid": "AF-O25142-F1",
-        "uniprotid": "O25142",
-        "plddt_global": 89.94,
-        "organism": "Helicobacter pylori 26695",
-        "img": fucosyltransferase,
-    },
-    {
-        "title": "Thioredoxin domain-containing protein",
-        "afid": "AF-A0A0K0EH67-F1",
-        "uniprotid": "A0A0K0EH67",
-        "plddt_global": 89.94,
-        "organism": "Helicobacter pylori 26695",
-        "img": unchar,
-    },
-    {
-        "title": "Lectin",
-        "afid": "AF-P86993-F1",
-        "uniprotid": "P86993",
-        "plddt_global": 89.94,
-        "organism": "Helicobacter pylori 26695",
-        "img": lectin,
-    },
-]
 // NOTE: "Computed model of" is added by RCSB, unchar. protein has different name in AFDB, AFDB ID: AF-O25142-F1 but RCSB AF_AFO25142F1
-//
-// TODO: change to result list
+
 
 function Results() {
-    const { data: sugarList, isLoading, isError, error } = useQuery<Sugar[], Error>({
-        queryKey: ["sugars"],
-        queryFn: getSugars
+    const { data: resultsList, isLoading, isError, error } = useQuery<ComputedStructure[], Error>({
+        queryKey: ["results"],
+        queryFn: getResults
     });
 
-    if (isLoading) return <div>Loading sugars...</div>;
+    if (isLoading) return <div>Loading results...</div>;
     if (isError) return <div>Error: {error.message}</div>;
 
     // const { abrev } = sugarResultsRoute.useParams()
@@ -85,10 +53,12 @@ function Results() {
                 </InputRightElement>
             </InputGroup>
             <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
-                {resultsList.map(r => <SearchResultItem result={r} />)}
+                {resultsList?.map(r => <SearchResultItem result={r} />)}
             </VStack>
         </MainContainer>
     )
 }
+
+// TODO: how many results displayed overall, choose how many on page + go to next page
 
 export default Results

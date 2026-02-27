@@ -17,7 +17,7 @@ type Motif struct {
 	Surrounding string `json:"surrounding"`
 	Sugar string `json:"sugar"`
 	OriginalStructure string `json:"original_struct"`
-	Residueids []ResidueId `json:"residue_ids"`
+	ResidueIds []ResidueId `json:"residue_ids"`
 	Score float32 `json:"score"`
 	ResidueTypes []string `json:"residue_types"`
 	Transformation []float32 `json:"transformation"`

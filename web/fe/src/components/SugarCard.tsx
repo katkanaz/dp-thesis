@@ -1,7 +1,7 @@
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { Card, CardBody, Image, Link as ChakraLink, Text } from "@chakra-ui/react";
 
-export type SugarInfo = { // TODO: still need this?
+export type SugarInfo = {
     name: string
     abrev: string
     img: string 

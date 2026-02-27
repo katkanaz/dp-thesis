@@ -3,7 +3,7 @@ import { Box, Link, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra
 type MotifDetailProps = {
     num: number
     sugar: string
-    rmsd: string
+    rmsd: number
     residues: string
     structurePDB: string
 }
