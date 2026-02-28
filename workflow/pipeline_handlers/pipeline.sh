@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -ne 5 ]; then
-        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUN> <PDB_MIRROR_ROOT> <SUGAR_LIST> <OUTPUT>"
+        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUN> <PDB_MIRROR_ROOT> <SUGAR_LIST> <OUTPUT_DIR>"
         exit 1
 fi
 
@@ -9,7 +9,7 @@ PROJECT_ROOT="$1"
 PIPELINE_RUN_ROOT="$2"
 PDB_MIRROR_ROOT="$3"
 SUGAR_LIST="$4"
-OUTPUT="$5"
+OUTPUT_DIR="$5"
 
 IFS="," read -r -a SUGARS <<< "$SUGAR_LIST"
 LAST_SUGAR_IDX=$((${#SUGARS[@]} - 1))
@@ -40,5 +40,5 @@ echo "Creating data pre-processing job: $DATA_PREPROCESS_ID" >> "$PIPELINE_RUN_L
 ANALYZE_SURROUNDINGS_ID=$(qsub -J 0-$LAST_SUGAR_IDX -W depend=afterok:"$DATA_PREPROCESS_ID" -F "$PROJECT_ROOT $PIPELINE_RUN_LOG $SUGAR_LIST $RESULT_PATH_LIST" analyze-surroundings.sh)
 echo "Creating analyze surroundings job: $ANALYZE_SURROUNDINGS_ID" >> "$PIPELINE_RUN_LOG"
 
-CREATE_MERGED_ID=$(qsub -W depend=afterok:"$ANALYZE_SURROUNDINGS_ID" -F "$PROJECT_ROOT $PIPELINE_RUN_LOG $RESULT_PATH_LIST $OUTPUT" create-merged.sh)
+CREATE_MERGED_ID=$(qsub -W depend=afterok:"$ANALYZE_SURROUNDINGS_ID" -F "$PROJECT_ROOT $PIPELINE_RUN_LOG $RESULT_PATH_LIST $OUTPUT" create-merged.sh) #TODO: output je output dir, jmeno souboru s data kdy spustena pipeline
 echo "Creating merged results job: $CREATE_MERGED_ID" >> "$PIPELINE_RUN_LOG"

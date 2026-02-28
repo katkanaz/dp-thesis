@@ -81,7 +81,7 @@ class Config():
 
         path_to_logfile = f"ligand_sort/{data_run}/{data_run}.log"
 
-        self.pdb_mirror_structures = self.user_cfg.pdb_mirror_dir / f"structures"
+        self.pdb_mirror_structures = self.user_cfg.pdb_mirror_dir / f"structures-files"
         self.pdb_mirror_validation_files = self.user_cfg.pdb_mirror_dir / f"validation-files"
         self.init_pq_dir = self.user_cfg.results_dir / f"ligand_sort/{data_run}/init_pq"
         self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
