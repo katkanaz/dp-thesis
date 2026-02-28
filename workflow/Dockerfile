@@ -1,22 +1,28 @@
 FROM python:3.8.20-slim AS pymol-build
 
-# Install Python libraries, Pymol Open Source
+# Install PyMOL Open Source and its requirements
 RUN apt update  && apt install -y --no-install-recommends git build-essential libglew-dev libglm-dev libfreetype-dev libxml2-dev libxslt1-dev
-
-WORKDIR /build
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN git clone https://github.com/schrodinger/pymol-open-source.git
-RUN cd pymol-open-source && git checkout tags/v2.4.0 && python setup.py install --no-vmd-plugins
-
-
-FROM python:3.8.20-slim AS release
 
 WORKDIR /app
 
-COPY --from=pymol-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+RUN python3.8 -m venv pymol-venv
+
+COPY requirements-pymol.txt .
+RUN pymol-venv/bin/pip install --no-cache-dir -r requirements-pymol.txt
+
+RUN git clone https://github.com/schrodinger/pymol-open-source.git
+RUN cd pymol-open-source && git checkout tags/v2.4.0 && /app/pymol-venv/bin/python3.8 setup.py install --no-vmd-plugins
+
+
+FROM python:3.12.3-slim AS release
+
+WORKDIR /app
+
+RUN apt update && apt install -y --no-install-recommends build-essential wget libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev
+
+RUN wget https://www.python.org/ftp/python/3.8.20/Python-3.8.20.tgz && tar -xzf Python-3.8.20.tgz && cd Python-3.8.20 && ./configure --enable-optimizations && make -j$(nproc) && make altinstall
+
+COPY --from=pymol-build /app/pymol-venv /app/pymol-venv
 
 RUN apt update && apt install -y --no-install-recommends libglew-dev libglm-dev libfreetype-dev sshpass rsync openssh-client
 
