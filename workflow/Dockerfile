@@ -46,6 +46,8 @@ RUN curl -L https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadServic
 
 RUN curl -L https://webchem.ncbr.muni.cz/Platform/PatternQuery/DownloadService/1.1.23.12.27b -o PatternQuery_1.1.23.12.27b.zip && unzip PatternQuery_1.1.23.12.27b.zip -d /app/pq/PatternQuery_1.1.23.12.27b && rm PatternQuery_1.1.23.12.27b.zip
 
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src /app/src
 

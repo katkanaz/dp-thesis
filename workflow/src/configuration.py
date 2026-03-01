@@ -28,6 +28,13 @@ class UserConfig(BaseModel):
             data = json.load(f)
         user_config = cls(**data)
 
+        user_config.pdb_mirror_dir = user_config.pdb_mirror_dir.resolve()
+        user_config.data_dir = user_config.data_dir.resolve()
+        user_config.results_dir = user_config.results_dir.resolve()
+        user_config.images_dir = user_config.images_dir.resolve()
+        user_config.mv_dir = user_config.mv_dir.resolve()
+        user_config.pq_dir = user_config.pq_dir.resolve()
+
         return user_config
 
 
