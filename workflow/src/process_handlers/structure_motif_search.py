@@ -110,6 +110,9 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Dict]:
     :return: Computed structures with the desired metadata.
     """
 
+    if not ids:
+        return {}
+
     query = DataQuery(
         input_type="entries",
         input_ids=ids,
