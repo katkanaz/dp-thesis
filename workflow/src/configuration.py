@@ -11,6 +11,7 @@ from logger import logger
 
 class UserConfig(BaseModel):
     pdb_mirror_dir: Path
+    init_pq_dir: Path
     data_dir: Path
     results_dir: Path
     images_dir: Path
@@ -29,6 +30,7 @@ class UserConfig(BaseModel):
         user_config = cls(**data)
 
         user_config.pdb_mirror_dir = user_config.pdb_mirror_dir.resolve()
+        user_config.init_pq_dir = user_config.init_pq_dir.resolve()
         user_config.data_dir = user_config.data_dir.resolve()
         user_config.results_dir = user_config.results_dir.resolve()
         user_config.images_dir = user_config.images_dir.resolve()
@@ -90,7 +92,7 @@ class Config():
 
         self.pdb_mirror_structures = self.user_cfg.pdb_mirror_dir / f"structures-files"
         self.pdb_mirror_validation_files = self.user_cfg.pdb_mirror_dir / f"validation-files"
-        self.init_pq_dir = self.user_cfg.results_dir / f"ligand_sort/{data_run}/init_pq"
+        self.init_pq_dir = self.user_cfg.init_pq_dir
         self.sugar_binding_patterns_dir = self.user_cfg.data_dir / f"{data_run}/sugar_binding_patterns"
         self.components_dir = self.user_cfg.data_dir / f"{data_run}/components"
         self.mmcif_files_dir = self.user_cfg.data_dir / f"{data_run}/mmcif_files"

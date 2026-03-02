@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ $# -ne 5 ]; then
-        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUNS_ROOT> <PDB_MIRROR_ROOT> <SUGAR_LIST> <OUTPUT_DIR>"
+if [ $# -ne 6 ]; then
+        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUNS_ROOT> <PDB_MIRROR_ROOT> <INIT_PQ> <SUGAR_LIST> <OUTPUT_DIR>"
         exit 1
 fi
 
@@ -8,8 +8,9 @@ fi
 PROJECT_ROOT="$1"
 PIPELINE_RUNS_ROOT="$2"
 PDB_MIRROR_ROOT="$3"
-SUGAR_LIST="$4"
-OUTPUT_DIR="$5"
+INIT_PQ="$4"
+SUGAR_LIST="$5"
+OUTPUT_DIR="$6"
 
 IFS="," read -r -a SUGARS <<< "$SUGAR_LIST"
 LAST_SUGAR_IDX=$((${#SUGARS[@]} - 1))
@@ -28,7 +29,7 @@ echo "$(date "+%Y-%m-%dT%H-%M") beginning pipeline" > "$PIPELINE_RUN_LOG"
 DOWNLOAD_ID=$(qsub -J 0-1 -F "$PROJECT_ROOT $PIPELINE_RUN $PIPELINE_RUN_LOG $PDB_MIRROR_ROOT" download-pdb-mirror.sh)
 echo "Creating download job: $DOWNLOAD_ID" >> "$PIPELINE_RUN_LOG"
 
-INIT_PQ_ID=$(qsub -W depend=afterok:"$DOWNLOAD_ID" -F "$PIPELINE_RUN $PIPELINE_RUN_LOG $PDB_MIRROR_ROOT" init-pq-run.sh) #TODO: handle zip
+INIT_PQ_ID=$(qsub -W depend=afterok:"$DOWNLOAD_ID" -F "$PIPELINE_RUN $PIPELINE_RUN_LOG $PDB_MIRROR_ROOT $INIT_PQ" init-pq-run.sh)
 echo "Creating initial PQ job: $INIT_PQ_ID" >> "$PIPELINE_RUN_LOG"
 
 REMOVE_LINKS_ID=$(qsub -W depend=afterok:"$DOWNLOAD_ID" -F "$PIPELINE_RUN_LOG $PDB_MIRROR_ROOT" remove-outdated-symlinks.sh)

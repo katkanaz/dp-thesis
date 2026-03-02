@@ -4,14 +4,15 @@
 #PBS -l walltime=40:00:00 
 
 
-if [ $# -ne 3 ]; then
-	echo "Usage: $0 <PIPELINE_RUN> <PIPELINE_RUN_LOG> <PDB_MIRROR_ROOT>"
+if [ $# -ne 4 ]; then
+	echo "Usage: $0 <PIPELINE_RUN> <PIPELINE_RUN_LOG> <PDB_MIRROR_ROOT> <INIT_PQ>"
 	exit 1
 fi
 
 PIPELINE_RUN="$1"
 PIPELINE_RUN_LOG="$2"
 PDB_MIRROR_ROOT="$3"
+INIT_PQ="$4"
 
 RUNDATE=$(date "+%Y-%m-%dT%H-%M")
 
@@ -42,6 +43,8 @@ cat <<EOF > $PIPELINE_RUN/pq-config.json
 EOF
 
 mono PatternQuery_1.1.23.12.27b/WebChemistry.Queries.Service.exe "$PIPELINE_RUN/pq-results" "$PIPELINE_RUN/pq-config.json" >> "$PIPELINE_RUN/pq_run.log"
+
+cp "$PIPELINE_RUN/pq-results/result.zip" "$INIT_PQ/result.zip"
 
 clean_scratch
 

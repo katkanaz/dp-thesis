@@ -101,7 +101,7 @@ class LocalDataHandler(DataSourceHandler):
         """
 
         logger.info("Downloading PQ results")
-        self.create_sym_links(["result.zip"], config.init_pq_dir, config.sugar_binding_patterns_dir) # TODO: Double check folder logic when creating script for init pq
+        self.create_sym_links(["result.zip"], config.init_pq_dir, config.sugar_binding_patterns_dir)
 
     def build_filenames_list(self, pdb_ids: Set[str], extension: str, name_sufix: str = "") -> List[str]:
         """
@@ -168,7 +168,7 @@ class RemoteDataHandler(DataSourceHandler):
 
         user, password, host = self.get_rsync_info() 
 
-        src_path = f"{user}@{host}:/storage/brno2/home/{user}/pq-runs/2025-07-19T17-44-results/result/result.zip" # FIXME: Not abstract enough 
+        src_path = f"{user}@{host}:{config.init_pq_dir}/result.zip"
         dest_path = Path(config.sugar_binding_patterns_dir)
 
         logger.info("Downloading PQ results")
@@ -204,11 +204,11 @@ class RemoteDataHandler(DataSourceHandler):
         return config.run_data_dir / file_name 
 
 
-    def download_from_mirror(self, src_dir: str, dest_path: Path, file_list_path: Path) -> None:
+    def download_from_mirror(self, config: Config, src_dir: str, dest_path: Path, file_list_path: Path) -> None:
         # TODO: add docs
         user, password, host = self.get_rsync_info() 
 
-        src_path = f"{user}@{host}:/storage/brno2/home/{user}/pdb-mirror/{src_dir}"
+        src_path = f"{user}@{host}:{config.user_cfg.pdb_mirror_dir}/{src_dir}"
 
         cmd = [
             "/usr/bin/rsync",
@@ -234,7 +234,7 @@ class RemoteDataHandler(DataSourceHandler):
 
         file_list_path = self.create_file_list(config, pdb_ids, "structures_file_list.txt", ".cif.gz")
         logger.info("Downloading structures files")
-        self.download_from_mirror("structures", dest_path, file_list_path)
+        self.download_from_mirror(config, "structures-files", dest_path, file_list_path)
 
 
     def download_validation_files(self, config: Config, pdb_ids: Set[str], dest_path: Path) -> None:
@@ -248,4 +248,4 @@ class RemoteDataHandler(DataSourceHandler):
 
         file_list_path = self.create_file_list(config, pdb_ids, "validation_file_list.txt", ".xml.gz", "_validation")
         logger.info("Downloading validation files")
-        self.download_from_mirror("validation-files", dest_path, file_list_path) # TODO: extract mirror struct definition to config
+        self.download_from_mirror(config, "validation-files", dest_path, file_list_path)

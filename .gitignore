@@ -16,3 +16,4 @@ venv/
 .worktrees/
 .current_run
 *.log
+config.json

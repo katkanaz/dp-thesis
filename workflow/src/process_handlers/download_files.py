@@ -212,7 +212,7 @@ def download_files(config: Config, test_mode: bool) -> None:
         pdb_ids_pq_file = config.run_data_dir / "pdb_ids_pq.json"
         pdb_ids_ccd = get_pdb_ids_with_sugars(config, sugar_names)
         source.get_pq_result(config)
-        output_file = unzip_single_file(config.sugar_binding_patterns_dir / "result.zip", config.sugar_binding_patterns_dir, "structures-with-sugars/structures.csv") # TODO: should the name and paths be given in cofig?
+        output_file = unzip_single_file(config.sugar_binding_patterns_dir / "result.zip", config.sugar_binding_patterns_dir, "structures-with-sugars/structures.csv")
         get_pdb_ids_from_pq(output_file, pdb_ids_pq_file)
 
         with (pdb_ids_pq_file).open() as f: # FIXME: get as return value from function
