@@ -1,0 +1,11 @@
+{
+    "pdb_mirror_dir": "../pdb-mirror",
+    "init_pq_dir": "../init-pq-dir",
+    "data_dir": "../workdir-volume/data",
+    "results_dir": "../workdir-volume/results",
+    "images_dir": "../workdir-volume/img",
+    "mv_dir": "../mv",
+    "pq_dir": "../pq",
+    "pdb_ids_list": ["7khu", "6nmp", "1gww", "5x3j", "6rig", "3l2j", "4d6d"],
+    "skip_ids": ["7zll", "5x7p"]
+}
