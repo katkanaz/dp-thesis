@@ -4,16 +4,6 @@
 #PBS -l walltime=40:00:00 
 
 
-if [ $# -ne 4 ]; then
-	echo "Usage: $0 <PIPELINE_RUN> <PIPELINE_RUN_LOG> <PDB_MIRROR_ROOT> <INIT_PQ>"
-	exit 1
-fi
-
-PIPELINE_RUN="$1"
-PIPELINE_RUN_LOG="$2"
-PDB_MIRROR_ROOT="$3"
-INIT_PQ="$4"
-
 RUNDATE=$(date "+%Y-%m-%dT%H-%M")
 
 

@@ -4,17 +4,6 @@
 #PBS -l walltime=40:00:00
 
 
-if [ $# -ne 4 ]; then
-        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUN_LOG> <SUGAR_LIST> <RESULT_PATH_LIST>"
-        exit 1
-fi
-
-
-PROJECT_ROOT="$1"
-PIPELINE_RUN_LOG="$2"
-SUGAR_LIST="$3"
-RESULT_PATH_LIST="$4"
-
 IFS="," read -r -a SUGARS <<< "$SUGAR_LIST"
 IFS="," read -r -a RES_PATHS <<< "$RESULT_PATH_LIST"
 
