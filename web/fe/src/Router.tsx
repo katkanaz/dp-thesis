@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Results from "./pages/Results";
 import ResultDetail from "./pages/ResultDetail";
 import Docs from "./pages/Docs";
+import Stats from "./pages/Stats";
 
 const rootRoute = createRootRoute({
     component: () => (
@@ -14,13 +15,13 @@ const rootRoute = createRootRoute({
     ),
 })
 
-const sugarsRoute = createRoute({
+export const homeRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/",
     component: Home,
 })
 
-export const sugarResultsRoute = createRoute({
+export const resultsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/results",
     component: Results,
@@ -32,12 +33,18 @@ export const resultDetailRoute = createRoute({
     component: ResultDetail,
 })
 
-const DocsRoute = createRoute({
+export const statsRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/stats",
+    component: Stats,
+})
+
+export const docsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/docs",
     component: Docs,
 })
 
-const routeTree = rootRoute.addChildren([sugarsRoute, sugarResultsRoute, resultDetailRoute, DocsRoute])
+const routeTree = rootRoute.addChildren([homeRoute, resultsRoute, resultDetailRoute, docsRoute, statsRoute])
 
 export const router = createRouter({ routeTree })

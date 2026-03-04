@@ -14,7 +14,6 @@ interface SugarCardProps {
 function SugarCard({sugar}: SugarCardProps) {
     return (
         <ChakraLink as={TanstackRouterLink} to="/results" textDecoration="none" _hover={{ textDecoration: "none", shadow: "lg" }}>
-        {/* FIXME: update where it leads - query filter apply*/}
             <Card>
                 <CardBody display="flex" flexDir="column" alignItems="center">
                     <Image src={`api/img/${sugar.img}`} />
