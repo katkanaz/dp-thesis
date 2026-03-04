@@ -1,10 +1,7 @@
-import { HamburgerIcon } from "@chakra-ui/icons"
 import MainContainer from "../components/MainContainer"
-import { Box, Drawer, DrawerCloseButton, DrawerContent, DrawerOverlay, Flex, IconButton, Link, Text, useDisclosure, VStack } from "@chakra-ui/react"
+import { Box, Flex, Link, Text, VStack } from "@chakra-ui/react"
 
 function Docs() {
-    // const { isOpen, onOpen, onClose } = useDisclosure();
-
     return (
         <MainContainer>
             <Flex>

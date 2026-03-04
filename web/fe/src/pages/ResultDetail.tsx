@@ -145,7 +145,7 @@ function ResultDetail() {
                                 </Tbody>
                             </Table>
                         </TableContainer>
-                        <VStack mt="3"> {/*FIXME: use query information*/}
+                        <VStack mt="3">
                             {compStruct.motifs.map((m, i) => <MotifDetail num={i+1} sugar={m.sugar} rmsd={m.score} residues={mergeRisudeInfo(m.residue_types, m.residue_ids)} structurePDB={m.original_struct} />)}
                         </VStack>
                     </Box>
