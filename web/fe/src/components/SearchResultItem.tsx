@@ -1,7 +1,7 @@
 import { HStack, Image, Link as ChakraLink, Table, TableContainer, Tbody, Td, Tr, VStack, Box } from "@chakra-ui/react";
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { ComputedStructure } from "../api/computed_structure";
-import placeholder from "../assets/logo.svg"
+import placeholder from "../assets/structure-placeholder.png"
 
 
 //TODO: img jinak - request na api/img, klice nemusi byt ve stringu, musi odpovidat json klicum, definovat v api aby kopirovalo json cely - ComputedStructure type
@@ -15,9 +15,9 @@ interface SearchResultItemProps {
 function SearchResultItem({result}: SearchResultItemProps) {
     return (
         <HStack align="flex-start" w="full" spacing={4}>
-            <Box boxSize="250px" flexShrink={0}>
+            <Box boxSize="250px" flexShrink={0} alignItems="center" display="flex">
                 <ChakraLink  as={TanstackRouterLink} to={result.afdb_id}>
-                    <Image src={placeholder} boxSize="250px" objectFit="cover" borderRadius="md"/>
+                    <Image src={placeholder} borderRadius="md"/>
                 </ChakraLink>
             </Box>
             <VStack align="left-start" spacing={3} flex="1" minW={0}>
