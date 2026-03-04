@@ -1,10 +1,11 @@
 import { Box, Link, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra-ui/react"
+import { MotifResidueInfo } from "../api/computed_structure"
 
 type MotifDetailProps = {
     num: number
     sugar: string
     rmsd: number
-    residues: string
+    residues: MotifResidueInfo[]
     structurePDB: string
 }
 
@@ -33,7 +34,7 @@ function MotifDetail({num, sugar, rmsd, residues, structurePDB}: MotifDetailProp
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">Motif residues:</Td>
                                 <Td>
-                                   {residues}
+                                   {residues.map(i => `${i.type} ${i.label_seq}/${i.label_asym}`).join(", ")}
                                 </Td>
                             </Tr>
                             <Tr>

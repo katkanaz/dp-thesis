@@ -1,6 +1,6 @@
-import { Box, HStack, Link, Switch, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link, Spinner, Switch, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
-import { getCompStruct, ComputedStructure } from "../api/computed_structure"
+import { getCompStruct, ComputedStructure, mergeRisudeInfo } from "../api/computed_structure"
 import { resultDetailRoute } from "../Router";
 import MolStarWrapper, { MolStarWrapperModel } from "../components/MolStarWrapper";
 import MotifDetail from "../components/MotifDetail";
@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 function ResultDetail() {
     const { afId } = resultDetailRoute.useParams()
 
-    const { data: compStruct, isLoading, isError, error } = useQuery<ComputedStructure, Error>({
+    const { data: compStruct, isLoading, isError } = useQuery<ComputedStructure, Error>({
         queryKey: ["comp-struct"],
         queryFn: () => getCompStruct(afId)
     });
@@ -50,6 +50,46 @@ function ResultDetail() {
 
     }, [molstar])
 
+
+    if (isLoading) {
+        return (
+            <Center minH="60vh">
+                <VStack spacing={4}>
+                    <Spinner size="xl" thickness="4px" />
+                    <Text fontSize="lg" color="gray.500">
+                        Loading results...
+                    </Text>
+                </VStack>
+            </Center>
+        )
+    }
+    if (isError) {
+        return (
+            <Center minH="60vh">
+                <VStack spacing={4}>
+                    <Alert
+                        status="error"
+                        variant="subtle"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        textAlign="center"
+                        borderRadius="lg"
+                        maxW="md"
+                    >
+                        <AlertIcon boxSize="40px" mr={0} />
+                        <AlertTitle mt={4} mb={1} fontSize="lg">
+                            Something went wrong
+                        </AlertTitle>
+                        <AlertDescription>
+                            We couldn’t load your results. Please try again.
+                        </AlertDescription>
+                    </Alert>
+                </VStack>
+            </Center>
+        )
+    }
+
     if (compStruct === undefined) {
         return (
             <MainContainer>
@@ -57,9 +97,6 @@ function ResultDetail() {
             </MainContainer>
         )
     }
-
-    if (isLoading) return <div>Loading computed structure...</div>;
-    if (isError) return <div>Error: {error.message}</div>;
 
 
     return (
@@ -109,7 +146,7 @@ function ResultDetail() {
                             </Table>
                         </TableContainer>
                         <VStack mt="3"> {/*FIXME: use query information*/}
-                            {compStruct.motifs.map((m, i) => <MotifDetail num={i} sugar={m.sugar} rmsd={m.score} residues="" structurePDB={m.original_structure} />)}
+                            {compStruct.motifs.map((m, i) => <MotifDetail num={i+1} sugar={m.sugar} rmsd={m.score} residues={mergeRisudeInfo(m.residue_types, m.residue_ids)} structurePDB={m.original_struct} />)}
                         </VStack>
                     </Box>
                     <VStack flexGrow="1">
