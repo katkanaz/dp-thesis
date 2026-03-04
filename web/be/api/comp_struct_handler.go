@@ -2,9 +2,13 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"slices"
+	"strings"
+	"time"
 )
 
 type ResidueId struct {
@@ -34,10 +38,90 @@ type ComputedStructure struct {
 	Motifs []Motif `json:"motifs"`
 }
 
+type LastUpdated struct {
+	Date string `json:"date"`
+}
+
+
+func getNewest(dir string, sufix string) (string, error) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return "", err
+	}
+
+	var newestTime time.Time
+	var newestFile string
+	layout := "2006-01-02T15-04-05"
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+
+		name := entry.Name()
+
+		if !strings.HasSuffix(name, sufix) {
+			continue
+		}
+
+		datetimePart := strings.TrimSuffix(name, sufix)
+
+		t, err := time.Parse(layout, datetimePart)
+		if err != nil {
+			continue
+		}
+
+		if t.After(newestTime) {
+			newestTime = t
+			newestFile = filepath.Join(dir, name)
+		}
+	}
+
+	if newestFile == "" {
+		return "", fmt.Errorf("No matching files found")
+	}
+
+	return newestFile, nil
+}
+
+
+func getLastModifiedDate(w http.ResponseWriter, r *http.Request) {
+	file, err := getNewest("data/merged/", "_merged.json")
+	if err != nil {
+		panic (err)
+	}
+
+	fileName := filepath.Base(file)
+	datetimePart := strings.TrimSuffix(fileName, "_merged.json")
+	layout := "2006-01-02T15-04-05"
+
+	t, err := time.Parse(layout, datetimePart)
+	if err != nil {
+		panic(err)
+	}
+
+	dateOnly := t.Format("2006-01-02")
+	lastUpdated := LastUpdated{
+		Date: dateOnly,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(lastUpdated); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+}
+
 
 func getComputedStructures() []ComputedStructure {
 	var computedStructures []ComputedStructure
-	merged, err := os.Open("data/merged.json")
+	file, err := getNewest("data/merged/", "_merged.json")
+	if err != nil {
+		panic (err)
+	}
+	merged, err := os.Open(file)
 	if err != nil {
 		panic(err)
 	}
@@ -80,4 +164,8 @@ func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func getStats(w http.ResponseWriter, r *http.Request) {
+
 }
