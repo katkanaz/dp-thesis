@@ -1,10 +1,39 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons"
-import { Box, HStack, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, HStack, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, Tooltip, VStack } from "@chakra-ui/react"
+
+import MultiSelect, { MultiSelectOption, useMultiSelect } from "./MultiSelect";
+
+const sugarOptions: MultiSelectOption[] = [
+    { id: 1, value: "FUC" },
+    { id: 2, value: "FUL" },
+    { id: 3, value: "GLC" },
+    { id: 4, value: "GAL" },
+    { id: 5, value: "SIA" }
+]
+
+const orgOptions: MultiSelectOption[] = [
+    { id: 1, value: "Lactobacillus" },
+    { id: 2, value: "Escherichia" },
+    { id: 3, value: "Debaryomyces hansenii CBS767" },
+    { id: 4, value: "Madurella mycetomatis" },
+    { id: 5, value: "Neisseria gonorrhoeae" }
+]
+
+const pdbOptions: MultiSelectOption[] = [
+    { id: 1, value: "7KHU" },
+    { id: 2, value: "4D6D" },
+    { id: 3, value: "1AGW" },
+    { id: 4, value: "7C7B" },
+    { id: 5, value: "1AMG" }
+]
 
 function FilterBar() {
+    const sugarMultiSelect = useMultiSelect()
+    const organismMultiSelect = useMultiSelect()
+    const pdbStructMultiSelect = useMultiSelect()
     return (
         <HStack>
-            <VStack alignItems="letf">
+            <VStack alignItems="flex-start">
                 <HStack spacing="1">
                     <Text>
                         Sugar
@@ -13,14 +42,9 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                 </HStack>
-                <Select>
-                    <option value="" disabled selected>Select</option>
-                    <option>FUC</option>
-                    <option>GAL</option>
-                    <option>GLC</option>
-                </Select>
+                <MultiSelect options={sugarOptions} {...sugarMultiSelect}/>
             </VStack>
-            <VStack alignItems="letf">
+            <VStack alignItems="flex-start">
                 <HStack spacing="1">
                     <Text>
                         pLDDT
@@ -38,16 +62,16 @@ function FilterBar() {
                       </NumberInputStepper>
                     </NumberInput>
                     <Box w="3" border="solid" borderWidth="0" borderBottomWidth="2px" borderColor="gray.700" />
-                    <NumberInput width="24">
+                    <NumberInput width="24" size="xs">
                       <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
+                      {/* <NumberInputStepper> */}
+                      {/*   <NumberIncrementStepper /> */}
+                      {/*   <NumberDecrementStepper /> */}
+                      {/* </NumberInputStepper> */}
                     </NumberInput>
                 </HStack>
             </VStack>
-            <VStack alignItems="letf">
+            <VStack alignItems="flex-start">
                 <HStack spacing="1">
                     <Text>
                         Organism
@@ -56,14 +80,9 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                 </HStack>
-                <Select>
-                    <option value="" disabled selected>Select</option>
-                    <option>Debaryomyces hansenii CBS767</option>
-                    <option>Fonsecaea pedrosoi CBS 271.37</option>
-                    <option>Madurella mycetomatis</option>
-                </Select>
+                <MultiSelect options={orgOptions} {...organismMultiSelect} width="16rem"/>
             </VStack>
-            <VStack alignItems="letf">
+            <VStack alignItems="flex-start">
                 <HStack spacing="1">
                     <Text>
                         PDB Structure
@@ -72,12 +91,7 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                 </HStack>
-                <Select>
-                    <option value="" disabled selected>Select</option>
-                    <option>7KHU</option>
-                    <option>4D6D</option>
-                    <option>1GWM</option>
-                </Select>
+                <MultiSelect options={pdbOptions} {...pdbStructMultiSelect} width="6rem"/>
             </VStack>
         </HStack>
     )
