@@ -12,7 +12,7 @@ RES_PATH=${RES_PATHS[$PBS_ARRAY_INDEX]}
 
 echo "$(date "+%Y-%m-%dT%H-%M") running analyze surroundings for sugar $SUGAR, saving result path to $RES_PATH" >> "$PIPELINE_RUN_LOG"
 
-docker run -it workflow bash -c "cd $PROJECT_ROOT/workflow/src; python surrounding_analysis.py -s $SUGAR -a -c -d --store_result_path $RES_PATH"
+singularity exec -B $PDB_MIRROR_ROOT:/app/pdb-mirror -B $INIT_PQ:/app/init-pq-dir -B $PIPELINE_RUN:/app/workdir-volume workflow-singularity.sif bash -c "cd /app/src; python surrounding_analysis.py -s $SUGAR -a -c -d --store_result_path $RES_PATH"
 
 RETURN_CODE="$?"
 echo "$(date "+%Y-%m-%dT%H-%M") analysis for $SUGAR ended $RETURN_CODE" >> "$PIPELINE_RUN_LOG"

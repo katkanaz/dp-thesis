@@ -6,4 +6,4 @@
 
 echo "$(date "+%Y-%m-%dT%H-%M") running data-preprocessing" >> "$PIPELINE_RUN_LOG"
 
-docker run -it workflow bash -c "cd $PROJECT_ROOT/workflow/src; python data_preprocessing.py"
+singularity exec -B $PDB_MIRROR_ROOT:/app/pdb-mirror -B $INIT_PQ:/app/init-pq-dir -B $PIPELINE_RUN:/app/workdir-volume workflow-singularity.sif bash -c "cd /app/src; python data_preprocessing.py"
