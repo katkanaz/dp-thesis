@@ -13,4 +13,4 @@ done
 
 echo "$(date "+%Y-%m-%dT%H-%M") creating merged results" >> "$PIPELINE_RUN_LOG"
 
-singularity exec -B $PDB_MIRROR_ROOT:/app/pdb-mirror -B $INIT_PQ:/app/init-pq-dir -B $PIPELINE_RUN:/app/workdir-volume workflow-singularity.sif bash -c "cd /app/src; python create_merged_results.py $SOURCE_ARGS_LIST -o /app/workdir-volume/${DATE}_merged.json"
+singularity exec -B $PDB_MIRROR_ROOT:/app/pdb-mirror -B $INIT_PQ:/app/init-pq-dir -B $PIPELINE_RUN:/app/workdir-volume $PROJECT_ROOT/workflow-singularity.sif bash -c "cd /app/src; python create_merged_results.py $SOURCE_ARGS_LIST -o /app/workdir-volume/${DATE}_merged.json"
