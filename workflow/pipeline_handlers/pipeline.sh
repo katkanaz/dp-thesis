@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ $# -ne 6 ]; then
-        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUNS_ROOT> <PDB_MIRROR_ROOT> <INIT_PQ> <SUGAR_LIST> <OUTPUT_DIR>"
+if [ $# -ne 5 ]; then
+        echo "Usage: $0 <PROJECT_ROOT> <PIPELINE_RUNS_ROOT> <PDB_MIRROR_ROOT> <INIT_PQ> <SUGAR_LIST>"
         exit 1
 fi
 
@@ -10,7 +10,6 @@ PIPELINE_RUNS_ROOT="$2"
 PDB_MIRROR_ROOT="$3"
 INIT_PQ="$4"
 SUGAR_LIST="$5"
-OUTPUT_DIR="$6"
 
 IFS="," read -r -a SUGARS <<< "$SUGAR_LIST"
 LAST_SUGAR_IDX=$((${#SUGARS[@]} - 1))
@@ -28,7 +27,7 @@ PIPELINE_RUN_LOG="$PIPELINE_RUN/pipeline.log"
 echo "$(date "+%Y-%m-%dT%H-%M") beginning pipeline" > "$PIPELINE_RUN_LOG"
 
 
-DOWNLOAD_ID=$(qsub -v "PROJECT_ROOT=$PROJECT_ROOT,PIPELINE_RUN=$PIPELINE_RUN,PIPELINE_RUN_LIG=$PIPELINE_RUN_LOG,PDB_MIRROR_ROOT=$PDB_MIRROR_ROOT" -J 0-1 -F download-pdb-mirror.sh)
+DOWNLOAD_ID=$(qsub -v "PROJECT_ROOT=$PROJECT_ROOT,PIPELINE_RUN=$PIPELINE_RUN,PIPELINE_RUN_LIG=$PIPELINE_RUN_LOG,PDB_MIRROR_ROOT=$PDB_MIRROR_ROOT" -J 0-1 download-pdb-mirror.sh)
 echo "Creating download job: $DOWNLOAD_ID" >> "$PIPELINE_RUN_LOG"
 
 INIT_PQ_ID=$(qsub -W depend=afterok:"$DOWNLOAD_ID" -v "PIPELINE_RUN=$PIPELINE_RUN,PIPELINE_RUN_LOG=$PIPELINE_RUN_LOG,PDB_MIRROR_ROOT=$PDB_MIRROR_ROOT,INIT_PQ=$INIT_PQ" init-pq-run.sh)
