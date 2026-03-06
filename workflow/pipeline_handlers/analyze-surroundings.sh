@@ -4,8 +4,8 @@
 #PBS -l walltime=40:00:00
 
 
-IFS="," read -r -a SUGARS <<< "$SUGAR_LIST"
-IFS="," read -r -a RES_PATHS <<< "$RESULT_PATH_LIST"
+IFS=";" read -r -a SUGARS <<< "$SUGAR_LIST"
+IFS=";" read -r -a RES_PATHS <<< "$RESULT_PATH_LIST"
 
 SUGAR=${SUGARS[$PBS_ARRAY_INDEX]}
 RES_PATH=${RES_PATHS[$PBS_ARRAY_INDEX]}

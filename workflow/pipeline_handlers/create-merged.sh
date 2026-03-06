@@ -4,7 +4,7 @@
 #PBS -l walltime=2:00:00
 
 
-IFS="," read -r -a RES_PATHS <<< "$RESULT_PATH_LIST"
+IFS=";" read -r -a RES_PATHS <<< "$RESULT_PATH_LIST"
 
 SOURCE_ARGS_LIST=""
 for RES_PATH in "${RES_PATHS[@]}"; do

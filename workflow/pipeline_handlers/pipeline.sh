@@ -11,7 +11,7 @@ PDB_MIRROR_ROOT="$3"
 INIT_PQ="$4"
 SUGAR_LIST="$5"
 
-IFS="," read -r -a SUGARS <<< "$SUGAR_LIST"
+IFS=";" read -r -a SUGARS <<< "$SUGAR_LIST"
 LAST_SUGAR_IDX=$((${#SUGARS[@]} - 1))
 
 DATE=$(date "+%Y-%m-%dT%H-%M-%S")
@@ -20,7 +20,7 @@ mkdir "$PIPELINE_RUN" || exit 2
 
 RESULT_PATH_LIST=""
 for SUGAR in "${SUGARS[@]}"; do
-	RESULT_PATH_LIST="$RESULT_PATH_LIST,/app/workdir-volume/$SUGAR-res.txt"
+	RESULT_PATH_LIST="$RESULT_PATH_LIST;/app/workdir-volume/$SUGAR-res.txt"
 done
 
 PIPELINE_RUN_LOG="$PIPELINE_RUN/pipeline.log"
