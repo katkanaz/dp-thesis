@@ -181,7 +181,7 @@ class RemoteDataHandler(DataSourceHandler):
             dest_path
         ]
 
-        subprocess.run(cmd, check=True) # TODO: add runtimeerror
+        subprocess.run(cmd, check=True)
 
 
     def create_file_list(self, config: Config, pdb_ids: Set[str], file_name: str, extension: str, name_sufix = "") -> Path:
@@ -219,8 +219,7 @@ class RemoteDataHandler(DataSourceHandler):
             dest_path
         ]
 
-        subprocess.run(cmd, check=True) # TODO: add runtimeerror
-         # FIXME: catch if rsync skips missing files
+        subprocess.run(cmd, check=True)
 
 
     def download_structures(self, config: Config, pdb_ids: Set[str], dest_path: Path) -> None:

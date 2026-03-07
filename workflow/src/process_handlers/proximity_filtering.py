@@ -3,7 +3,7 @@ Script Name:
 Description: 
 Author: Kateřina Nazarčuková
 """
-# TODO: fix 
+# TODO: fix docstring 
 
 
 from argparse import ArgumentParser
@@ -11,7 +11,6 @@ import json
 import math
 from logger import logger, setup_logger
 from pathlib import Path
-from tqdm import tqdm
 from typing import List, Tuple, Union
 
 from configuration import Config

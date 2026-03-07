@@ -28,7 +28,6 @@ from utils.unzip_file import unzip_all
 more_than_one_pattern = []          # just to check no more than one pattern for specific ResidueID was found
 pq_couldnt_find_pattern = []        # some ResidueID couldn't be found by PQ because they have different ResidueID somehow 
 result_folder_not_created = []      # just in case something else goes wrong
-# FIXME: Fix the pq_results folder coming from first pq
 
 def download_pq(config: Config) -> None:
     """
@@ -78,7 +77,6 @@ def create_pq_config(config: Config, structure: str, residues: List[Dict[str, st
     # case. In that case e.g. residues "GLC 1 M" and "GLC 1 m" would have the same
     # query for PQ. Therefore, tag "_2" is added to such queries.
     case_sensitive_check = []
-    # TODO: Test runtime, if tqdm useful
     for residue in residues:
         if residue["name"] == sugar:
             case = f"{residue['num']}_{residue['chain']}"
@@ -100,7 +98,6 @@ def create_pq_config(config: Config, structure: str, residues: List[Dict[str, st
 
 
 def extract_results(target: Path, zip_result_folder: Path, query_names: List[str]) -> None:
-    # FIXME: Reword
     """
     Unzip the results and rename and move each sugar surrounding (pattern) to single common folder.
 
@@ -118,21 +115,18 @@ def extract_results(target: Path, zip_result_folder: Path, query_names: List[str
     with TemporaryDirectory() as temp_dir:
         with zipfile.ZipFile(zip_result_folder, "r") as zip_ref:
             zip_ref.extractall(temp_dir)
-            # TODO: Test runtime, if tqdm useful
             for query_name in query_names: 
                 results_path = Path(temp_dir) / query_name / "patterns"
                 if not results_path.exists():
                     pq_couldnt_find_pattern.append(query_name)
                     continue
                 # It is expected to have only one pattern found for one query, but checking just in case
-                # TODO: add error flag
                 if len(os.listdir(results_path)) > 1:
                     #global END_FLAG
                     #END_FLAG = True
                     #return
                     more_than_one_pattern.append(query_name)
                     continue
-                # FIXME: check if correct
                 for file in results_path.iterdir():
                     Path(file).rename(results_path / f"{query_name}.pdb")  # Rename the pattern so it is distinguishable
                 src = results_path / f"{query_name}.pdb"
@@ -144,10 +138,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     pq_base = config.user_cfg.pq_dir
     matches = sorted([p for p in pq_base.glob("PatternQuery*") if p.is_dir()])
     pq_dir = matches[-1] if matches else pq_base / "PatternQuery"
-    # if not pq_dir.exists() or (pq_dir.is_dir() and not any(pq_dir.iterdir())):
-    #     download_pq(config) # FIXME:
 
-    # Tmp # FIXME:
     (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)
     (config.pq_run_dir / "results").mkdir(exist_ok=True, parents=True)
 
@@ -163,7 +154,7 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
 
     for structure, residues in tqdm(ligands.items(), desc="Running PQ for each ligand"):
         prefix, pdb_id = structure.split("_", 1)
-        structure = f"{prefix}_{pdb_id.lower()}" # FIXME: Why does it need to be all caps in the first place?
+        structure = f"{prefix}_{pdb_id.lower()}"
         query_names = create_pq_config(config, structure, residues, sugar)
         if not query_names:
             continue
@@ -197,7 +188,6 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
                 else:
                     logger.info("PQ process completed successfully")
 
-                # TODO: Does this delete the results?, make that optional
                 zip_result_folder = config.pq_run_dir / "results" / "result/result.zip"
                 if not zip_result_folder.exists():
                     result_folder_not_created.append(structure)

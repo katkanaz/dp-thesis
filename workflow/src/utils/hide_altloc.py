@@ -1,5 +1,4 @@
 from typing import Dict, List
-# NOTE: can check if 4 letters are returned, their case?
 
 
 def remove_altloc_from_id(pdb_id: str) -> str:

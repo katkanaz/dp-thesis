@@ -7,7 +7,6 @@ Credits: Original concept by Daniela Repelová, modifications by Kateřina Nazar
 
 
 import json
-import logging
 from typing import List, Dict, Set, Union
 
 import gemmi
@@ -81,7 +80,6 @@ def extract_sugars(table: Table) -> List[Dict[str, str]]:
     # means there will be two residues with the same num and chain,
     # but different name listed in the mmCIF file. PQ can find only the first one.
     conformers = []
-    # TODO: Test how long running, if tqdm useful
     for row in table:
         if row[0] in SUGAR_NAMES:
             res = f"{row[1]} {row[2]}"
@@ -127,7 +125,6 @@ def remove_connections(block: Block, mono: List[Dict[str, str]], oligo: List[Dic
     has_role = conn.has_column(5)
     if not has_role:
         pdb_not_anotated_glycosylation.add(block.name)
-    # TODO: Test how long running, if tqdm useful
     for row in conn:
         # only covalent connection between AK and sugar are relevant
         if (row[0] == "covale" and row[1].capitalize() in AMINO_ACIDS and row[3] in SUGAR_NAMES):
@@ -189,7 +186,6 @@ def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[
             "auth_seq_id_2",
         ]
     )
-    # TODO: Test runtime, if tqdm useful
     for row in close_contact:
         if row[0].capitalize() in AMINO_ACIDS and row[2] in SUGAR_NAMES:
             res = {"name": row[2], "num": row[3], "chain": row[1]}
@@ -203,7 +199,6 @@ def remove_close_contacts(block: Block, mono: List[Dict[str, str]], oligo: List[
                 # Save the chain to remove the whole oligosaccharide
                 close_contact_oligo_chains.add(res["chain"])
 
-    # TODO: Test runtime, if tqdm useful
     for i in range(len(oligo) - 1, -1, -1):
         if oligo[i]["chain"] in close_contact_oligo_chains:
             close_contact_residues.append(oligo[i])
@@ -240,9 +235,7 @@ def count_num_residues(res_in_whole_struct: Dict) -> int:
     return sum([len(residues) for residues in res_in_whole_struct.values()])
 
 
-#TODO: refactor global variable
 def categorize(config: Config) -> None:
-    # Tmp # FIXME:
     config.categorization_dir.mkdir(exist_ok=True, parents=True)
 
     global SUGAR_NAMES
@@ -250,8 +243,6 @@ def categorize(config: Config) -> None:
         SUGAR_NAMES = json.load(f)
 
     logger.info(config.run_data_dir)
-    # FIXME: Why do we read this here???? it is same as folder content
-    # FIXME: do we create it in the download script just to read it here???
     with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open() as f:
         pdb_files: List[str] = json.load(f)
 
@@ -286,7 +277,7 @@ def categorize(config: Config) -> None:
             pdb_sugars_in_wrong_category.add(block.name)
             continue
 
-        all_residues[block.name] = current_all_residues # FIXME: Reword variables
+        all_residues[block.name] = current_all_residues
 
 
         # Remove glycosylations and close contacts from mono and oligosaccharides.
@@ -298,11 +289,9 @@ def categorize(config: Config) -> None:
         current_ligands = monosacharides.copy()
         current_ligands.extend(oligosacharides)
 
-        # TODO: Extract to function
         # Store residues from the current structure to the appropirate groups
-        # FIXME: Make block.name lower
         if current_ligands:
-            ligands[block.name] = current_ligands # FIXME: Reword variables
+            ligands[block.name] = current_ligands
         if current_glycosylated:
             glycosylated[block.name] = current_glycosylated
         if current_close_contacts:
@@ -325,7 +314,7 @@ def categorize(config: Config) -> None:
             pdb_lig_glyc_close.append(block.name)
 
     # Save everything
-    save_category(ligands, "ligands", config) # FIXME: Make into object as well
+    save_category(ligands, "ligands", config)
     save_category(glycosylated, "glycosylated", config)
     save_category(close_contacts, "close_contacts", config)
     save_category(all_residues, "all_residues", config)

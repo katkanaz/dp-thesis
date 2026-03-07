@@ -31,7 +31,6 @@ def remove_nonsugar_residues(config: Config) -> None:
     logger.info("Creating model file")
 
     doc = gemmi.cif.read(str(config.components_dir / "components.cif.gz"))
-    # TODO: Test how long running, if tqdm useful
     for i in range(len(doc) - 1, -1, -1):
         comp_type = doc[i].find_value('_chem_comp.type')
         if "saccharide" not in comp_type.lower():
@@ -54,7 +53,7 @@ def download_mv(config: Config) -> None:
     logger.info("Downloading MotiveValidator")
 
     response = requests.get("https://webchem.ncbr.muni.cz/Platform/MotiveValidator/DownloadService")
-    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f: # FIXME: Keep version number
+    with open((config.user_cfg.mv_dir / "MotiveValidator.zip"), "wb") as f:
         f.write(response.content)
 
     unzip_all(config.user_cfg.mv_dir / "MotiveValidator.zip", config.user_cfg.mv_dir / "MotiveValidator")
@@ -102,7 +101,6 @@ def get_rmsd_and_merge(config: Config) -> None:
     with open(config.validation_dir / "all_rmsd.csv", "w", newline="", encoding="utf8") as f:
         writer = csv.writer(f)
         writer.writerow(["pdb", "name", "num", "chain", "rmsd"])
-    # TODO: Test how long running, if tqdm useful
         for model in data["Models"]:
             for entry in model["Entries"]:
                 pdb = entry["Id"].split("_")[1]
@@ -113,7 +111,7 @@ def get_rmsd_and_merge(config: Config) -> None:
                     continue
                 writer.writerow(row)
 
-    rscc = pd.read_csv(config.validation_dir / "all_rscc_and_resolution.csv") # FIXME: will it have different pdb ids????
+    rscc = pd.read_csv(config.validation_dir / "all_rscc_and_resolution.csv")
     rmsd = pd.read_csv(config.validation_dir / "all_rmsd.csv")
 
     merged = rscc.merge(rmsd, on=["pdb", "name", "num", "chain"])
@@ -121,7 +119,6 @@ def get_rmsd_and_merge(config: Config) -> None:
 
 
 def run_mv(config: Config, is_unix: bool) -> None:
-    # Tmp # FIXME:
     (config.mv_run_dir / "results").mkdir(exist_ok=True, parents=True)
     (config.user_cfg.mv_dir).mkdir(exist_ok=True, parents=True)
 
@@ -149,7 +146,7 @@ def run_mv(config: Config, is_unix: bool) -> None:
 
     if mv_proc.returncode != 0:
         logger.error(f"MV process exited with code {mv_proc.returncode}")
-        # TODO: raise exception
+        raise Exception("MV process did not finish successfully")
     else:
         logger.info("MV process completed successfully")
 

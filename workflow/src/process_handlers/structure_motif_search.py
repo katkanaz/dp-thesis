@@ -70,11 +70,10 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResi
 
     # Usually the sugar has "it's own" chain meaning that all amino acid residues have chain ID for example A and the sugar has B
     # However in some files there is a chain A and then chain B which includes both sugar and amino acids
-    # Sugar cannot be excluded from renumbering? # FIXME:
+    # Sugar cannot be excluded from renumbering?
     sorted_chains = sorted(chains, key = lambda c: c.get_id())
     chain_id_map = {}
     key = "A"
-    # TODO: Test runtime if tqdm useful
     for ch in sorted_chains:
         all_res = list(ch.get_residues())
 
@@ -84,14 +83,13 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResi
         chain_id_map[ch.get_id()] = key
         key = chr(ord(key) + 1)
 
-    # TODO: Test runtime if tqdm useful
     residues = []
     for chain in chains:
         i = 1
         for residue in chain:
             residue: Residue = residue
             chain: Chain = chain
-            # Excludes the sugar #FIXME: Make clearer
+            # Excludes the sugar
             if residue.get_id()[0] == " ":
                 residues.append(StructMotifResidue(struct_oper_id="1", chain_id=chain_id_map[chain.get_id()], label_seq_id=i)) # type: ignore
             i += 1
@@ -207,7 +205,9 @@ def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_res
 def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool, number: int, method: str, config: Config, max_residues: int, store_result_path: Union[Path, None]) -> None:
     search_results: Dict[str, Dict[str, Dict]] = {}
 
-    # FIXME: Think about keeping or removing flag
+    # NOTE: Clustering is required when using RCSB structure motif search
+    # service. If you are using a different service you can try skipping the
+    # clustering step (no representatives will be selected).
     if perform_clustering:
         run_pymol_subprocess("process_handlers.proximity_filtering", ["-t" if test_mode else "", "-s", sugar, "-n", str(number), "-m", method, "--max_residues", str(max_residues)])
         representatives: List[Path] = load_representatives(config)

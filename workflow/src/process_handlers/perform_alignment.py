@@ -10,14 +10,12 @@ from argparse import ArgumentParser
 import csv
 import itertools
 import json
-import math
 import os
 from pathlib import Path
 import re
 from typing import Tuple
 
 import numpy as np
-from tqdm import tqdm
 from logger import logger, setup_logger
 
 from configuration import Config

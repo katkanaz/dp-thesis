@@ -25,7 +25,6 @@ def extract_rscc_and_resolution(config: Config) -> None:
     :param config: Config object
     """
 
-    # Tmp # FIXME:
     config.validation_dir.mkdir(exist_ok=True, parents=True)
 
     logger.info("Extracting RSCC and resolution")
@@ -48,7 +47,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
         modified_ids_no_altloc = [remove_altloc_from_id(pdb_id) for pdb_id in modified_ligands]
         all_rscc.writerow(["pdb", "resolution", "name", "num", "chain", "rscc", "type"])
-        for structure, residues in tqdm(all_residues.items(), desc="Extracting RSCC and resolution"): # FIXME: why for all residues and not just ligands?
+        for structure, residues in tqdm(all_residues.items(), desc="Extracting RSCC and resolution"):
             file = f"{structure.lower()}_validation.xml.gz"
             logger.debug(f"Parsing {file}")
             with gzip.open(config.validation_files_dir / file, "rt") as file_xml:
@@ -85,7 +84,7 @@ def extract_rscc_and_resolution(config: Config) -> None:
 
                 # Structure can have unsupported altloc, therefore is not in any category
                 if res_type is None:
-                    continue # FIXME: Refactor with this issue
+                    continue
                 row = [str(structure), str(resolution), str(residue["name"]), residue["num"], residue["chain"], str(rscc), res_type]
                 all_rscc.writerow(row)
 

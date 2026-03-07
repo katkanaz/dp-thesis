@@ -148,7 +148,7 @@ def tanglegram(a, b, n_data, results_folder: Path, labelsA=None, labelsB=None, e
         13: '#9a6324', 14: '#fffac8', 15: '#800000', 16: '#aaffc3', 17: '#808000', 18: '#ffd8b1',
         19: '#000075', 20: '#61ffff', 21: '#d300ff', 22: '#000000',
     }
-    with (results_folder).open() as f: # FIXME:
+    with (results_folder).open() as f:
         clusters = json.load(f)
     dflt_col = "#808080"
 
@@ -517,9 +517,6 @@ def untangle_permutations(link1, link2, labels1, labels2, edges,
     link1,link2
                         Reordered linkages.
     """
-    # TODO:
-    # - once all possible permutations are computed, we could test them using
-    #   parallel processes
 
     # Keep track of past entanglements
     entang = [float('inf')]

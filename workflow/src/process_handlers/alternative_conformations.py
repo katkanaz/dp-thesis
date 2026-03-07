@@ -47,9 +47,7 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
     :param residues_to_delete: List of residues to delete in the given structure
     :param ligand_values:
     """
-    # FIXME: what is ligand values
 
-    # TODO: Test how long running, if tqdm useful
     for residue in residues_to_keep:
         model_idx = residue["model_idx"]
         chain_idx = residue["chain_idx"] 
@@ -61,7 +59,6 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
     new_values: Set[Tuple[str, str, str]] = set(ligand_values)
     if len(new_values) != len(ligand_values):
         logger.warning(f"Ligand values contains duplicates {new_values=} {ligand_values=}")
-    # TODO: Test how long running, if tqdm useful
     for residue in reversed(residues_to_delete):
         model_idx = residue["model_idx"]
         chain_idx = residue["chain_idx"] 
@@ -138,13 +135,11 @@ def separate_alternative_conformations(input_file: Path, ligands: Tuple[str, Lis
     for model_idx, model in enumerate(structure_a):
         models_count += 1
         for chain_idx, chain in enumerate(model):
-            # TODO: Test how long running, if tqdm useful
             for residue_idx, residue in enumerate(chain):
                 if residue.name in sugar_names:
                     atom_altloc_a = []
                     atom_altloc_b = []
 
-                    # TODO: Test how long running, if tqdm useful
                     for atom_idx, atom in enumerate(residue):
                         if atom.altloc != "\0":
                             if atom.altloc == "A":

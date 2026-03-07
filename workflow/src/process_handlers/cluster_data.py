@@ -39,7 +39,6 @@ def perform_data_clustering(sugar: str, number: int, method: str,
     """
 
     logger.info(f"Clustering data from {align_method}")
-    # FIXME:
     config.dendrograms_dir.mkdir(exist_ok=True, parents=True)
 
     data = np.load(config.clusters_dir / align_method / f"{sugar}_all_pairs_rmsd_{align_method}.npy")
@@ -50,8 +49,6 @@ def perform_data_clustering(sugar: str, number: int, method: str,
     # Calculate the linkage matrix using given cluster_method
     Z1 = sch.linkage(D, method=method)
 
-    # TODO: Try to calculate the num of clusters from matrix with given threshold
-    # something times threshold - 1
     dendro_sugar_folder = config.dendrograms_dir
     dendro_sugar_folder.mkdir(exist_ok=True, parents=True)
 
@@ -94,7 +91,6 @@ def perform_data_clustering(sugar: str, number: int, method: str,
     representatives = {}
     average_rmsds = {}
 
-    # TODO: Test how long running, if tqdm useful
     for cluster, structures in clusters.items():
         lowest_rmsd_sum = np.inf
         representative_structure = None
@@ -110,7 +106,6 @@ def perform_data_clustering(sugar: str, number: int, method: str,
             representatives[cluster] = representative_structure
             average_rmsds[cluster] = [lowest_rmsd_sum / length]
 
-    # TODO: Test how long running, if tqdm useful
     for cluster, structure in representatives.items():
         sum = 0
         for _, structure2 in representatives.items():

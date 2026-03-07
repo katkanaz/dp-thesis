@@ -77,7 +77,6 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     pdb_ids = set()
     counts_structures_with_sugar = {} 
     sugars_not_present_in_any_structure = []
-    # TODO: Test how long running, if tqdm useful
     for sugar in sugar_names:
         response = requests.get(f"https://www.ebi.ac.uk/pdbe/api/pdb/compound/in_pdb/{sugar}")
         structures = response.json()
@@ -194,7 +193,6 @@ def check_downloaded_files(json_file: Path, validation_files: Path, mmcif_files:
 
 
 def download_files(config: Config, test_mode: bool) -> None:
-    # Tmp # FIXME:
     config.run_data_dir.mkdir(exist_ok=True, parents=True)
     config.user_cfg.results_dir.mkdir(exist_ok=True, parents=True)
     config.mmcif_files_dir.mkdir(exist_ok=True, parents=True)
@@ -215,7 +213,7 @@ def download_files(config: Config, test_mode: bool) -> None:
         output_file = unzip_single_file(config.sugar_binding_patterns_dir / "result.zip", config.sugar_binding_patterns_dir, "structures-with-sugars/structures.csv")
         get_pdb_ids_from_pq(output_file, pdb_ids_pq_file)
 
-        with (pdb_ids_pq_file).open() as f: # FIXME: get as return value from function
+        with (pdb_ids_pq_file).open() as f:
             pdb_ids_pq = json.load(f)
 
         pdb_ids = set(pdb_ids_ccd).intersection(set(pdb_ids_pq))
@@ -233,7 +231,7 @@ def download_files(config: Config, test_mode: bool) -> None:
 
         logger.debug("Creating test mode PDB IDs file")
         with (config.run_data_dir / "pdb_ids_intersection_pq_ccd.json").open("w") as f:
-            json.dump(list(pdb_ids), f, indent=4) # FIXME: categorize needs it - fix that! dont load from file
+            json.dump(list(pdb_ids), f, indent=4)
 
 
     logger.debug("Before download function executes")

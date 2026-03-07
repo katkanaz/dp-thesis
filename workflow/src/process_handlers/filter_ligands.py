@@ -43,8 +43,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     with open(config.categorization_dir / "modified_ligands.json", "r", encoding="utf8") as f:
         modified_ligands = json.load(f)
 
-    # FIXME: These numbers can be missleading since the structures with alternative conformations are now split into two
-    logger.info(f"Number of structures before filtering: {len(modified_ligands.keys())}")
+    logger.info(f"Number of files before filtering: {len(modified_ligands.keys())}")
     logger.info(f"Number of residues before filtering: {count_num_residues(modified_ligands)}")
 
     # Save the pdb id of structures with good resolution, because not all structures have resolution
@@ -54,7 +53,6 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     delete_residues = defaultdict(list)
     with open(config.validation_dir / "merged_rscc_rmsd.csv", "r", encoding="utf8") as f:
         rscc_rmsd = DictReader(f)
-    # TODO: Test how long running, if tqdm useful
         for row in rscc_rmsd:
             if float(row["resolution"]) <= max_resolution and row["type"] == "ligand":
                 good_structures.add(row["pdb"])
@@ -69,7 +67,6 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
 
     # Save structures from which all residues were deleted
     delete_empty_structures = set()
-    # TODO: Test how long running, if tqdm useful
     for pdb, residues in modified_ligands.items():
         if remove_altloc_from_id(pdb) in delete_residues:
             for residue in delete_residues[remove_altloc_from_id(pdb)]:
@@ -84,7 +81,7 @@ def filter_ligands(max_resolution: float, min_rscc: float, max_rmsd: float, conf
     for key in delete_empty_structures:
         del modified_ligands[key]
 
-    logger.info(f"Number of structures after filtering: {len(modified_ligands.keys())}")
+    logger.info(f"Number of files after filtering: {len(modified_ligands.keys())}")
     logger.info(f"Number of residues after filtering: {count_num_residues(modified_ligands)}")
 
     with open(config.categorization_dir / "filtered_modified_ligands.json", "w", encoding="utf8") as f:
