@@ -1,48 +1,37 @@
-import { QuestionOutlineIcon } from "@chakra-ui/icons"
-import { Box, HStack, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { QuestionOutlineIcon, IconButton, SearchIcon } from "@chakra-ui/icons"
+import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Text, Tooltip, VStack } from "@chakra-ui/react"
 
-import MultiSelect, { MultiSelectOption, useMultiSelect } from "./MultiSelect";
+import MultiSelect, { useMultiSelect } from "./MultiSelect";
+import { FilterOptions, getFilterOptions } from "../api/computed_structure";
+import { useQuery } from "@tanstack/react-query";
 
-const sugarOptions: MultiSelectOption[] = [
-    { id: 1, value: "FUC" },
-    { id: 2, value: "FUL" },
-    { id: 3, value: "GLC" },
-    { id: 4, value: "GAL" },
-    { id: 5, value: "SIA" }
-]
-
-const orgOptions: MultiSelectOption[] = [
-    { id: 1, value: "Lactobacillus" },
-    { id: 2, value: "Escherichia" },
-    { id: 3, value: "Debaryomyces hansenii CBS767" },
-    { id: 4, value: "Madurella mycetomatis" },
-    { id: 5, value: "Neisseria gonorrhoeae" }
-]
-
-const pdbOptions: MultiSelectOption[] = [
-    { id: 1, value: "7KHU" },
-    { id: 2, value: "4D6D" },
-    { id: 3, value: "1AGW" },
-    { id: 4, value: "7C7B" },
-    { id: 5, value: "1AMG" }
-]
 
 function FilterBar() {
-    const sugarMultiSelect = useMultiSelect()
-    const organismMultiSelect = useMultiSelect()
-    const pdbStructMultiSelect = useMultiSelect()
+    const { data, isLoading, isError } = useQuery<FilterOptions, Error>({
+        queryKey: ["options"],
+        queryFn: getFilterOptions
+    });
+    const sugarMultiSelect = useMultiSelect(data?.sugars, { isLoading, isError })
+    const organismMultiSelect = useMultiSelect(data?.organisms, { isLoading, isError })
+    const pdbStructMultiSelect = useMultiSelect(data?.pdb_structures, { isLoading, isError })
+
     return (
         <HStack>
             <VStack alignItems="flex-start">
-                <HStack spacing="1">
+                <HStack spacing="1" w="full">
                     <Text>
                         Sugar
                     </Text>
                     <Tooltip label="" fontSize="sm">
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
+                    {sugarMultiSelect.props.selected.length > 0 &&
+                        <Button variant="ghost" size="xs" ml="auto" onClick={() => sugarMultiSelect.clearSelected()}>
+                            <Text fontStyle="italic" color="gray.400">clear</Text>
+                        </Button>
+                    }
                 </HStack>
-                <MultiSelect options={sugarOptions} {...sugarMultiSelect}/>
+                <MultiSelect {...sugarMultiSelect.props} width="6rem" placeholder="e.g. GLC"/>
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1">
@@ -53,46 +42,58 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                 </HStack>
-                <HStack>
-                    <NumberInput width="24">
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                    <Box w="3" border="solid" borderWidth="0" borderBottomWidth="2px" borderColor="gray.700" />
-                    <NumberInput width="24" size="xs">
-                      <NumberInputField />
-                      {/* <NumberInputStepper> */}
-                      {/*   <NumberIncrementStepper /> */}
-                      {/*   <NumberDecrementStepper /> */}
-                      {/* </NumberInputStepper> */}
-                    </NumberInput>
-                </HStack>
+                <VStack>
+                    <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 30]}>
+                        <RangeSliderTrack>
+                            <RangeSliderFilledTrack />
+                        </RangeSliderTrack>
+                        <RangeSliderThumb index={0} />
+                        <RangeSliderThumb index={1} />
+                    </RangeSlider>
+                    <HStack>
+                        <NumberInput width="3rem" size="xs">
+                          <NumberInputField borderRadius="md" />
+                        </NumberInput>
+                        <Box w="3" border="solid" borderWidth="0" borderBottomWidth="2px" borderColor="gray.700" />
+                        <NumberInput width="3rem" size="xs">
+                          <NumberInputField borderRadius="md" />
+                        </NumberInput>
+                    </HStack>
+                </VStack>
             </VStack>
             <VStack alignItems="flex-start">
-                <HStack spacing="1">
+                <HStack spacing="1" w="full">
                     <Text>
                         Organism
                     </Text>
                     <Tooltip label="Organism from which the protein originates from" fontSize="sm">
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
+                    {organismMultiSelect.props.selected.length > 0 &&
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => organismMultiSelect.clearSelected()}>
+                            clear
+                        </Button>
+                    }
                 </HStack>
-                <MultiSelect options={orgOptions} {...organismMultiSelect} width="16rem"/>
+                <MultiSelect {...organismMultiSelect.props} width="16rem" placeholder="e.g. Madurella mycetomatis"/>
             </VStack>
             <VStack alignItems="flex-start">
-                <HStack spacing="1">
+                <HStack spacing="1" w="full">
                     <Text>
                         PDB Structure
                     </Text>
                     <Tooltip label="" fontSize="sm">
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
+                    {pdbStructMultiSelect.props.selected.length > 0 &&
+                        <Button variant="ghost" size="xs" ml="auto" onClick={() => pdbStructMultiSelect.clearSelected()}>
+                            <Text fontStyle="italic" color="gray.400">clear</Text>
+                        </Button>
+                    }
                 </HStack>
-                <MultiSelect options={pdbOptions} {...pdbStructMultiSelect} width="6rem"/>
+                <MultiSelect {...pdbStructMultiSelect.props} width="7rem" placeholder="e.g. 7KHU"/>
             </VStack>
+        <IconButton aria-label='Search using filters' icon={<SearchIcon />} ml="auto" />
         </HStack>
     )
 }

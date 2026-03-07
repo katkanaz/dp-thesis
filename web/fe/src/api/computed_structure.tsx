@@ -1,3 +1,5 @@
+import { MultiSelectOption } from "../components/MultiSelect";
+
 export type ResidueId = {
 	label_asym_id: string,
 	struct_oper_id: string,
@@ -27,15 +29,26 @@ export type ComputedStructure = {
 };
 
 export type LastUpdated = {
-	date: string
+	date: string,
 }
 
 export type MotifResidueInfo = {
-    type: string
-    label_seq: number
-    label_asym: string
+    type: string,
+    label_seq: number,
+    label_asym: string,
 }
 
+export type PlddtRange = {
+    min: number,
+    max: number,
+}
+
+export type FilterOptions = {
+    sugars: MultiSelectOption[],
+    plddt_range: PlddtRange,
+    organisms: MultiSelectOption[],
+    pdb_structures: MultiSelectOption[],
+}
 
 export const getResults = async (): Promise<ComputedStructure[]> => {
     const res = await fetch("/api/results");
@@ -58,7 +71,6 @@ export const getLastModified = async (): Promise<LastUpdated> => {
     return data;
 }
 
-
 export const mergeRisudeInfo = (residue_types: string[], residue_ids: ResidueId[]): MotifResidueInfo[] => {
     const res: MotifResidueInfo[] = [];
     for (let i = 0; i < residue_ids.length; i++) {
@@ -69,4 +81,11 @@ export const mergeRisudeInfo = (residue_types: string[], residue_ids: ResidueId[
         });
     }
     return res;
+}
+
+export const getFilterOptions = async (): Promise<FilterOptions> => {
+    const res = await fetch(`/api/filter-options`);
+    if (!res.ok) throw new Error("Failed to fetch filter options");
+    const data: FilterOptions = await res.json();
+    return data;
 }
