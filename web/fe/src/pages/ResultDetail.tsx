@@ -2,54 +2,42 @@ import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Li
 import MainContainer from "../components/MainContainer"
 import { getCompStruct, ComputedStructure, mergeRisudeInfo } from "../api/computed_structure"
 import { resultDetailRoute } from "../Router";
-import MolStarWrapper, { MolStarWrapperModel } from "../components/MolStarWrapper";
 import MotifDetail from "../components/MotifDetail";
 import { useEffect, useState } from "react";
-import { loadMVS, MVSData } from "molstar/lib/extensions/mvs";
 import { useQuery } from "@tanstack/react-query";
-
-
-// function getSugarResult(_abrev: string, afId: string): ComputedStructure | undefined {
-//     return resultsList.find(r => r.afid === afId) 
-// }
+import { MolStarWrapper } from "../components/MolStarWrapper";
+import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
+import { Download, ParseCif } from "molstar/lib/mol-plugin-state/transforms/data";
+import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from "molstar/lib/mol-plugin-state/transforms/model";
+import { StructureRepresentation3D } from "molstar/lib/mol-plugin-state/transforms/representation";
 
 
 function ResultDetail() {
-    const { afId } = resultDetailRoute.useParams()
+    const { afId } = resultDetailRoute.useParams();
 
     const { data: compStruct, isLoading, isError } = useQuery<ComputedStructure, Error>({
         queryKey: ["comp-struct"],
         queryFn: () => getCompStruct(afId)
     });
 
-
-
-    const [molstar, setMolstar] = useState<MolStarWrapperModel|undefined>(undefined)
-
+    const [ molStar, setMolStar ] = useState<PluginUIContext|undefined>(undefined);
 
     useEffect(() => {
-        if (!molstar) return
-
-            const mvsBuilder = MVSData.createBuilder()
-            mvsBuilder
-                .download({ url: `https://models.rcsb.org/af_afo25142f1.bcif` })
-                .parse({ format: 'bcif' })
-                .modelStructure({})
-                .component({})
-                .representation({})
-                .color({ color: "blue" })
-            const mvsData = mvsBuilder.getState();
-
-            // const response = await fetch('https://raw.githubusercontent.com/molstar/molstar/master/examples/mvs/1cbs.mvsj');
-            // const rawData = await response.text();
-            // const mvsData: MVSData = MVSData.fromMVSJ(rawData);
-
-
-            loadMVS(molstar.plugin, mvsData, { sourceUrl: undefined, sanityChecks: true, replaceExisting: false });
-        
-
-    }, [molstar])
-
+        if (!compStruct || !molStar) return
+        molStar
+            .build()
+            .toRoot()
+            .apply(Download, {url: `https://models.rcsb.org/${compStruct.pdb_id}.bcif`, isBinary: true})
+            .apply(ParseCif)
+            .apply(TrajectoryFromMmCif)
+            .apply(ModelFromTrajectory)
+            .apply(StructureFromModel)
+            .apply(StructureComponent, {type: {name: "static", params: "polymer"}})
+            .apply(StructureRepresentation3D, {
+                type: {name: "cartoon", params: {alpha: 1, ignoreLight: false}},
+                colorTheme: {name: "plddt-confidence", params: {}}
+            }).commit()
+    }, [compStruct, molStar]);
 
     if (isLoading) {
         return (
@@ -97,7 +85,6 @@ function ResultDetail() {
             </MainContainer>
         )
     }
-
 
     return (
         <MainContainer>
@@ -151,7 +138,7 @@ function ResultDetail() {
                     </Box>
                     <VStack flexGrow="1">
                         <Box position="relative" width="100%" zIndex="10">
-                            <MolStarWrapper setMolstar={setMolstar}/>
+                            <MolStarWrapper setMolStar={setMolStar} />
                         </Box>
                         <Switch></Switch>
                     </VStack>

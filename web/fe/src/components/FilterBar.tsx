@@ -1,4 +1,4 @@
-import { QuestionOutlineIcon, IconButton, SearchIcon } from "@chakra-ui/icons"
+import { QuestionOutlineIcon, SearchIcon } from "@chakra-ui/icons"
 import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Text, Tooltip, VStack } from "@chakra-ui/react"
 
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
@@ -26,8 +26,8 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                     {sugarMultiSelect.props.selected.length > 0 &&
-                        <Button variant="ghost" size="xs" ml="auto" onClick={() => sugarMultiSelect.clearSelected()}>
-                            <Text fontStyle="italic" color="gray.400">clear</Text>
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => sugarMultiSelect.clearSelected()}>
+                            clear
                         </Button>
                     }
                 </HStack>
@@ -43,7 +43,7 @@ function FilterBar() {
                     </Tooltip>
                 </HStack>
                 <VStack>
-                    <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 30]}>
+                    <RangeSlider aria-label={["min", "max"]} defaultValue={[10, 30]}>
                         <RangeSliderTrack>
                             <RangeSliderFilledTrack />
                         </RangeSliderTrack>
@@ -86,14 +86,16 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                     {pdbStructMultiSelect.props.selected.length > 0 &&
-                        <Button variant="ghost" size="xs" ml="auto" onClick={() => pdbStructMultiSelect.clearSelected()}>
-                            <Text fontStyle="italic" color="gray.400">clear</Text>
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => pdbStructMultiSelect.clearSelected()}>
+                            clear
                         </Button>
                     }
                 </HStack>
                 <MultiSelect {...pdbStructMultiSelect.props} width="7rem" placeholder="e.g. 7KHU"/>
             </VStack>
-        <IconButton aria-label='Search using filters' icon={<SearchIcon />} ml="auto" />
+            <Button aria-label="Filter results" leftIcon={<SearchIcon aria-label="Search icon" />} ml="auto" color="gray.600">
+                Filter
+            </Button>
         </HStack>
     )
 }
