@@ -4,6 +4,7 @@ import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeS
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 
 function FilterBar() {
@@ -11,9 +12,24 @@ function FilterBar() {
         queryKey: ["options"],
         queryFn: getFilterOptions
     });
-    const sugarMultiSelect = useMultiSelect(data?.sugars, { isLoading, isError })
-    const organismMultiSelect = useMultiSelect(data?.organisms, { isLoading, isError })
-    const pdbStructMultiSelect = useMultiSelect(data?.pdb_structures, { isLoading, isError })
+    const sugarMultiSelect = useMultiSelect(data?.sugars, { isLoading, isError });
+    const organismMultiSelect = useMultiSelect(data?.organisms, { isLoading, isError });
+    const pdbStructMultiSelect = useMultiSelect(data?.pdb_structures, { isLoading, isError });
+
+    const min = data?.plddt_range.min;
+    const max = data?.plddt_range.max;
+    const [ range, setRange ] = useState<[number, number]|undefined>(undefined);
+
+    useEffect(() => {
+        console.log(data)
+      if (min !== undefined && max !== undefined && !range) {
+        setRange([min, max])
+      }
+    }, [data, range])
+
+    if (!data || !range ) {
+      return null
+    }
 
     return (
         <HStack>
@@ -43,7 +59,14 @@ function FilterBar() {
                     </Tooltip>
                 </HStack>
                 <VStack>
-                    <RangeSlider aria-label={["min", "max"]} defaultValue={[10, 30]}>
+                    <RangeSlider
+                        aria-label={["min", "max"]}
+                        min={min}
+                        max={max}
+                        value={range}
+                        step={0.1}
+                        onChange={(val) => setRange(val as [number, number])}
+                    >
                         <RangeSliderTrack>
                             <RangeSliderFilledTrack />
                         </RangeSliderTrack>
@@ -51,12 +74,31 @@ function FilterBar() {
                         <RangeSliderThumb index={1} />
                     </RangeSlider>
                     <HStack>
-                        <NumberInput width="3rem" size="xs">
-                          <NumberInputField borderRadius="md" />
+                        <NumberInput
+                            width="3rem"
+                            size="xs"
+                            value={range[0]}
+                            min={min}
+                            max={range[1]}
+                            precision={2}
+                            onChange={(_, value) =>
+                                setRange([value, range[1]])
+                            }
+                        >
+                          <NumberInputField px="1.5" borderRadius="md" />
                         </NumberInput>
                         <Box w="3" border="solid" borderWidth="0" borderBottomWidth="2px" borderColor="gray.700" />
-                        <NumberInput width="3rem" size="xs">
-                          <NumberInputField borderRadius="md" />
+                        <NumberInput
+                            width="3rem"
+                            size="xs"
+                            value={range[1]}
+                            min={range[0]}
+                            max={max}
+                            onChange={(_, value) =>
+                                setRange([range[0], value])
+                            }
+                        >
+                          <NumberInputField px="1.5" borderRadius="md" />
                         </NumberInput>
                     </HStack>
                 </VStack>
@@ -100,4 +142,4 @@ function FilterBar() {
     )
 }
 
-export default FilterBar
+export default FilterBar;

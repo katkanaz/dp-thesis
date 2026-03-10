@@ -1,0 +1,5329 @@
+[
+    {
+        "pdb_id": "AF_AFQ6BQK9F1",
+        "afdb_id": "AF-Q6BQK9-F1",
+        "title": "Computed structure model of Lysophospholipase NTE1",
+        "organism": [
+            "Debaryomyces hansenii CBS767"
+        ],
+        "plddt": 65.59,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 172
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 329
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 331
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 193
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 192
+                    }
+                ],
+                "score": 1.85,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.664,
+                    0.585,
+                    -0.465,
+                    0.0,
+                    -0.535,
+                    -0.807,
+                    -0.251,
+                    0.0,
+                    -0.522,
+                    0.082,
+                    0.849,
+                    0.0,
+                    20.319,
+                    -15.211,
+                    -11.681,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 172
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 329
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 331
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 193
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 192
+                    }
+                ],
+                "score": 1.87,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.667,
+                    -0.285,
+                    -0.688,
+                    0.0,
+                    0.543,
+                    0.818,
+                    0.188,
+                    0.0,
+                    0.509,
+                    -0.499,
+                    0.701,
+                    0.0,
+                    -25.795,
+                    19.185,
+                    -31.832,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA0A0D2H0G0F1",
+        "afdb_id": "AF-A0A0D2H0G0-F1",
+        "title": "Computed structure model of Unplaced genomic scaffold supercont1.2, whole genome shotgun sequence",
+        "organism": [
+            "Fonsecaea pedrosoi CBS 271.37"
+        ],
+        "plddt": 81.79,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 348
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 396
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 398
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 384
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 385
+                    }
+                ],
+                "score": 2.18,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.433,
+                    0.9,
+                    -0.049,
+                    0.0,
+                    0.764,
+                    0.396,
+                    0.51,
+                    0.0,
+                    0.478,
+                    0.183,
+                    -0.859,
+                    0.0,
+                    -20.114,
+                    -7.898,
+                    33.327,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 348
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 396
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 398
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 384
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 385
+                    }
+                ],
+                "score": 2.17,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.427,
+                    -0.765,
+                    -0.483,
+                    0.0,
+                    -0.776,
+                    -0.584,
+                    0.239,
+                    0.0,
+                    -0.465,
+                    0.272,
+                    -0.843,
+                    0.0,
+                    13.857,
+                    -10.019,
+                    4.067,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA8YUS2F1",
+        "afdb_id": "AF-A8YUS2-F1",
+        "title": "Computed structure model of Elongation factor Tu",
+        "organism": [
+            "Lactobacillus helveticus DPC 4571"
+        ],
+        "plddt": 91.75,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 306
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 362
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 364
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 342
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 343
+                    }
+                ],
+                "score": 2.21,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.204,
+                    0.873,
+                    -0.443,
+                    0.0,
+                    0.425,
+                    -0.329,
+                    -0.843,
+                    0.0,
+                    -0.882,
+                    -0.361,
+                    -0.304,
+                    0.0,
+                    6.523,
+                    -3.774,
+                    25.624,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 306
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 362
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 364
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 342
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 343
+                    }
+                ],
+                "score": 2.21,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.205,
+                    -0.542,
+                    -0.815,
+                    0.0,
+                    -0.409,
+                    0.709,
+                    -0.574,
+                    0.0,
+                    0.889,
+                    0.451,
+                    -0.077,
+                    0.0,
+                    -12.664,
+                    -9.397,
+                    -4.964,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA0A175W077F1",
+        "afdb_id": "AF-A0A175W077-F1",
+        "title": "Computed structure model of Uncharacterized protein",
+        "organism": [
+            "Madurella mycetomatis"
+        ],
+        "plddt": 78.71,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 151
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 196
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 198
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 184
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 185
+                    }
+                ],
+                "score": 2.28,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.151,
+                    0.381,
+                    -0.912,
+                    0.0,
+                    0.967,
+                    -0.137,
+                    -0.217,
+                    0.0,
+                    -0.208,
+                    -0.914,
+                    -0.348,
+                    0.0,
+                    -11.458,
+                    -17.851,
+                    21.29,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 151
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 196
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 198
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 184
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 185
+                    }
+                ],
+                "score": 2.29,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.163,
+                    0.118,
+                    -0.98,
+                    0.0,
+                    -0.962,
+                    0.24,
+                    -0.131,
+                    0.0,
+                    0.22,
+                    0.964,
+                    0.152,
+                    0.0,
+                    5.498,
+                    4.713,
+                    -1.582,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFP09790F1",
+        "afdb_id": "AF-P09790-F1",
+        "title": "Computed structure model of IgA-specific serine endopeptidase autotransporter",
+        "organism": [
+            "Neisseria gonorrhoeae"
+        ],
+        "plddt": 81.86,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 399
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 397
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 376
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 336
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 337
+                    }
+                ],
+                "score": 2.32,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.65,
+                    0.101,
+                    -0.753,
+                    0.0,
+                    -0.532,
+                    -0.647,
+                    -0.546,
+                    0.0,
+                    -0.542,
+                    0.756,
+                    -0.367,
+                    0.0,
+                    -16.227,
+                    13.224,
+                    48.259,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 399
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 397
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 376
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 336
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 337
+                    }
+                ],
+                "score": 2.33,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.637,
+                    0.294,
+                    -0.712,
+                    0.0,
+                    0.547,
+                    0.823,
+                    -0.15,
+                    0.0,
+                    0.542,
+                    -0.486,
+                    -0.686,
+                    0.0,
+                    9.519,
+                    -35.68,
+                    6.663,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFP58997F1",
+        "afdb_id": "AF-P58997-F1",
+        "title": "Computed structure model of Major structural subunit of bundle-forming pilus",
+        "organism": [
+            "Escherichia coli O111:H-"
+        ],
+        "plddt": 85.87,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 187
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 120
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 122
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 102
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 103
+                    }
+                ],
+                "score": 2.42,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.65,
+                    -0.605,
+                    -0.459,
+                    0.0,
+                    -0.282,
+                    -0.754,
+                    0.594,
+                    0.0,
+                    -0.706,
+                    -0.257,
+                    -0.66,
+                    0.0,
+                    -7.255,
+                    -17.38,
+                    20.999,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 187
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 120
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 122
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 102
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 103
+                    }
+                ],
+                "score": 2.41,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.638,
+                    0.763,
+                    -0.106,
+                    0.0,
+                    0.279,
+                    0.357,
+                    0.892,
+                    0.0,
+                    0.718,
+                    0.539,
+                    -0.44,
+                    0.0,
+                    1.292,
+                    4.511,
+                    -2.104,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ8D452F1",
+        "afdb_id": "AF-Q8D452-F1",
+        "title": "Computed structure model of Catalase",
+        "organism": [
+            "Vibrio vulnificus CMCP6"
+        ],
+        "plddt": 95.5,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 273
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 310
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 312
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 80
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 81
+                    }
+                ],
+                "score": 2.45,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.607,
+                    -0.664,
+                    -0.437,
+                    0.0,
+                    0.725,
+                    0.688,
+                    -0.039,
+                    0.0,
+                    0.326,
+                    -0.293,
+                    0.899,
+                    0.0,
+                    5.847,
+                    -18.695,
+                    26.413,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 273
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 310
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 312
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 80
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 81
+                    }
+                ],
+                "score": 2.44,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.593,
+                    0.803,
+                    -0.057,
+                    0.0,
+                    -0.73,
+                    -0.567,
+                    -0.382,
+                    0.0,
+                    -0.339,
+                    -0.185,
+                    0.923,
+                    0.0,
+                    -11.892,
+                    3.183,
+                    3.112,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ87JE8F1",
+        "afdb_id": "AF-Q87JE8-F1",
+        "title": "Computed structure model of Catalase",
+        "organism": [
+            "Vibrio parahaemolyticus RIMD 2210633"
+        ],
+        "plddt": 95.84,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 273
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 310
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 312
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 80
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 81
+                    }
+                ],
+                "score": 2.48,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.069,
+                    0.721,
+                    0.69,
+                    0.0,
+                    0.988,
+                    0.143,
+                    -0.051,
+                    0.0,
+                    -0.135,
+                    0.678,
+                    -0.723,
+                    0.0,
+                    1.954,
+                    -8.825,
+                    27.494,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 273
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 310
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 312
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 80
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 81
+                    }
+                ],
+                "score": 2.46,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.051,
+                    -0.969,
+                    0.243,
+                    0.0,
+                    -0.989,
+                    -0.084,
+                    -0.125,
+                    0.0,
+                    0.142,
+                    -0.234,
+                    -0.962,
+                    0.0,
+                    -8.112,
+                    -5.983,
+                    -0.8,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ7MFM6F1",
+        "afdb_id": "AF-Q7MFM6-F1",
+        "title": "Computed structure model of Catalase",
+        "organism": [
+            "Vibrio vulnificus YJ016"
+        ],
+        "plddt": 95.3,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 273
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 310
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 312
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 80
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 81
+                    }
+                ],
+                "score": 2.5,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.217,
+                    -0.495,
+                    0.842,
+                    0.0,
+                    0.153,
+                    0.834,
+                    0.53,
+                    0.0,
+                    -0.964,
+                    0.244,
+                    -0.105,
+                    0.0,
+                    1.465,
+                    -17.422,
+                    28.5,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 273
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 310
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 312
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 80
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 81
+                    }
+                ],
+                "score": 2.48,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.207,
+                    0.01,
+                    0.978,
+                    0.0,
+                    -0.17,
+                    -0.984,
+                    0.046,
+                    0.0,
+                    0.964,
+                    -0.176,
+                    -0.202,
+                    0.0,
+                    -7.564,
+                    0.981,
+                    4.334,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFP29422F1",
+        "afdb_id": "AF-P29422-F1",
+        "title": "Computed structure model of Catalase",
+        "organism": [
+            "Micrococcus luteus"
+        ],
+        "plddt": 98.22,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 261
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 300
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 302
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 69
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 70
+                    }
+                ],
+                "score": 2.59,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.674,
+                    0.522,
+                    -0.523,
+                    0.0,
+                    -0.727,
+                    0.592,
+                    -0.347,
+                    0.0,
+                    0.129,
+                    0.614,
+                    0.778,
+                    0.0,
+                    8.558,
+                    -9.752,
+                    25.692,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 261
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 300
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 302
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 69
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 70
+                    }
+                ],
+                "score": 2.58,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.67,
+                    -0.183,
+                    -0.719,
+                    0.0,
+                    0.728,
+                    -0.353,
+                    -0.588,
+                    0.0,
+                    -0.146,
+                    -0.917,
+                    0.37,
+                    0.0,
+                    -14.658,
+                    -4.2,
+                    -1.969,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFP33553F1",
+        "afdb_id": "AF-P33553-F1",
+        "title": "Computed structure model of Major structural subunit of bundle-forming pilus",
+        "organism": [
+            "Escherichia coli O127:H6 str. E2348/69"
+        ],
+        "plddt": 85.73,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 187
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 120
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 122
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 102
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 103
+                    }
+                ],
+                "score": 2.58,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.845,
+                    -0.244,
+                    -0.475,
+                    0.0,
+                    -0.198,
+                    -0.969,
+                    0.146,
+                    0.0,
+                    -0.497,
+                    -0.029,
+                    -0.868,
+                    0.0,
+                    -7.185,
+                    -16.764,
+                    21.498,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 187
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 120
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 122
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 102
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 103
+                    }
+                ],
+                "score": 2.57,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.835,
+                    0.46,
+                    -0.301,
+                    0.0,
+                    0.204,
+                    0.767,
+                    0.608,
+                    0.0,
+                    0.511,
+                    0.447,
+                    -0.735,
+                    0.0,
+                    1.21,
+                    3.729,
+                    -1.975,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ7TN83F1",
+        "afdb_id": "AF-Q7TN83-F1",
+        "title": "Computed structure model of Synaptotagmin-16",
+        "organism": [
+            "Mus musculus"
+        ],
+        "plddt": 60.38,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 411
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 362
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 364
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 457
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 458
+                    }
+                ],
+                "score": 2.64,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.146,
+                    0.771,
+                    -0.62,
+                    0.0,
+                    -0.223,
+                    0.585,
+                    0.78,
+                    0.0,
+                    0.964,
+                    0.252,
+                    0.087,
+                    0.0,
+                    17.653,
+                    -22.79,
+                    33.266,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 411
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 362
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 364
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 457
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 458
+                    }
+                ],
+                "score": 2.63,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.151,
+                    -0.362,
+                    -0.92,
+                    0.0,
+                    0.209,
+                    -0.898,
+                    0.388,
+                    0.0,
+                    -0.966,
+                    -0.25,
+                    -0.06,
+                    0.0,
+                    -23.746,
+                    3.386,
+                    10.951,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA0A0G2K644F1",
+        "afdb_id": "AF-A0A0G2K644-F1",
+        "title": "Computed structure model of Synaptotagmin 16",
+        "organism": [
+            "Rattus norvegicus"
+        ],
+        "plddt": 60.77,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 416
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 367
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 369
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 462
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 463
+                    }
+                ],
+                "score": 2.65,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.941,
+                    -0.339,
+                    0.0,
+                    0.0,
+                    0.172,
+                    -0.478,
+                    -0.862,
+                    0.0,
+                    0.292,
+                    -0.811,
+                    0.507,
+                    0.0,
+                    12.465,
+                    -29.366,
+                    45.936,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 416
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 367
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 369
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 462
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 463
+                    }
+                ],
+                "score": 2.64,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.943,
+                    0.283,
+                    0.178,
+                    0.0,
+                    -0.156,
+                    0.845,
+                    -0.512,
+                    0.0,
+                    -0.295,
+                    0.454,
+                    0.84,
+                    0.0,
+                    -18.714,
+                    2.731,
+                    25.264,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ9STV1F1",
+        "afdb_id": "AF-Q9STV1-F1",
+        "title": "Computed structure model of Rhamnogalacturonan endolyase",
+        "organism": [
+            "Arabidopsis thaliana"
+        ],
+        "plddt": 96.17,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 527
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 617
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 619
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 578
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 558
+                    }
+                ],
+                "score": 2.74,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.623,
+                    0.582,
+                    0.522,
+                    0.0,
+                    -0.334,
+                    -0.802,
+                    0.495,
+                    0.0,
+                    0.707,
+                    0.134,
+                    0.695,
+                    0.0,
+                    14.102,
+                    -12.261,
+                    17.052,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 527
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 617
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 619
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 578
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 558
+                    }
+                ],
+                "score": 2.74,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.609,
+                    -0.775,
+                    0.171,
+                    0.0,
+                    0.334,
+                    0.446,
+                    0.83,
+                    0.0,
+                    -0.72,
+                    -0.448,
+                    0.531,
+                    0.0,
+                    -20.061,
+                    2.386,
+                    -8.268,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFP96084F1",
+        "afdb_id": "AF-P96084-F1",
+        "title": "Computed structure model of Proline iminopeptidase",
+        "organism": [
+            "Thermoplasma acidophilum DSM 1728"
+        ],
+        "plddt": 97.38,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 23
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 52
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 57
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 55
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 27
+                    }
+                ],
+                "score": 2.78,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.772,
+                    0.5,
+                    0.393,
+                    0.0,
+                    0.222,
+                    -0.791,
+                    0.57,
+                    0.0,
+                    0.596,
+                    -0.353,
+                    -0.722,
+                    0.0,
+                    3.514,
+                    -20.564,
+                    33.75,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 23
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 52
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 57
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 55
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 27
+                    }
+                ],
+                "score": 2.76,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.782,
+                    -0.618,
+                    0.085,
+                    0.0,
+                    -0.227,
+                    0.409,
+                    0.884,
+                    0.0,
+                    -0.581,
+                    0.671,
+                    -0.46,
+                    0.0,
+                    -9.671,
+                    1.12,
+                    10.414,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFO77512F1",
+        "afdb_id": "AF-O77512-F1",
+        "title": "Computed structure model of Glycine N-phenylacetyltransferase",
+        "organism": [
+            "Bos taurus"
+        ],
+        "plddt": 95.78,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 26
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 30
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 224
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 225
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 226
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.993,
+                    -0.062,
+                    0.098,
+                    0.0,
+                    0.1,
+                    0.89,
+                    -0.445,
+                    0.0,
+                    -0.06,
+                    0.452,
+                    0.89,
+                    0.0,
+                    -11.36,
+                    -23.95,
+                    13.192,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 26
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 30
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 224
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 225
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 226
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.994,
+                    0.024,
+                    0.103,
+                    0.0,
+                    -0.099,
+                    -0.556,
+                    -0.825,
+                    0.0,
+                    0.037,
+                    -0.831,
+                    0.555,
+                    0.0,
+                    5.594,
+                    14.001,
+                    -5.616,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ5RFP0F1",
+        "afdb_id": "AF-Q5RFP0-F1",
+        "title": "Computed structure model of Glycine N-acyltransferase",
+        "organism": [
+            "Pongo abelii"
+        ],
+        "plddt": 95.76,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 27
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 31
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 225
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 226
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 227
+                    }
+                ],
+                "score": 2.79,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.296,
+                    0.412,
+                    -0.862,
+                    0.0,
+                    -0.321,
+                    -0.807,
+                    -0.496,
+                    0.0,
+                    -0.9,
+                    0.423,
+                    -0.106,
+                    0.0,
+                    -10.024,
+                    -26.213,
+                    14.695,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 27
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 31
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 225
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 226
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 227
+                    }
+                ],
+                "score": 2.79,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.282,
+                    0.068,
+                    -0.957,
+                    0.0,
+                    0.339,
+                    0.94,
+                    -0.033,
+                    0.0,
+                    0.898,
+                    -0.334,
+                    -0.288,
+                    0.0,
+                    4.251,
+                    15.263,
+                    -3.215,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFB5R595F1",
+        "afdb_id": "AF-B5R595-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Enteritidis str. P125109"
+        ],
+        "plddt": 98.26,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.8,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.195,
+                    -0.833,
+                    -0.518,
+                    0.0,
+                    0.092,
+                    0.51,
+                    -0.855,
+                    0.0,
+                    0.976,
+                    -0.215,
+                    -0.023,
+                    0.0,
+                    18.028,
+                    -17.11,
+                    32.124,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.96,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.159,
+                    -0.871,
+                    -0.465,
+                    0.0,
+                    0.02,
+                    0.468,
+                    -0.883,
+                    0.0,
+                    0.987,
+                    -0.15,
+                    -0.057,
+                    0.0,
+                    17.755,
+                    -14.941,
+                    30.736,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.76,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.207,
+                    0.978,
+                    -0.033,
+                    0.0,
+                    -0.082,
+                    -0.016,
+                    -0.997,
+                    0.0,
+                    -0.975,
+                    0.209,
+                    0.077,
+                    0.0,
+                    -24.14,
+                    -0.972,
+                    7.111,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.93,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.17,
+                    0.985,
+                    0.032,
+                    0.0,
+                    -0.009,
+                    0.034,
+                    -0.999,
+                    0.0,
+                    -0.985,
+                    0.17,
+                    0.014,
+                    0.0,
+                    -23.851,
+                    -2.181,
+                    4.826,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ8Z4N3F1",
+        "afdb_id": "AF-Q8Z4N3-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Typhi"
+        ],
+        "plddt": 98.19,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.81,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.787,
+                    -0.512,
+                    0.344,
+                    0.0,
+                    0.118,
+                    -0.672,
+                    -0.731,
+                    0.0,
+                    0.606,
+                    -0.535,
+                    0.589,
+                    0.0,
+                    17.215,
+                    -8.878,
+                    34.666,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.98,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.734,
+                    -0.544,
+                    0.406,
+                    0.0,
+                    0.133,
+                    -0.702,
+                    -0.7,
+                    0.0,
+                    0.666,
+                    -0.46,
+                    0.587,
+                    0.0,
+                    16.48,
+                    -6.646,
+                    32.89,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.784,
+                    0.264,
+                    0.562,
+                    0.0,
+                    -0.103,
+                    0.948,
+                    -0.301,
+                    0.0,
+                    -0.612,
+                    0.178,
+                    0.77,
+                    0.0,
+                    -23.412,
+                    -9.383,
+                    5.223,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.95,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.73,
+                    0.261,
+                    0.631,
+                    0.0,
+                    -0.119,
+                    0.959,
+                    -0.259,
+                    0.0,
+                    -0.673,
+                    0.114,
+                    0.731,
+                    0.0,
+                    -22.651,
+                    -10.457,
+                    2.573,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ8TVA6F1",
+        "afdb_id": "AF-Q8TVA6-F1",
+        "title": "Computed structure model of UPF0107 protein MK1486",
+        "organism": [
+            "Methanopyrus kandleri AV19"
+        ],
+        "plddt": 94.11,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 38
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 82
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 39
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 40
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 41
+                    }
+                ],
+                "score": 2.79,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.151,
+                    -0.584,
+                    -0.797,
+                    0.0,
+                    0.594,
+                    0.698,
+                    -0.399,
+                    0.0,
+                    0.79,
+                    -0.413,
+                    0.453,
+                    0.0,
+                    -13.259,
+                    -11.8,
+                    9.415,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 38
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 82
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 39
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 40
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 41
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.131,
+                    0.904,
+                    -0.407,
+                    0.0,
+                    -0.589,
+                    -0.401,
+                    -0.701,
+                    0.0,
+                    -0.797,
+                    0.148,
+                    0.586,
+                    0.0,
+                    7.498,
+                    5.284,
+                    -14.852,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFB5RD05F1",
+        "afdb_id": "AF-B5RD05-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Gallinarum str. 287/91"
+        ],
+        "plddt": 98.22,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.81,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.164,
+                    -0.714,
+                    -0.68,
+                    0.0,
+                    -0.018,
+                    0.692,
+                    -0.722,
+                    0.0,
+                    0.986,
+                    -0.106,
+                    -0.126,
+                    0.0,
+                    18.297,
+                    -16.169,
+                    31.091,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.97,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.145,
+                    -0.759,
+                    -0.635,
+                    0.0,
+                    -0.094,
+                    0.649,
+                    -0.755,
+                    0.0,
+                    0.985,
+                    -0.049,
+                    -0.165,
+                    0.0,
+                    17.933,
+                    -14.131,
+                    29.684,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.178,
+                    0.956,
+                    -0.233,
+                    0.0,
+                    0.025,
+                    -0.241,
+                    -0.97,
+                    0.0,
+                    -0.984,
+                    0.167,
+                    -0.067,
+                    0.0,
+                    -24.399,
+                    -1.269,
+                    5.743,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.93,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.158,
+                    0.973,
+                    -0.171,
+                    0.0,
+                    0.102,
+                    -0.188,
+                    -0.977,
+                    0.0,
+                    -0.982,
+                    0.137,
+                    -0.129,
+                    0.0,
+                    -24.018,
+                    -2.355,
+                    3.508,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ57LH5F1",
+        "afdb_id": "AF-Q57LH5-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Choleraesuis str. SC-B67"
+        ],
+        "plddt": 98.27,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.81,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.144,
+                    -0.573,
+                    -0.807,
+                    0.0,
+                    -0.118,
+                    0.819,
+                    -0.561,
+                    0.0,
+                    0.982,
+                    0.015,
+                    -0.186,
+                    0.0,
+                    18.626,
+                    -15.456,
+                    29.809,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.97,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.139,
+                    -0.624,
+                    -0.769,
+                    0.0,
+                    -0.197,
+                    0.779,
+                    -0.596,
+                    0.0,
+                    0.97,
+                    0.068,
+                    -0.231,
+                    0.0,
+                    18.154,
+                    -13.44,
+                    28.336,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.78,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.159,
+                    0.897,
+                    -0.413,
+                    0.0,
+                    0.123,
+                    -0.433,
+                    -0.893,
+                    0.0,
+                    -0.98,
+                    0.092,
+                    -0.179,
+                    0.0,
+                    -24.712,
+                    -1.244,
+                    4.273,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.94,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.154,
+                    0.922,
+                    -0.354,
+                    0.0,
+                    0.202,
+                    -0.38,
+                    -0.902,
+                    0.0,
+                    -0.967,
+                    0.067,
+                    -0.245,
+                    0.0,
+                    -24.223,
+                    -2.281,
+                    1.993,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFO31908F1",
+        "afdb_id": "AF-O31908-F1",
+        "title": "Computed structure model of SPbeta prophage-derived uncharacterized protein YorF",
+        "organism": [
+            "Bacillus subtilis subsp. subtilis str. 168"
+        ],
+        "plddt": 90.16,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 201
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 235
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 179
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 182
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 181
+                    }
+                ],
+                "score": 2.82,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.929,
+                    -0.354,
+                    0.103,
+                    0.0,
+                    -0.041,
+                    0.374,
+                    0.926,
+                    0.0,
+                    -0.367,
+                    0.857,
+                    -0.362,
+                    0.0,
+                    -12.378,
+                    -20.525,
+                    33.909,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 201
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 235
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 179
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 182
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 181
+                    }
+                ],
+                "score": 2.82,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.929,
+                    0.247,
+                    0.276,
+                    0.0,
+                    0.025,
+                    -0.785,
+                    0.619,
+                    0.0,
+                    0.369,
+                    -0.568,
+                    -0.736,
+                    0.0,
+                    6.255,
+                    0.766,
+                    10.704,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA9N1Y3F1",
+        "afdb_id": "AF-A9N1Y3-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Paratyphi B str. SPB7"
+        ],
+        "plddt": 98.18,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.82,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.746,
+                    -0.549,
+                    0.377,
+                    0.0,
+                    0.181,
+                    -0.712,
+                    -0.679,
+                    0.0,
+                    0.641,
+                    -0.439,
+                    0.63,
+                    0.0,
+                    16.961,
+                    -8.764,
+                    34.518,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.98,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.69,
+                    -0.576,
+                    0.438,
+                    0.0,
+                    0.2,
+                    -0.733,
+                    -0.65,
+                    0.0,
+                    0.696,
+                    -0.36,
+                    0.621,
+                    0.0,
+                    16.212,
+                    -6.564,
+                    32.762,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.78,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.743,
+                    0.279,
+                    0.608,
+                    0.0,
+                    -0.166,
+                    0.957,
+                    -0.237,
+                    0.0,
+                    -0.648,
+                    0.075,
+                    0.758,
+                    0.0,
+                    -23.157,
+                    -9.409,
+                    5.04,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.95,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.686,
+                    0.274,
+                    0.674,
+                    0.0,
+                    -0.187,
+                    0.962,
+                    -0.2,
+                    0.0,
+                    -0.703,
+                    0.011,
+                    0.711,
+                    0.0,
+                    -22.383,
+                    -10.465,
+                    2.424,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFB4T0R5F1",
+        "afdb_id": "AF-B4T0R5-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Newport str. SL254"
+        ],
+        "plddt": 98.26,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.82,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.125,
+                    -0.668,
+                    -0.733,
+                    0.0,
+                    -0.087,
+                    0.744,
+                    -0.663,
+                    0.0,
+                    0.988,
+                    -0.019,
+                    -0.151,
+                    0.0,
+                    18.605,
+                    -15.73,
+                    30.255,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.97,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.11,
+                    -0.713,
+                    -0.692,
+                    0.0,
+                    -0.165,
+                    0.7,
+                    -0.695,
+                    0.0,
+                    0.98,
+                    0.038,
+                    -0.195,
+                    0.0,
+                    18.166,
+                    -13.681,
+                    28.799,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.78,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.139,
+                    0.943,
+                    -0.302,
+                    0.0,
+                    0.093,
+                    -0.316,
+                    -0.944,
+                    0.0,
+                    -0.986,
+                    0.103,
+                    -0.132,
+                    0.0,
+                    -24.696,
+                    -1.232,
+                    4.796,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.94,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.124,
+                    0.962,
+                    -0.244,
+                    0.0,
+                    0.173,
+                    -0.263,
+                    -0.949,
+                    0.0,
+                    -0.977,
+                    0.076,
+                    -0.199,
+                    0.0,
+                    -24.238,
+                    -2.305,
+                    2.514,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFB5F1B3F1",
+        "afdb_id": "AF-B5F1B3-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Agona str. SL483"
+        ],
+        "plddt": 98.25,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.82,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.148,
+                    -0.442,
+                    -0.885,
+                    0.0,
+                    -0.203,
+                    0.889,
+                    -0.411,
+                    0.0,
+                    0.968,
+                    0.119,
+                    -0.221,
+                    0.0,
+                    18.941,
+                    -14.649,
+                    29.153,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.98,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.155,
+                    -0.498,
+                    -0.853,
+                    0.0,
+                    -0.282,
+                    0.85,
+                    -0.445,
+                    0.0,
+                    0.947,
+                    0.171,
+                    -0.272,
+                    0.0,
+                    18.369,
+                    -12.591,
+                    27.609,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.78,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.163,
+                    0.822,
+                    -0.545,
+                    0.0,
+                    0.205,
+                    -0.569,
+                    -0.796,
+                    0.0,
+                    -0.965,
+                    0.018,
+                    -0.261,
+                    0.0,
+                    -25.021,
+                    -1.616,
+                    3.3,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.95,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.17,
+                    0.855,
+                    -0.49,
+                    0.0,
+                    0.284,
+                    -0.518,
+                    -0.806,
+                    0.0,
+                    -0.944,
+                    -0.002,
+                    -0.331,
+                    0.0,
+                    -24.429,
+                    -2.655,
+                    0.939,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFB5FR78F1",
+        "afdb_id": "AF-B5FR78-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Dublin str. CT_02021853"
+        ],
+        "plddt": 98.27,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.81,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.135,
+                    -0.619,
+                    -0.774,
+                    0.0,
+                    -0.082,
+                    0.785,
+                    -0.614,
+                    0.0,
+                    0.987,
+                    -0.02,
+                    -0.157,
+                    0.0,
+                    18.501,
+                    -15.575,
+                    30.288,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.97,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.127,
+                    -0.666,
+                    -0.735,
+                    0.0,
+                    -0.16,
+                    0.745,
+                    -0.648,
+                    0.0,
+                    0.979,
+                    0.035,
+                    -0.201,
+                    0.0,
+                    18.062,
+                    -13.583,
+                    28.853,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.15,
+                    0.92,
+                    -0.361,
+                    0.0,
+                    0.088,
+                    -0.376,
+                    -0.922,
+                    0.0,
+                    -0.985,
+                    0.107,
+                    -0.137,
+                    0.0,
+                    -24.593,
+                    -1.386,
+                    4.748,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.94,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.141,
+                    0.942,
+                    -0.304,
+                    0.0,
+                    0.166,
+                    -0.325,
+                    -0.931,
+                    0.0,
+                    -0.976,
+                    0.081,
+                    -0.202,
+                    0.0,
+                    -24.136,
+                    -2.419,
+                    2.512,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFC0PYL4F1",
+        "afdb_id": "AF-C0PYL4-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Paratyphi C str. RKS4594"
+        ],
+        "plddt": 98.26,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.81,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.154,
+                    -0.477,
+                    -0.865,
+                    0.0,
+                    -0.19,
+                    0.874,
+                    -0.448,
+                    0.0,
+                    0.97,
+                    0.096,
+                    -0.226,
+                    0.0,
+                    18.979,
+                    -14.994,
+                    29.227,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.97,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.158,
+                    -0.532,
+                    -0.832,
+                    0.0,
+                    -0.269,
+                    0.834,
+                    -0.482,
+                    0.0,
+                    0.95,
+                    0.148,
+                    -0.275,
+                    0.0,
+                    18.431,
+                    -12.93,
+                    27.704,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.77,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.17,
+                    0.843,
+                    -0.511,
+                    0.0,
+                    0.193,
+                    -0.537,
+                    -0.821,
+                    0.0,
+                    -0.966,
+                    0.041,
+                    -0.254,
+                    0.0,
+                    -25.057,
+                    -1.354,
+                    3.535,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.94,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.173,
+                    0.874,
+                    -0.454,
+                    0.0,
+                    0.273,
+                    -0.486,
+                    -0.83,
+                    0.0,
+                    -0.946,
+                    0.02,
+                    -0.322,
+                    0.0,
+                    -24.491,
+                    -2.407,
+                    1.189,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ9RF52F1",
+        "afdb_id": "AF-Q9RF52-F1",
+        "title": "Computed structure model of Peptidase B",
+        "organism": [
+            "Salmonella enterica subsp. enterica serovar Typhimurium str. LT2"
+        ],
+        "plddt": 98.28,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.82,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.157,
+                    -0.369,
+                    -0.916,
+                    0.0,
+                    -0.25,
+                    0.912,
+                    -0.325,
+                    0.0,
+                    0.955,
+                    0.178,
+                    -0.236,
+                    0.0,
+                    19.001,
+                    -13.928,
+                    28.714,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.97,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.171,
+                    -0.426,
+                    -0.888,
+                    0.0,
+                    -0.322,
+                    0.876,
+                    -0.358,
+                    0.0,
+                    0.931,
+                    0.225,
+                    -0.287,
+                    0.0,
+                    18.402,
+                    -12.038,
+                    27.186,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 63
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.78,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.173,
+                    0.774,
+                    -0.609,
+                    0.0,
+                    0.25,
+                    -0.633,
+                    -0.733,
+                    0.0,
+                    -0.953,
+                    -0.026,
+                    -0.303,
+                    0.0,
+                    -25.078,
+                    -2.021,
+                    2.559,
+                    1.0
+                ]
+            },
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 6
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 8
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 62
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 65
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 64
+                    }
+                ],
+                "score": 2.94,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.186,
+                    0.81,
+                    -0.556,
+                    0.0,
+                    0.323,
+                    -0.585,
+                    -0.744,
+                    0.0,
+                    -0.928,
+                    -0.041,
+                    -0.371,
+                    0.0,
+                    -24.458,
+                    -2.923,
+                    0.294,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ9LRZ0F1",
+        "afdb_id": "AF-Q9LRZ0-F1",
+        "title": "Computed structure model of Topless-related protein 2",
+        "organism": [
+            "Arabidopsis thaliana"
+        ],
+        "plddt": 77.7,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 382
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 385
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 373
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 370
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 371
+                    }
+                ],
+                "score": 2.91,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.793,
+                    0.609,
+                    -0.008,
+                    0.0,
+                    -0.276,
+                    -0.347,
+                    0.896,
+                    0.0,
+                    0.543,
+                    0.713,
+                    0.444,
+                    0.0,
+                    29.455,
+                    -27.412,
+                    19.402,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFG4WJD3F1",
+        "afdb_id": "AF-G4WJD3-F1",
+        "title": "Computed structure model of GDP-L-colitose synthase",
+        "organism": [
+            "Yersinia pseudotuberculosis"
+        ],
+        "plddt": 95.17,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 247
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 243
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 241
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 202
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 203
+                    }
+                ],
+                "score": 2.9,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.595,
+                    -0.131,
+                    -0.793,
+                    0.0,
+                    -0.081,
+                    0.991,
+                    -0.103,
+                    0.0,
+                    0.8,
+                    0.003,
+                    -0.601,
+                    0.0,
+                    9.209,
+                    -18.318,
+                    26.794,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ8CYI6F1",
+        "afdb_id": "AF-Q8CYI6-F1",
+        "title": "Computed structure model of Uncharacterized protein",
+        "organism": [
+            "Streptococcus pneumoniae R6"
+        ],
+        "plddt": 91.87,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "3_0_7khu_FUC_6_E",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 117
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 115
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 374
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 371
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 372
+                    }
+                ],
+                "score": 2.99,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.913,
+                    -0.335,
+                    0.235,
+                    0.0,
+                    0.111,
+                    0.35,
+                    0.93,
+                    0.0,
+                    -0.394,
+                    0.875,
+                    -0.283,
+                    0.0,
+                    7.403,
+                    -24.846,
+                    9.588,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFQ2N8Z6F1",
+        "afdb_id": "AF-Q2N8Z6-F1",
+        "title": "Computed structure model of ATP synthase subunit delta",
+        "organism": [
+            "Erythrobacter litoralis HTCC2594"
+        ],
+        "plddt": 78.51,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 133
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 137
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 143
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 112
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 113
+                    }
+                ],
+                "score": 2.76,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.732,
+                    0.608,
+                    0.308,
+                    0.0,
+                    -0.592,
+                    -0.344,
+                    -0.728,
+                    0.0,
+                    -0.337,
+                    -0.716,
+                    0.612,
+                    0.0,
+                    -8.417,
+                    26.31,
+                    2.65,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA4HVU1F1",
+        "afdb_id": "AF-A4HVU1-F1",
+        "title": "Computed structure model of DNA-directed DNA polymerase",
+        "organism": [
+            "Leishmania infantum"
+        ],
+        "plddt": 70.8,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 880
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 893
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 895
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 897
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 896
+                    }
+                ],
+                "score": 2.44,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    0.183,
+                    0.977,
+                    0.112,
+                    0.0,
+                    -0.911,
+                    0.212,
+                    -0.354,
+                    0.0,
+                    -0.369,
+                    -0.037,
+                    0.929,
+                    0.0,
+                    -14.342,
+                    -46.535,
+                    43.38,
+                    1.0
+                ]
+            }
+        ]
+    },
+    {
+        "pdb_id": "AF_AFA3M3H0F1",
+        "afdb_id": "AF-A3M3H0-F1",
+        "title": "Computed structure model of Adhesin Ata autotransporter",
+        "organism": [
+            "Acinetobacter baumannii ATCC 17978"
+        ],
+        "plddt": 74.15,
+        "af_version": "v2.0",
+        "af_revision": 4,
+        "motifs": [
+            {
+                "surrounding": "9_0_7khu_FUC_6_C",
+                "sugar": "FUC",
+                "original_struct": "7khu",
+                "residue_ids": [
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 238
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 254
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 240
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 206
+                    },
+                    {
+                        "label_asym_id": "A",
+                        "struct_oper_id": "1",
+                        "label_seq_id": 205
+                    }
+                ],
+                "score": 2.7,
+                "residue_types": [
+                    "LYS",
+                    "THR",
+                    "THR",
+                    "GLY",
+                    "GLU"
+                ],
+                "transformation": [
+                    -0.263,
+                    0.964,
+                    -0.05,
+                    0.0,
+                    -0.115,
+                    0.02,
+                    0.993,
+                    0.0,
+                    0.958,
+                    0.267,
+                    0.106,
+                    0.0,
+                    60.689,
+                    -65.803,
+                    10.996,
+                    1.0
+                ]
+            }
+        ]
+    }
+]

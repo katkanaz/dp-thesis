@@ -140,7 +140,6 @@ function ResultDetail() {
                         <Box position="relative" width="100%" zIndex="10">
                             <MolStarWrapper setMolStar={setMolStar} />
                         </Box>
-                        <Switch></Switch>
                     </VStack>
                 </HStack>
             </VStack>

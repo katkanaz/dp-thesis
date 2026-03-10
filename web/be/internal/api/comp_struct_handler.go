@@ -20,8 +20,8 @@ type OptionItem struct {
 }
 
 type PlddtRange struct {
-	Min float32
-	Max float32
+	Min float32 `json:"min"`
+	Max float32 `json:"max"`
 }
 
 type FilterOptions struct {

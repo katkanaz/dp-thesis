@@ -6,93 +6,93 @@
     }
   ],
   "plddt_range": {
-    "Min": 60.38,
-    "Max": 98.28
+    "min": 60.38,
+    "max": 98.28
   },
   "organisms": [
     {
       "id": 0,
-      "value": "Escherichia coli O111:H-"
-    },
-    {
-      "id": 1,
-      "value": "Mus musculus"
-    },
-    {
-      "id": 2,
-      "value": "Bacillus subtilis subsp. subtilis str. 168"
-    },
-    {
-      "id": 3,
-      "value": "Salmonella enterica subsp. enterica serovar Typhimurium str. LT2"
-    },
-    {
-      "id": 4,
-      "value": "Leishmania infantum"
-    },
-    {
-      "id": 5,
-      "value": "Acinetobacter baumannii ATCC 17978"
-    },
-    {
-      "id": 6,
-      "value": "Vibrio vulnificus CMCP6"
-    },
-    {
-      "id": 7,
-      "value": "Arabidopsis thaliana"
-    },
-    {
-      "id": 8,
-      "value": "Salmonella enterica subsp. enterica serovar Enteritidis str. P125109"
-    },
-    {
-      "id": 9,
-      "value": "Salmonella enterica subsp. enterica serovar Choleraesuis str. SC-B67"
-    },
-    {
-      "id": 10,
-      "value": "Salmonella enterica subsp. enterica serovar Dublin str. CT_02021853"
-    },
-    {
-      "id": 11,
-      "value": "Fonsecaea pedrosoi CBS 271.37"
-    },
-    {
-      "id": 12,
       "value": "Pongo abelii"
     },
     {
-      "id": 13,
-      "value": "Streptococcus pneumoniae R6"
+      "id": 1,
+      "value": "Bacillus subtilis subsp. subtilis str. 168"
     },
     {
-      "id": 14,
-      "value": "Debaryomyces hansenii CBS767"
-    },
-    {
-      "id": 15,
-      "value": "Lactobacillus helveticus DPC 4571"
-    },
-    {
-      "id": 16,
-      "value": "Rattus norvegicus"
-    },
-    {
-      "id": 17,
-      "value": "Methanopyrus kandleri AV19"
-    },
-    {
-      "id": 18,
-      "value": "Salmonella enterica subsp. enterica serovar Paratyphi B str. SPB7"
-    },
-    {
-      "id": 19,
+      "id": 2,
       "value": "Salmonella enterica subsp. enterica serovar Newport str. SL254"
     },
     {
+      "id": 3,
+      "value": "Acinetobacter baumannii ATCC 17978"
+    },
+    {
+      "id": 4,
+      "value": "Neisseria gonorrhoeae"
+    },
+    {
+      "id": 5,
+      "value": "Vibrio vulnificus YJ016"
+    },
+    {
+      "id": 6,
+      "value": "Escherichia coli O127:H6 str. E2348/69"
+    },
+    {
+      "id": 7,
+      "value": "Salmonella enterica subsp. enterica serovar Paratyphi B str. SPB7"
+    },
+    {
+      "id": 8,
+      "value": "Lactobacillus helveticus DPC 4571"
+    },
+    {
+      "id": 9,
+      "value": "Arabidopsis thaliana"
+    },
+    {
+      "id": 10,
+      "value": "Salmonella enterica subsp. enterica serovar Typhi"
+    },
+    {
+      "id": 11,
+      "value": "Salmonella enterica subsp. enterica serovar Gallinarum str. 287/91"
+    },
+    {
+      "id": 12,
+      "value": "Erythrobacter litoralis HTCC2594"
+    },
+    {
+      "id": 13,
+      "value": "Micrococcus luteus"
+    },
+    {
+      "id": 14,
+      "value": "Mus musculus"
+    },
+    {
+      "id": 15,
+      "value": "Bos taurus"
+    },
+    {
+      "id": 16,
+      "value": "Methanopyrus kandleri AV19"
+    },
+    {
+      "id": 17,
+      "value": "Salmonella enterica subsp. enterica serovar Choleraesuis str. SC-B67"
+    },
+    {
+      "id": 18,
+      "value": "Vibrio parahaemolyticus RIMD 2210633"
+    },
+    {
+      "id": 19,
+      "value": "Salmonella enterica subsp. enterica serovar Enteritidis str. P125109"
+    },
+    {
       "id": 20,
-      "value": "Salmonella enterica subsp. enterica serovar Paratyphi C str. RKS4594"
+      "value": "Salmonella enterica subsp. enterica serovar Agona str. SL483"
     },
     {
       "id": 21,
@@ -100,51 +100,51 @@
     },
     {
       "id": 22,
-      "value": "Salmonella enterica subsp. enterica serovar Gallinarum str. 287/91"
+      "value": "Escherichia coli O111:H-"
     },
     {
       "id": 23,
-      "value": "Salmonella enterica subsp. enterica serovar Agona str. SL483"
+      "value": "Salmonella enterica subsp. enterica serovar Dublin str. CT_02021853"
     },
     {
       "id": 24,
-      "value": "Erythrobacter litoralis HTCC2594"
+      "value": "Salmonella enterica subsp. enterica serovar Typhimurium str. LT2"
     },
     {
       "id": 25,
-      "value": "Vibrio parahaemolyticus RIMD 2210633"
+      "value": "Streptococcus pneumoniae R6"
     },
     {
       "id": 26,
-      "value": "Thermoplasma acidophilum DSM 1728"
+      "value": "Debaryomyces hansenii CBS767"
     },
     {
       "id": 27,
-      "value": "Escherichia coli O127:H6 str. E2348/69"
+      "value": "Thermoplasma acidophilum DSM 1728"
     },
     {
       "id": 28,
-      "value": "Bos taurus"
+      "value": "Leishmania infantum"
     },
     {
       "id": 29,
-      "value": "Madurella mycetomatis"
+      "value": "Fonsecaea pedrosoi CBS 271.37"
     },
     {
       "id": 30,
-      "value": "Neisseria gonorrhoeae"
+      "value": "Rattus norvegicus"
     },
     {
       "id": 31,
-      "value": "Vibrio vulnificus YJ016"
+      "value": "Salmonella enterica subsp. enterica serovar Paratyphi C str. RKS4594"
     },
     {
       "id": 32,
-      "value": "Micrococcus luteus"
+      "value": "Madurella mycetomatis"
     },
     {
       "id": 33,
-      "value": "Salmonella enterica subsp. enterica serovar Typhi"
+      "value": "Vibrio vulnificus CMCP6"
     }
   ],
   "pdb_structures": [
