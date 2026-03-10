@@ -33,7 +33,7 @@ function MotifDetail({num, sugar, rmsd, residues, structurePDB}: MotifDetailProp
                             </Tr>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">Motif residues:</Td>
-                                <Td>
+                                <Td style={{maxWidth: "17rem", textWrap: "auto"}}>
                                    {residues.map(i => `${i.type} ${i.label_seq}/${i.label_asym}`).join(", ")}
                                 </Td>
                             </Tr>
