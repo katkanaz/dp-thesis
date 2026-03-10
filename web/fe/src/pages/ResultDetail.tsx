@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link, Spinner, Switch, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link, Spinner, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import { getCompStruct, ComputedStructure, mergeRisudeInfo } from "../api/computed_structure"
 import { resultDetailRoute } from "../Router";
