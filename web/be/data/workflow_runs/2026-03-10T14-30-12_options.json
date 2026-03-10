@@ -1,0 +1,380 @@
+{
+  "sugars": [
+    {
+      "id": 0,
+      "value": "MAN"
+    },
+    {
+      "id": 1,
+      "value": "FUC"
+    },
+    {
+      "id": 2,
+      "value": "FUL"
+    },
+    {
+      "id": 3,
+      "value": "GAL"
+    },
+    {
+      "id": 4,
+      "value": "SIA"
+    },
+    {
+      "id": 5,
+      "value": "GLC"
+    }
+  ],
+  "plddt_range": {
+    "min": 57.19,
+    "max": 98.31
+  },
+  "organisms": [
+    {
+      "id": 0,
+      "value": "Arabidopsis thaliana"
+    },
+    {
+      "id": 1,
+      "value": "Laburnum alpinum"
+    },
+    {
+      "id": 2,
+      "value": "Nitrosomonas eutropha C91"
+    },
+    {
+      "id": 3,
+      "value": "Bacillus subtilis subsp. subtilis str. 168"
+    },
+    {
+      "id": 4,
+      "value": "Trichlorobacter lovleyi SZ"
+    },
+    {
+      "id": 5,
+      "value": "Pseudomonas paraeruginosa PA7"
+    },
+    {
+      "id": 6,
+      "value": "Saccharophagus degradans 2-40"
+    },
+    {
+      "id": 7,
+      "value": "Streptococcus pyogenes MGAS10394"
+    },
+    {
+      "id": 8,
+      "value": "Oryza sativa Japonica Group"
+    },
+    {
+      "id": 9,
+      "value": "Bos taurus"
+    },
+    {
+      "id": 10,
+      "value": "Escherichia coli K-12"
+    },
+    {
+      "id": 11,
+      "value": "Nocardia brasiliensis ATCC 700358"
+    },
+    {
+      "id": 12,
+      "value": "Bacillus pumilus SAFR-032"
+    },
+    {
+      "id": 13,
+      "value": "Wuchereria bancrofti"
+    },
+    {
+      "id": 14,
+      "value": "Panthera tigris tigris"
+    },
+    {
+      "id": 15,
+      "value": "Dictyostelium discoideum"
+    },
+    {
+      "id": 16,
+      "value": "Streptococcus pyogenes serotype M1"
+    },
+    {
+      "id": 17,
+      "value": "Streptococcus pyogenes MGAS315"
+    },
+    {
+      "id": 18,
+      "value": "Chlamydia trachomatis D/UW-3/CX"
+    },
+    {
+      "id": 19,
+      "value": "Trichuris trichiura"
+    },
+    {
+      "id": 20,
+      "value": "Zea mays"
+    },
+    {
+      "id": 21,
+      "value": "Citrobacter koseri ATCC BAA-895"
+    },
+    {
+      "id": 22,
+      "value": "Onchocerca volvulus"
+    },
+    {
+      "id": 23,
+      "value": "Strongyloides stercoralis"
+    },
+    {
+      "id": 24,
+      "value": "Vibrio vulnificus YJ016"
+    },
+    {
+      "id": 25,
+      "value": "Escherichia coli O157:H7"
+    },
+    {
+      "id": 26,
+      "value": "Debaryomyces hansenii CBS767"
+    },
+    {
+      "id": 27,
+      "value": "Rattus norvegicus"
+    },
+    {
+      "id": 28,
+      "value": "Teredinibacter turnerae T7901"
+    },
+    {
+      "id": 29,
+      "value": "Drosophila melanogaster"
+    },
+    {
+      "id": 30,
+      "value": "Staphylococcus saprophyticus subsp. saprophyticus ATCC 15305 = NCTC 7292"
+    },
+    {
+      "id": 31,
+      "value": "Flavobacterium johnsoniae UW101"
+    },
+    {
+      "id": 32,
+      "value": "Enterococcus faecium"
+    },
+    {
+      "id": 33,
+      "value": "Raphanus sativus"
+    },
+    {
+      "id": 34,
+      "value": "Ulex europaeus"
+    },
+    {
+      "id": 35,
+      "value": "Clostridium botulinum"
+    },
+    {
+      "id": 36,
+      "value": "Caenorhabditis elegans"
+    },
+    {
+      "id": 37,
+      "value": "Mycoplasmopsis pulmonis UAB CTIP"
+    },
+    {
+      "id": 38,
+      "value": "Streptococcus pyogenes MGAS8232"
+    },
+    {
+      "id": 39,
+      "value": "Trypanosoma cruzi strain CL Brener"
+    },
+    {
+      "id": 40,
+      "value": "Felis catus"
+    },
+    {
+      "id": 41,
+      "value": "Schizosaccharomyces pombe 972h-"
+    },
+    {
+      "id": 42,
+      "value": "Hahella chejuensis KCTC 2396"
+    },
+    {
+      "id": 43,
+      "value": "Xenopus laevis"
+    },
+    {
+      "id": 44,
+      "value": "Cupriavidus pinatubonensis JMP134"
+    },
+    {
+      "id": 45,
+      "value": "Equus caballus"
+    },
+    {
+      "id": 46,
+      "value": "Streptococcus pneumoniae R6"
+    },
+    {
+      "id": 47,
+      "value": "Homo sapiens"
+    },
+    {
+      "id": 48,
+      "value": "Pseudomonas aeruginosa UCBPP-PA14"
+    },
+    {
+      "id": 49,
+      "value": "Dracunculus medinensis"
+    },
+    {
+      "id": 50,
+      "value": "Prochlorococcus marinus str. MIT 9313"
+    },
+    {
+      "id": 51,
+      "value": "Streptococcus pyogenes SSI-1"
+    },
+    {
+      "id": 52,
+      "value": "Oryctolagus cuniculus"
+    },
+    {
+      "id": 53,
+      "value": "Microcystis viridis"
+    },
+    {
+      "id": 54,
+      "value": "Chromohalobacter israelensis DSM 3043"
+    },
+    {
+      "id": 55,
+      "value": "Madurella mycetomatis"
+    },
+    {
+      "id": 56,
+      "value": "Danio rerio"
+    },
+    {
+      "id": 57,
+      "value": "Clostridium botulinum A str. Hall"
+    },
+    {
+      "id": 58,
+      "value": "Mycobacterium ulcerans str. Harvey"
+    },
+    {
+      "id": 59,
+      "value": "Salmonella enterica subsp. enterica serovar Typhimurium str. LT2"
+    },
+    {
+      "id": 60,
+      "value": "Klebsiella pneumoniae subsp. pneumoniae HS11286"
+    },
+    {
+      "id": 61,
+      "value": "Cytisophyllum sessilifolium"
+    },
+    {
+      "id": 62,
+      "value": "Shigella dysenteriae Sd197"
+    },
+    {
+      "id": 63,
+      "value": "Shigella flexneri"
+    },
+    {
+      "id": 64,
+      "value": "Klebsiella aerogenes"
+    },
+    {
+      "id": 65,
+      "value": "Pseudomonas aeruginosa PAO1"
+    },
+    {
+      "id": 66,
+      "value": "Brassica napus"
+    },
+    {
+      "id": 67,
+      "value": "Cladophialophora carrionii"
+    },
+    {
+      "id": 68,
+      "value": "Mus musculus"
+    },
+    {
+      "id": 69,
+      "value": "Pseudomonas aeruginosa LESB58"
+    },
+    {
+      "id": 70,
+      "value": "Glycine max"
+    },
+    {
+      "id": 71,
+      "value": "Sus scrofa"
+    },
+    {
+      "id": 72,
+      "value": "Pongo abelii"
+    },
+    {
+      "id": 73,
+      "value": "Streptococcus mutans UA159"
+    }
+  ],
+  "pdb_structures": [
+    {
+      "id": 0,
+      "value": "2eae"
+    },
+    {
+      "id": 1,
+      "value": "1qot"
+    },
+    {
+      "id": 2,
+      "value": "7qpt"
+    },
+    {
+      "id": 3,
+      "value": "1so0"
+    },
+    {
+      "id": 4,
+      "value": "6zfa"
+    },
+    {
+      "id": 5,
+      "value": "1zhs"
+    },
+    {
+      "id": 6,
+      "value": "7p1n"
+    },
+    {
+      "id": 7,
+      "value": "3uet"
+    },
+    {
+      "id": 8,
+      "value": "5uwc"
+    },
+    {
+      "id": 9,
+      "value": "5f97"
+    },
+    {
+      "id": 10,
+      "value": "3n95"
+    },
+    {
+      "id": 11,
+      "value": "7amz"
+    }
+  ]
+}
