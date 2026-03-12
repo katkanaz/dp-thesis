@@ -19,15 +19,15 @@ function NavBar() {
                 <ChakraLink as={TanstackRouterLink} to={homeRoute.to} textDecoration="none" _hover={{ textDecoration: "none" }}>
                     <HStack spacing="1">
                         <Image src={logo} alt="Website Logo" boxSize="40px"/>
-                        <Text fontWeight="bold" fontSize="lg">
-                            Web Title
+                        <Text fontWeight="bold" fontSize="2xl" fontFamily="fantasy" color="#DD697B">
+                            SweetSeek
                         </Text>
                     </HStack>
                 </ChakraLink>
             </Box>
             {lastUpdated &&
                 <>
-                    <Box ml="4" height="60%" borderLeft="1px" borderColor="gray.400"></Box>
+                    <Box ml="4" height="60%" borderLeft="1px" borderColor="#4A5759"></Box>
                     <Box ml="4" color="gray.400">
                         Last updated {lastUpdated.date}
                     </Box>
