@@ -83,7 +83,7 @@ if __name__ == "__main__":
         main(config, is_unix, args.res, args.rscc, args.rmsd, args.test_mode)
 
         if not args.keep_current_run:
-            Config.clear_current_run()
+            config.clear_current_run()
 
     end_time = datetime.now()
     duration = end_time - start_time

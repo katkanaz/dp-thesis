@@ -17,6 +17,7 @@ class UserConfig(BaseModel):
     images_dir: Path
     mv_dir: Path
     pq_dir: Path
+    current_run_dir: Path
 
     pdb_ids_list: Optional[List[str]] = None
     skip_ids: Optional[List[str]] = None
@@ -36,6 +37,7 @@ class UserConfig(BaseModel):
         user_config.images_dir = user_config.images_dir.resolve()
         user_config.mv_dir = user_config.mv_dir.resolve()
         user_config.pq_dir = user_config.pq_dir.resolve()
+        user_config.current_run_dir = user_config.current_run_dir.resolve()
 
         return user_config
 
@@ -146,9 +148,15 @@ class Config():
 
 
 
-    @classmethod
-    def get_current_run(cls, force_new: bool = False) -> str:
-        file_path = "../.current_run"
+    def get_current_run(self, force_new: bool = False) -> str:
+        """
+        Get current_run date. Creates .current_run file with current date if no active
+        current_run is found.
+
+        :param force_new: Force creation of new .current_run even if it already exists
+        :return: Datetime of the active current_run
+        """
+        file_path = self.user_cfg.current_run_dir / ".current_run"
 
         if os.path.isfile(file_path) and not force_new:
             with open(file_path, "r", encoding="utf8") as f:
@@ -163,12 +171,11 @@ class Config():
             return current_datetime
 
 
-    @classmethod     
-    def clear_current_run(cls) -> None:
+    def clear_current_run(self) -> None:
         """
-        Delete .current_run file from results directory.
+        Delete .current_run file.
         """
-        file_path = "../.current_run"
+        file_path = self.user_cfg.current_run_dir / ".current_run"
         try:
             if os.path.isfile(file_path):
                 os.remove(file_path)

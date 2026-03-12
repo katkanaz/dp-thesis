@@ -50,5 +50,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src /app/src
+COPY ./src/docker-config.json /app/src/config.json
 
 CMD ["tail", "-f", "/dev/null"]

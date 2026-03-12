@@ -102,7 +102,7 @@ if __name__ == "__main__":
         main(args.test_mode, args.sugar, config, is_unix, args.perform_align, args.perform_clustering, args.number, args.method, args.min_residues, args.max_residues, args.make_dendrogram, args.store_result_path, args.color_threshold)
 
         if not args.keep_current_run:
-            Config.clear_current_run()
+            config.clear_current_run()
 
     end_time = datetime.now()
     duration = end_time - start_time

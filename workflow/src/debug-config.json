@@ -1,9 +1,12 @@
 {
+    "pdb_mirror_dir": "../pdb-mirror",
+    "init_pq_dir": "../init-pq-dir",
     "data_dir": "../data",
     "results_dir": "../results",
     "images_dir": "../img",
     "mv_dir": "../mv",
     "pq_dir": "../pq",
+    "current_run_dir": "..",
     "pdb_ids_list": [],
     "skip_ids": ["7zll"],
     "data_run": "2025-06-13T12-30-00"

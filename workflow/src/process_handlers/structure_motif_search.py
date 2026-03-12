@@ -258,4 +258,4 @@ if __name__ == "__main__":
     structure_motif_search(args.test_mode, args.sugar, args.perform_clustering, args.number, args.method, config, args.max_residues, args.store_result_path)
 
     if not args.keep_current_run:
-        Config.clear_current_run()
+        config.clear_current_run()

@@ -108,4 +108,4 @@ if __name__ == "__main__":
     filter_ligands(args.res, args.rscc, args.rmsd, config)
 
     if not args.keep_current_run:
-        Config.clear_current_run()
+        config.clear_current_run()
