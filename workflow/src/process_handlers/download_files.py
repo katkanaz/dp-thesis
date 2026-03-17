@@ -83,7 +83,7 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
         if not structures:
             sugars_not_present_in_any_structure.append(sugar)
             continue
-        pdb_ids.update(structures[sugar])
+        pdb_ids.update([d["pdb_id"] for d in structures[sugar]])
         counts_structures_with_sugar[sugar] = len(structures[sugar])
 
     with (config.run_data_dir / "pdb_ids_ccd.json").open("w") as f:

@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    config = Config.load("config.json", None, False)
+    config = Config.load("config.json", None, False, args)
 
     setup_logger(config.log_path)
 
