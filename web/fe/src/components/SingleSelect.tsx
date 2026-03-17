@@ -2,18 +2,11 @@ import { Combobox } from "@base-ui/react/combobox"
 import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons"
 import { Box, HStack, IconButton, Input, List, ListItem } from "@chakra-ui/react"
 import { useRef, useState } from "react"
+import { SelectOption, OptionInfo } from "./MultiSelect"
 
-export type SelectOption = {
-    id: number,
-    value: string
-}
 
-export type OptionInfo = {
-    isLoading: boolean,
-    isError: boolean,
-}
 
-interface MultiSelectProps {
+interface SingleSelectProps {
     options: SelectOption[]
     optionInfo: OptionInfo
     query: string 
@@ -34,7 +27,7 @@ export function useMultiSelect(options: SelectOption[] | undefined, optionInfo: 
     return multiSelectReturn
 }
 
-function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelected, width, placeholder }: MultiSelectProps) {
+function SingleSelect({ options, optionInfo, query, setQuery, selected, setSelected, width, placeholder }: SingleSelectProps) {
     const filtered = options?.filter((item) =>
         item.value.toLowerCase().includes(query.toLowerCase())
     )
@@ -44,8 +37,7 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
     return (
         <Combobox.Root
             value={selected}
-            multiple
-            onValueChange={setSelected}
+            onValueChange={(v: any) => {multiple ? setSelected(v as any): setSelected([v as any])}}
         >
             <Box display="flex" flexDir="column" gap="0.25rem" maxW="20rem">
                 <Combobox.Chips ref={containerRef} render={(props) => (
@@ -163,4 +155,4 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
     )
 }
 
-export default MultiSelect
+export default SingleSelect

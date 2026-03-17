@@ -1,4 +1,4 @@
-import { MultiSelectOption } from "../components/MultiSelect";
+import { SelectOption } from "../components/MultiSelect";
 
 export type ResidueId = {
 	label_asym_id: string,
@@ -44,10 +44,10 @@ export type PlddtRange = {
 }
 
 export type FilterOptions = {
-    sugars: MultiSelectOption[],
+    sugars: SelectOption[],
     plddt_range: PlddtRange,
-    organisms: MultiSelectOption[],
-    pdb_structures: MultiSelectOption[],
+    organisms: SelectOption[],
+    pdb_structures: SelectOption[],
 }
 
 export const getResults = async (): Promise<ComputedStructure[]> => {

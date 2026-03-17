@@ -39,6 +39,10 @@ function ResultDetail() {
             }).commit()
     }, [compStruct, molStar]);
 
+    // color_from_source
+    // palette - DiscretePalete
+    // examples.py, jupiternotebook setup
+
     if (isLoading) {
         return (
             <Center minH="60vh">
