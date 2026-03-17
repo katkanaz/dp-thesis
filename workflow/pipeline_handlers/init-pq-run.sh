@@ -4,9 +4,6 @@
 #PBS -l walltime=40:00:00 
 
 
-RUNDATE=$(date "+%Y-%m-%dT%H-%M")
-
-
 test -n "$SCRATCHDIR" || { echo >&2 "Variable SCRATCHDIR is not set!"; exit 2; }
 
 echo "$(date "+%Y-%m-%dT%H-%M") starting PDB mirror copy for PQ" >> "$PIPELINE_RUN_LOG"
@@ -32,7 +29,7 @@ cat <<EOF > $PIPELINE_RUN/pq-config.json
 }
 EOF
 
-mono PatternQuery_1.1.23.12.27b/WebChemistry.Queries.Service.exe "$PIPELINE_RUN/pq-results" "$PIPELINE_RUN/pq-config.json" >> "$PIPELINE_RUN/pq_run.log"
+mono "$INIT_PQ/PatternQuery_1.1.23.12.27b/WebChemistry.Queries.Service.exe" "$PIPELINE_RUN/pq-results" "$PIPELINE_RUN/pq-config.json" >> "$PIPELINE_RUN/pq_run.log"
 
 cp "$PIPELINE_RUN/pq-results/result.zip" "$INIT_PQ/result.zip"
 
