@@ -80,7 +80,7 @@ def get_pdb_ids_with_sugars(config: Config, sugar_names: List[str]) -> Set[str]:
     for sugar in sugar_names:
         response = requests.get(f"https://www.ebi.ac.uk/pdbe/api/pdb/compound/in_pdb/{sugar}")
         structures = response.json()
-        if not structures:
+        if not structures.get(sugar):
             sugars_not_present_in_any_structure.append(sugar)
             continue
         pdb_ids.update([d["pdb_id"] for d in structures[sugar]])
