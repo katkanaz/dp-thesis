@@ -127,8 +127,8 @@ def run_mv(config: Config, is_unix: bool) -> None:
     mv_base = config.user_cfg.mv_dir
     matches = sorted([p for p in mv_base.glob("MotiveValidator*") if p.is_dir()])
     mv_dir = matches[-1] if matches else mv_base / "MotiveValidator"
-    # if not mv_dir.exists() or (mv_dir.is_dir() and not any(mv_dir.iterdir())):
-    #     download_mv(config)
+    if not mv_dir.exists() or (mv_dir.is_dir() and not any(mv_dir.iterdir())):
+        raise Exception(f"Missing requirement: MotiveValidator. Not found in {mv_dir}")
     create_mv_config(config)
 
     cmd = [f"{'mono ' if is_unix is True else ''}"

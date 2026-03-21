@@ -138,6 +138,8 @@ def run_pq(sugar: str, config: Config, is_unix: bool) -> None:
     pq_base = config.user_cfg.pq_dir
     matches = sorted([p for p in pq_base.glob("PatternQuery*") if p.is_dir()])
     pq_dir = matches[-1] if matches else pq_base / "PatternQuery"
+    if not pq_dir.exists() or (pq_dir.is_dir() and not any(pq_dir.iterdir())):
+        raise Exception(f"Missing requirement: PatternQuery. Not found in {pq_dir}")
 
     (config.pq_run_dir / "structures").mkdir(exist_ok=True, parents=True)
     (config.pq_run_dir / "results").mkdir(exist_ok=True, parents=True)
